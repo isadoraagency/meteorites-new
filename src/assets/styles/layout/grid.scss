@@ -1,0 +1,91 @@
+@use "../utils/variables" as *;
+@use "../mixins/grid" as *;
+@use "../mixins/mixin" as *;
+@use "sass:math";
+
+// ====================
+// Default columns & offsets
+// ====================
+@for $i from 1 through $grid-columns {
+  .ia-col-#{$i} {
+    @include make-col($i);
+  }
+
+  .ia-col-offset-#{$i} {
+    margin-left: math.percentage(math.div($i, $grid-columns));
+  }
+
+  // xs
+  .ia-col-xs-#{$i} {
+    @include make-col($i);
+  }
+
+  .ia-col-offset-xs-#{$i} {
+    margin-left: math.percentage(math.div($i, $grid-columns));
+  }
+}
+
+// ====================
+// Responsive sm
+// ====================
+@include respond-to(sm) {
+  @for $i from 1 through $grid-columns {
+    .ia-col-sm-#{$i} {
+      @include make-col($i);
+    }
+
+    .ia-col-offset-sm-#{$i} {
+      margin-left: math.percentage(math.div($i, $grid-columns));
+    }
+  }
+}
+
+// ====================
+// Responsive md
+// ====================
+@include respond-to(md) {
+  @for $i from 1 through $grid-columns {
+    .ia-col-md-#{$i} {
+      @include make-col($i);
+    }
+
+    .ia-col-offset-md-#{$i} {
+      margin-left: math.percentage(math.div($i, $grid-columns));
+    }
+  }
+}
+
+// ====================
+// Responsive lg
+// ====================
+@include respond-to(lg) {
+  @for $i from 1 through $grid-columns {
+    .ia-col-lg-#{$i} {
+      @include make-col($i);
+    }
+
+    .ia-col-offset-lg-#{$i} {
+      margin-left: math.percentage(math.div($i, $grid-columns));
+    }
+  }
+}
+
+// ====================
+// Container & row & col defaults
+// ====================
+.ia-container {
+  @include container;
+  box-sizing: border-box;
+}
+
+.ia-row {
+  @include make-grid;
+}
+
+.ia-col {
+  padding-left: calc(var(--grid-gutter-width) / 2);
+  padding-right: calc(var(--grid-gutter-width) / 2);
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: calc(var(--grid-gutter-width));
+}

@@ -1,0 +1,51 @@
+@use "../utils/variables" as *;
+.skip-to-main-content-link {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+  padding: 1em;
+  background-color: black;
+  color: white;
+  opacity: 0;
+}
+.skip-to-main-content-link:focus {
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 1;
+}
+
+a {
+  color: $secondary;
+  transition: all .3s;
+  u {
+    text-decoration: none;
+  }
+
+}
+.single .long-text a[target="_blank"]:after {
+  display: none;
+}
+.ia-link {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $primary;
+  &[target="_blank"] {
+    padding-right: 22px;
+    position: relative;
+    &:after {
+      position: absolute;
+      right: 0;
+      margin-top: 3px;
+      line-height: 0;
+
+      content: url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.8002 4.4C7.46882 4.4 7.2002 4.13137 7.2002 3.8C7.2002 3.46863 7.46882 3.2 7.8002 3.2H12.2002C12.5316 3.2 12.8002 3.46863 12.8002 3.8V8.2C12.8002 8.53137 12.5316 8.8 12.2002 8.8C11.8688 8.8 11.6002 8.53137 11.6002 8.2V5.24852L4.22446 12.6243C3.99014 12.8586 3.61025 12.8586 3.37593 12.6243C3.14162 12.3899 3.14162 12.01 3.37593 11.7757L10.7517 4.4H7.8002Z" fill="%23282087"/></svg>');
+    }
+  }
+}
+@each $name, $color in $theme-colors {
+  // Link Classes
+  .ia-link--#{$name} {
+    color: #{$color};
+    border-bottom-color: #{$color};
+  }
+}

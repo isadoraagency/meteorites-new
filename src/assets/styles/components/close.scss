@@ -1,0 +1,81 @@
+@use "../utils/variables" as *;
+.close {
+  position: relative;
+  border: none;
+  transition: all .3s;
+  cursor: pointer;
+  padding: 0;
+  background: #B7AFFF;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  i {
+
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      left: 50%;
+      margin-left: -1px;
+      top: 50%;
+      height: 2.4rem;
+      background: $primary;
+      margin-top: -1.2rem;
+      transform: rotate(45deg);
+    }
+    &:before {
+      transform: rotate(-45deg);
+    }
+  }
+  &--sm {
+    font-size: 1.2rem;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    i {
+      top: 50%;
+      left: 50%;
+      position: absolute;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+@each $name, $color in $theme-colors {
+  // Button Classes
+  .close--#{$name} {
+    background-color: $color;
+    @if $name == "white" or $name == "info" or $name == "warning" or $name == "light" {
+      color: $dark !important;
+    } @else{
+      color: $white !important;
+    }
+    &:hover,
+    &:focus {
+      @if $name == "dark" {
+        background-color: $info;
+        color: $dark !important;
+      }@else if $name == "primary" {
+        background-color: $secondary;
+        color: $white !important;
+      }@else{
+        background-color: $dark;
+        color: $white !important;
+      }
+
+    }
+  }
+}
+@media (max-width: 767px) {
+  .close {
+    width: 4rem;
+    height: 4rem;
+    i {
+      &:before,
+      &:after {
+        height: 2.6rem;
+        margin-top: -1.3rem;
+      }
+    }
+  }
+}

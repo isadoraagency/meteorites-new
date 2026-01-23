@@ -1,0 +1,24 @@
+@use "../utils/variables" as *;
+@mixin placeholder {
+  &::-webkit-input-placeholder {@content}
+  &:-moz-placeholder           {@content}
+  &::-moz-placeholder          {@content}
+  &:-ms-input-placeholder      {@content}  
+}
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: $breakpoint-sm) { @content; }
+  } @else if $breakpoint == md {
+    @media (min-width: $breakpoint-md) { @content; }
+  } @else if $breakpoint == lg {
+    @media (min-width: $breakpoint-lg) { @content; }
+  } @else if $breakpoint == xs {
+    @media (max-width: $breakpoint-xs) { @content; }
+  }
+}
+
+@mixin bg {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}

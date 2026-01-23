@@ -1,0 +1,135 @@
+@use "../utils/variables" as *;
+.tabs {
+  position: relative;
+  &.tabs--dark {
+    .tab-list-outer {
+      color: $dark;
+      background: rgba($dark, .15);
+      border-color: $dark;
+    }
+    .moving-tab {
+      background: $dark;
+    }
+    .tab-item {
+      color: $dark;
+
+     
+      &.active {
+        color: $white;
+      }
+    }
+    .tab-content {
+      color: $dark;
+    }
+  }
+  &.tabs--light {
+    .tab-list-outer {
+      color: $white;
+      background: rgba($dark, .15);
+      border-color: $white;
+    }
+    .moving-tab {
+      background: $white;
+    }
+    .tab-item {
+      color: $white;
+      &.active {
+        color: $dark;
+      }
+    }
+    .tab-content {
+      color: $white;
+    }
+  }
+  .tab-list {
+    display: inline-flex;
+    list-style: none;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    &-outer {
+      border: 1px solid $dark;
+      background: rgba($dark, .15);
+      padding: 0.6rem;
+      border-radius: 50px;
+      max-width: 46%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+  .moving-tab {
+    position: absolute;
+    width: 50%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: $dark;
+    border-radius: 50px;
+    margin: 0;
+    transition: left .3s linear;
+  }
+  .tab-item {
+    padding: 2rem 4.5rem;
+    line-height: 1;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s;
+    color: $dark;
+    border-radius: 50px;
+    margin-bottom: 0;
+    width: 50%;
+    font-size: 2rem;
+    &.active {
+      color: $white; // Active tab color
+    }
+    // &::before {
+    //   content: "";
+    //   position: absolute;
+    //   bottom: 0;
+    //   left: 0;
+    //   width: 100%;
+    //   height: 100%;
+    //   border-radius: 50px;
+    //   background-color: $dark; // Background color for the active tab
+    //   transform: scaleX(0);
+    //   transition: transform 0.3s;
+    //   transform-origin: center;
+    //   z-index: -1;
+    // }
+
+    // &.active::before {
+    //   transform: scaleX(1);
+    // }
+  }
+
+  .tab-content {
+    color: $dark;
+
+    .tab-pane {
+      display: none;
+      &.active {
+
+      }
+    }
+  }
+}
+@media (max-width: 1200px) {
+  .tabs .tab-item {
+    padding: 2rem 2.4rem;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  .tabs .tab-list-outer {
+    max-width: 52%;
+  }
+}
+@media (max-width: 767px) {
+  .tabs .tab-list-outer {
+    max-width: 100%;
+    li {
+      width: 50%;
+    }
+  }
+}

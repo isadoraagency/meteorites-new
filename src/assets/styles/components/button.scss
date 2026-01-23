@@ -1,0 +1,215 @@
+@use "../utils/variables" as *;
+@use "../mixins/button" as *;
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.ia-btn {
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  line-height: 1.5;
+  font-weight: 500;
+  border: 2px solid #0000;
+  font-family: $font-heading;
+  color: #2827C2;
+  background: $vyg padding-box, conic-gradient(from var(--angle), #A398FF 43.15%, #2827C2 70.17%, #4F40FF 80.66%, #A398FF 100%) border-box;
+  border: 2px solid #0000;
+
+  box-sizing: border-box;
+  transition: all .15s
+  ease-in;
+  animation: rotate 3s
+  linear infinite paused;
+  position: relative;
+  i {
+    transition: all .3s;
+  }
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    animation-play-state: running;
+  }
+}
+@keyframes rotate {
+  100% {
+    --angle: 1turn;
+  }
+}
+.play-btn {
+  width: 5.6rem;
+  height: 5.6rem;
+  border-radius: 50%;
+  background: #B7AFFF;
+  position: relative;
+
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  i {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-45%, -50%);
+    color: $primary;
+    svg {
+      display: block;
+    }
+  }
+}
+@each $name, $color in $theme-colors {
+  // Button Classes
+  .ia-btn--#{$name} {
+    background-color: $color;
+    @if $name == "white" or $name == "info" or $name == "warning" or $name == "light" {
+      color: $dark;
+    } @else{
+      color: $white;
+    }
+    @if $name == "info" {
+      border-color: rgba($primary, 0.05);
+    }
+    &:hover,
+    &:focus {
+      @if $name == "dark" {
+        background-color: $info;
+        color: $dark;
+      }@else if $name == "primary" {
+        background-color: $secondary;
+        color: $white;
+      }@else{
+        background-color: $dark;
+        color: $white;
+
+      }
+    }
+  }
+
+  .ia-btn--outline-#{$name} {
+    border-color: $color;
+    background: none;
+    color: $color;
+    position: relative;
+    &:before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      z-index: 1;
+      border: 2px solid $color;
+      transition: opacity 0.3s;
+      border-radius:  $button-border-radius - .1;
+    }
+    &:hover,
+    &:focus {
+      background-color: rgba($color, 0.1);
+      color: $color;
+      &:before {
+        opacity: 1;
+      }
+    }
+  }
+
+
+}
+
+
+.ia-btn--white {
+  i.icon-logo-icon {
+    color: $primary;
+    margin-right: .5rem;
+  }
+  &:hover,
+  &:focus {
+    i.icon-logo-icon {
+      color: $primary;
+    }
+  }
+}
+.ia-btn {
+  @include button($button-padding-md, $button-font-size-md);
+}
+.ia-btn--sm {
+  @include button($button-padding-sm, $button-font-size-sm);
+}
+.ia-btn--md {
+  @include button($button-padding-md, $button-font-size-md);
+}
+.ia-btn--lg {
+  @include button($button-padding-lg, $button-font-size-lg);
+}
+@media (max-width: 1024px) {
+  .ia-btn--sm {
+    @include button($button-padding-sm, 1.2rem);
+  }
+  .ia-btn--md {
+    @include button(1rem 2rem, 1.6rem);
+  }
+  .ia-btn {
+    @include button(1rem 2rem, 1.6rem);
+  }
+  .ia-btn--lg {
+    @include button(1.6rem 2rem, 1.6rem);
+  }
+}
+
+@media (max-width: 812px) {
+
+  .ia-btn--md {
+    @include button(1rem 2rem, 1.4rem);
+  }
+  .ia-btn {
+    @include button(1rem 2rem, 1.4rem);
+  }
+  .ia-btn--lg {
+    @include button(1.6rem 2rem, 1.6rem);
+  }
+  .ia-btn--sm {
+    @include button(0.4rem 1.2rem, 1.4rem);
+  }
+  .play-btn {
+    width: 4rem;
+    height: 4rem;
+    box-shadow: 0 2.8px 2.8px 0 rgba(0, 0, 0, 0.25);
+    i {
+      width: 13px;
+    }
+  }
+}
+
+
+
+.ia-btn__media {
+  border: 1px solid rgba($white, 0.05);
+  border-radius: 5rem;
+  color: $white;
+  font-size: 1.4rem;
+  background: rgba($primary, 0.5);
+  position: relative;
+  padding: 1.6rem 5.2rem 1.6rem 1.6rem;
+  em {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 3.2rem;
+    background: $primary;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translate(0, -50%);
+    i {
+      font-size: 1.2rem;
+      color: $white;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+  }
+  &:hover,
+  &:focus {
+    background: $secondary;
+  }
+}

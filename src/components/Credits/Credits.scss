@@ -1,0 +1,31 @@
+@use "../../assets/styles/utils/variables" as *;
+.credits {
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: $vyg;
+  height: 100%;
+  padding-top: 7rem;
+  box-sizing: border-box;
+  .ia-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    overflow-y: auto;
+    text-align: center;
+  }
+  .credits__in {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .close {
+    position: absolute;
+    top: 2.4rem;
+    right: 2.4rem;
+
+  }
+}

@@ -1,0 +1,39 @@
+@use "./variables" as *;
+$opacity: (
+  '5' : 0.05,
+  '25': 0.25,
+  '50' : 0.5,
+  '75' : 0.75
+);
+
+
+@each $name, $color in $theme-colors {
+  // Background Classes
+  .bg--#{$name} {
+    --bg-opacity: 1;
+    background-color: rgba($color, var(--bg-opacity)) !important;
+  }
+  // Text Color Classes
+  .text--#{$name} {
+    --text-opacity: 1;
+    color: rgba($color, var(--text-opacity)) !important;
+  }
+  // Border Color Classes
+  .border--#{$name} {
+    --border-opacity: 1;
+    border-color: rgba($color, var(--border-opacity)) !important;
+  }
+}
+
+@each $name, $value in $opacity {
+  .border-opacity-#{$name} {
+    --border-opacity: #{$value};
+  }
+  .bg-opacity-#{$name} {
+    --bg-opacity: #{$value};
+  }
+
+  .text-opacity-#{$name} {
+    --text-opacity: #{$value};
+  }
+}

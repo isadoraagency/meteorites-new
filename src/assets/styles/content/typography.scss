@@ -1,0 +1,173 @@
+@use "../utils/variables" as *;
+code {
+  font-family: "Fira Code", "Source Code Pro", "Consolas", "Courier New", monospace;
+  font-size: 16px;
+  line-height: 1.5;
+  background: $light !important;
+}
+//font-weight
+.text-extra-bold {font-weight: 1000 !important;}
+.text-bold {font-weight: 800 !important;}
+.text-semi-bold {font-weight: 600 !important;}
+.text-medium {font-weight: 500 !important;}
+.text-regular {font-weight: 400 !important;}
+.text-light {font-weight: 300 !important;}
+.text-thin {font-weight: 100 !important;}
+
+h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6 {
+  font-weight: 500;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+  font-family: $font-heading;
+}
+
+@each $name, $size in $head-sizes {
+   h#{$name},
+   .h#{$name}{
+     font-size: #{$size};
+  }
+}
+
+h1,.h1 {
+  line-height: 1.1;
+}
+.fz-1,.fz-2,.fz-3,.fz-4,.fz-4,.fz-6 {
+  line-height: 1.2;
+}
+.fz-1 {
+  font-size: $fz1;
+}
+.fz-2 {font-size: $fz2;}
+.fz-3 {font-size: $fz3;}
+.fz-4 {font-size: $fz4;}
+.fz-5 {font-size: $fz5;}
+.fz-6 {font-size: $fz6;}
+
+p,.p1,.p2,.p3,.p4 {
+  margin-bottom: $spacing-lg;
+  line-height: 1.5;
+}
+p,
+.p1, {
+  font-size: $p;
+}
+.p2 {
+  font-size: $p2;
+}
+.p3 {
+  font-size: $p3;
+}
+.p4 {
+  font-size: $p4;
+}
+.text-title {
+  font-family: $font-heading !important;
+}
+.text-p {
+  font-family: $font-base !important;
+}
+.text-sub {
+  font-family: $font-sub !important;
+}
+.text-upper {text-transform: uppercase;}
+.text-lower {text-transform: lowercase;}
+
+ul,ol {
+  margin: 0 0 3rem 2.5rem;
+  li {
+    margin-bottom: 1.5rem;
+    font-size: $p2;
+    line-height: 1.5;
+  }
+}
+
+ul {
+  ul {
+    list-style-type: disc;
+  }
+}
+.sub-title {
+  font-size: 1.8rem;
+  padding-left: 2.8rem;
+  margin-bottom: 3rem;
+  position: relative;
+  color: $white;
+  &:after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    border-radius: 50%;
+    background: $warning;
+  }
+
+}
+.content-entry {
+  p:last-child {
+    margin-bottom: 4rem;
+  }
+  &.text--white {
+    a {
+      color: $white;
+      border-color: $white;
+      &:hover,
+      &:focus {
+        border-color: transparent;
+      }
+    }
+  }
+  &.text--dark {
+    a {
+      color: $dark;
+      border-color: $dark;
+      &:hover,
+      &:focus {
+        border-color: transparent;
+      }
+    }
+  }
+}
+.title-indent {
+  text-indent: 9rem;
+}
+.tag {
+  padding: 8px;
+  color: $white;
+  font-size: 1.4rem;
+  line-height: 1;
+  background: rgba($white, 0.05);
+  border-radius: .5rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 1200px) {
+
+}
+
+@media (max-width: 767px) {
+  h1,.h1,h2,.h2 {
+    font-size: 4.4rem;
+  }
+  h3,.h3 {
+    font-size: 3rem;
+  }
+
+  h4,.h4,
+  h5,.h5 {
+    font-size: 2.2rem;
+  }
+
+
+
+
+
+  .fz-5 {
+    font-size: 1.8rem;
+  }
+
+
+}

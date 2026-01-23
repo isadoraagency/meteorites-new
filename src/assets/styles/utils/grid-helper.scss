@@ -1,0 +1,95 @@
+@use "../mixins/mixin" as *;
+
+@use "./variables" as *;
+
+.ia-gutter-xs-10 {
+  --grid-gutter-width: 10px;
+}
+.ia-gutter-xs-20 {
+  --grid-gutter-width: 20px;
+}
+.ia-gutter-xs-30 {
+  --grid-gutter-width: 30px;
+}
+.ia-gutter-xs-40 {
+  --grid-gutter-width: 40px;
+}
+.ia-gutter-xs-50 {
+  --grid-gutter-width: 50px;
+}
+.ia-gutter-sm-10 {
+  @include respond-to(sm) {
+    --grid-gutter-width: 10px;
+  }
+}
+.ia-gutter-sm-20 {
+  @include respond-to(sm) {
+    --grid-gutter-width: 20px;
+  }
+}
+.ia-gutter-sm-30 {
+  @include respond-to(sm) {
+    --grid-gutter-width: 30px;
+  }
+}
+.ia-gutter-sm-40 {
+  @include respond-to(sm) {
+    --grid-gutter-width: 40px;
+  }
+}
+.ia-gutter-sm-50 {
+  @include respond-to(sm) {
+    --grid-gutter-width: 50px;
+  }
+}
+.ia-gutter-md-10 {
+  @include respond-to(md) {
+    --grid-gutter-width: 10px;
+  }
+}
+.ia-gutter-md-20 {
+  @include respond-to(md) {
+    --grid-gutter-width: 20px;
+  }
+}
+.ia-gutter-md-30 {
+  @include respond-to(md) {
+    --grid-gutter-width: 30px;
+  }
+}
+.ia-gutter-md-40 {
+  @include respond-to(md) {
+    --grid-gutter-width: 40px;
+  }
+}
+.ia-gutter-md-50 {
+  @include respond-to(md) {
+    --grid-gutter-width: 50px;
+  }
+}
+.ia-gutter-lg-10 {
+  @include respond-to(lg) {
+    --grid-gutter-width: 10px;
+  }
+}
+
+.ia-gutter-lg-20 {
+  @include respond-to(lg) {
+    --grid-gutter-width: 20px;
+  }
+}
+.ia-gutter-lg-30 {
+  @include respond-to(lg) {
+    --grid-gutter-width: 30px;
+  }
+}
+.ia-gutter-lg-40 {
+  @include respond-to(lg) {
+    --grid-gutter-width: 40px;
+  }
+}
+.ia-gutter-lg-50 {
+  @include respond-to(lg) {
+    --grid-gutter-width: 50px;
+  }
+}

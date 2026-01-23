@@ -1,0 +1,40 @@
+@use "./variables" as *;
+
+.border-example {
+  display: flex;
+  margin-bottom: 1rem;
+  span {
+    height: 8rem;
+    width: 8rem;
+    margin-right: 1rem;
+    background: $light;
+  }
+}
+.border-0 {
+  border: none !important;
+}
+.border {
+  --border-opacity: 1;
+  border: $border-width solid rgba($info, var(--border-opacity));
+}
+.border-top {
+  border-top: $border-width solid rgba($info, var(--border-opacity));
+}
+.border-bottom {
+  border-bottom: $border-width solid rgba($info, var(--border-opacity));
+}
+.border-left {
+  border-left: $border-width solid rgba($info, var(--border-opacity));
+}
+.border-right {
+  border-right: $border-width solid rgba($info, var(--border-opacity));
+}
+.rounded {
+  border-radius: $border-radius;
+}
+.rounded--lg {
+  border-radius: $border-radius-lg;
+}
+.rounded--xl {
+  border-radius: $border-radius-xl;
+}

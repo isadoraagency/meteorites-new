@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Iron",
+    "description": "Most iron meteorites are thought to be the cores of asteroids that melted early in their history. They consist mainly of iron-nickel metal with small amounts of sulphide and carbide minerals.",
+    "image": "images/iron.webp",
+    "type" : ""
+  },
+  {
+    "id": 2,
+    "name": "Stony-Iron",
+    "description": "Stony-iron meteorites consist of almost equal parts iron-nickel metal and silicate minerals including precious and semi-precious gemstones. They are considered some of the most beautiful meteorites..",
+    "image": "images/pallasites.webp",
+    "type" : "Pallasites"
+  },
+  {
+    "id": 3,
+    "name": "Stony-Iron",
+    "description": "Mesosiderite meteorites are rocks composed of broken fragments of minerals or rock cemented together by a finer material. They contain a mix of igneous (solidified) silicate and metal clasts (rocks made of pieces of older rocks).",
+    "image": "images/mesosiderites.webp",
+    "type" : "Mesosiderites"
+  },
+  {
+    "id": 4,
+    "name": "Stony",
+    "description": "At over 4.5 billion years old, chondrites are some of the most primitive and pristine rocks in the solar system and have never been melted.",
+    "image": "images/chondrites.webp",
+    "type": "Chondrites"
+  },
+  {
+    "id": 5,
+    "name": "Stony",
+    "description": "Achondrites include meteorites from asteroids, Mars and the Moon. They are igneous. When magma cools and crystallises, it creates a concentric layered structure. This process is known as igneous differentiation.",
+    "image": "images/achondrites.webp",
+    "type" : "Achondrites"
+
+  }
+]

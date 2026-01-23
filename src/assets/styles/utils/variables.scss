@@ -1,0 +1,104 @@
+$grid-columns: 12;
+$container-max-width: 1380px;
+
+//breakpoint
+$breakpoint-xs: 480px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 1024px;
+$breakpoint-lg: 1200px;
+
+//font family
+$font-base: 'Space Grotesk', sans-serif;
+$font-heading: 'Chakra Petch', sans-serif;
+$font-sub: Arial, sans-serif;
+
+//spacing
+$spacing: 1rem;
+$spacing-xs: $spacing*0.5;
+$spacing-sm: $spacing*0.75;
+$spacing-md: $spacing*2;
+$spacing-lg: $spacing*3;
+$spacing-xl: $spacing*4;
+
+//buttons
+$button-padding-sm: 0.4rem 1.2rem;
+$button-padding-md: 1rem 3.2rem;
+$button-padding-lg: 1.4rem 3.4rem;
+
+$button-font-size-sm: 1.6rem;
+$button-font-size-md: 2.4rem;
+$button-font-size-lg: 2.6rem;
+
+$button-border-radius: 3rem;
+
+// border & border radius
+$border-radius: 1rem;
+$border-radius-lg: 2rem;
+$border-radius-xl: 3rem;
+$border-width: 1px;
+
+//font size
+$h1: 8rem;
+$h2: 6.4rem;
+$h3: 4.8rem;
+$h4: 4.4rem;
+$h5: 4rem; //Subhead Weave L
+$h6: 2.4rem; //Subhead Weave M
+$head-sizes: (
+  1: $h1,
+  2: $h2,
+  3: $h3,
+  4: $h4,
+  5: $h5,
+  6: $h6
+);
+
+$fz1: 3rem;
+$fz2: 3.8rem;
+$fz3: 3.4rem;
+$fz4: 2.4rem;
+$fz5: 2rem;
+$fz6: 1.8rem;
+
+$p: 1.6rem;  //Body L
+$p2: 1.4rem; //Body M
+$p3: 1.2rem; //Body S
+$p4: 1.2rem;
+
+//colors
+$primary: #282087; //primary
+$secondary: #6D65C4; //secondary
+$danger: #DB3B0F; //
+$dark: #282541; //inverted
+$warning: #FDFF8D; //Yellow
+$light: #f5f5f5;
+$success: #28a745;
+$info: #C8C6FF; //primary inverted
+
+//natural colors
+$white: #fff;
+$black: #000;
+
+
+$theme-colors: (
+  "primary":    $primary,
+  "secondary":  $secondary,
+  "success":    $success,
+  "info":       $info,
+  "warning":    $warning,
+  "danger":     $danger,
+  "light":      $light,
+  "dark":       $dark,
+  "white":      $white
+);
+
+// SCROLLBAR WIDTH
+$sbWidth: var(--scroll-width);
+
+$dbg: linear-gradient(180deg, #000D84 0%, #4F40FF 118.36%);
+$dbgi: linear-gradient(180deg, #4F40FF 0%, #000745 118.36%);
+
+$svg: linear-gradient(180deg, #908EFF -13.28%, #E1D7FF 35.94%);
+$ivg: linear-gradient(0deg, #6E6BFF -13.75%, #E1D7FF 126.25%);
+$ivgi: linear-gradient(180deg, #6E6BFF 0%, #E1D7FF 100%);
+$vyg: linear-gradient(180deg, #A398FF 0%, #DFD5FF 49%, #FDFF8D 100%);

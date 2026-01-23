@@ -1,0 +1,46 @@
+@use "../../assets/styles/utils/variables" as *;
+.sources-wrap {
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: $vyg;
+  height: 100%;
+  padding-top: 7rem;
+  box-sizing: border-box;
+  .ia-container {
+    position: relative;
+
+  }
+  .close {
+    position: absolute;
+    top: 2.4rem;
+    right: 2.4rem;
+
+  }
+}
+.sources-container {
+  max-width: 652px;
+  position: relative;
+  overflow-y: auto;
+  &__in {
+    border-radius: 4.8rem;
+    border: 1px solid rgba(154, 154, 154, 0.50);
+    background: radial-gradient(185.7% 115.11% at 92.83% 8.76%, rgba(249, 249, 249, 0.38) 0%, rgba(105, 105, 105, 0.18) 100%);
+    backdrop-filter: blur(15px);
+    padding: 4.8rem 6.5rem;
+    box-sizing: border-box;
+  }
+  &__bgs {
+    position: absolute;
+    left: 33%;
+    top: 50%;
+    width: 70%;
+    transform: translate(0, -50%);
+    video {
+      width: 100%;
+      height: auto;
+      border-radius: 99rem;
+    }
+  }
+}

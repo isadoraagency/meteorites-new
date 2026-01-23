@@ -1,0 +1,86 @@
+[
+  {
+    "title": "Nakhla",
+    "slug" : "mars-rock-nakhla",
+    "about": "<p>This specimen may look ordinary, but it has extraordinary origins. It is a particularly large Martian meteorite - one of less than 70 known. About 11 million years ago, a large asteroid or comet impact on Mars was powerful enough to throw material into space. Some of this material eventually landed on Earth as meteorites.</p> <p>We know it is from Mars as we can compare its chemistry to information collected by space probes that have been there. This one was actually seen falling to Earth in Egypt in 1911.</p> <p>You can see the melted black fusion crust on the surface, which formed as it travelled through the Earth's atmosphere. Martian meteorites are extremely valuable to science for what they can reveal about the mysterious red planet. The clay minerals in this meteorite prove that water once existed on Mars - and water is one of the things needed for a planet to sustain life.</p>",
+    "short": "The <strong>Nakhla meteorite</strong> is considered a cumulate rock, formed by the accumulation of augite and olivine crystals in excess of their proportions in the parent magma.",
+    "image": "/images/mars-rock-nakhla.png",
+    "shadow": "/images/mars-rock-nakhla-shadow.svg",
+    "video": "/videos/mars-rock-nakhla.mp4",
+    "old": "<strong>1.3</strong> billion years old",
+    "fallDate": "June 28, 1911",
+    "fallPlace": "Abu Hommos, Egypt",
+    "composition": ["Carbon-13", "Aspartic acid", "Glutamic acid", "γ-aminobutyric acid", "Glycine", "Alanine"],
+    "type": "Achondrite",
+    "class": "Martian meteorite",
+    "observedFall": true,
+    "videoFall" : {
+      "description" : "This video is of the Winchcombe fireball, captured by Ben Stanley of AllSky7, and organisation which is part of the UK Fireball Alliance.",
+      "source" : "Natural History Museum",
+      "src" : "/videos/winchcombe-falling.mp4"
+    },
+    "foundDate": "1911-06-28"
+  },
+  {
+    "title": "The Imilac",
+    "slug" : "the-imilac",
+    "about": "<p>This extraterrestrial piece is part of an ancient pallasite meteorite. It is a slice from one of the world's largest specimens of its kind.</p><p>It's thought to have been part of a much larger meteor that weighed up to 1,000 kilogrammes and exploded over the Atacama Desert in northern Chile, possibly in the fourteenth century.</p>",
+    "short": "<p><strong>Olivine</strong><br/>Due to weathering, intact olivine grains are present only on large specimens</p>",
+    "image": "/images/imilac.png",
+    "shadow": "/images/imilac-shadow.svg",
+    "video": "/videos/imilac.mp4",
+    "old": "<strong>7</strong>Billion years old",
+    "fallDate": "Possibly in the 14th Century",
+    "fallPlace": "Atacama Desert, Chile",
+    "composition": ["Glycine", "Nickel", "Gallium", "Germanium", "Iridium"],
+    "type": "Stony-iron",
+    "class": "Pallasite",
+    "observedFall": false,
+    "videoFall" : {},
+    "foundDate": "1822-01-01"
+  },
+  {
+    "title": "The Winchcombe",
+    "slug" : "the-winchcombe",
+    "about": "<p>The Winchcombe meteorite was the first UK meteorite fall for thirty years and was the first ever Carbonaceous Chondrite to be found in the UK.  In all, just over 600 grams of meteorite material fell on Winchcombe and nearby Woodmancote.</p>  <p>Nearly all of the landowners who found pieces have donated their finds to science.  The main mass fell on the Wilcock family’s driveway and they have donated over 300 grams to the Natural History Museum in London. It will be kept there and for decades to come it will be made available to scientific institutions from all over the world for research purposes.</p>",
+    "short": "The <strong>Winchcombe meteorite</strong> provides further evidence that volatile-rich carbonaceous asteroids played an important role in the origin of Earth’s water.",
+    "image": "/images/winchcombe.png",
+    "shadow": "/images/winchcombe-shadow.svg",
+    "video": "/videos/winchcombe.mp4",
+    "old": "<strong>7</strong> billion years old",
+    "fallDate": "February 28, 2021",
+    "fallPlace": "Winchcombe, Gloucestershire, United Kingdom",
+    "composition": ["Phyllosilicates and/or Fe-sulfides", "Tochilinite-cronstedtite intergrowths (TCIs)", "Carbonates (mainly calcite, although dolomite was also observed)", "Olivine", "Magnetite"],
+    "type": "Chondrite",
+    "class": "Carbonaceous chondrite",
+    "observedFall": true,
+    "videoFall" : {
+      "description" : "This video is of the Winchcombe fireball, captured by Ben Stanley of AllSky7, and organisation which is part of the UK Fireball Alliance.",
+      "source" : "Natural History Museum",
+      "src" : "/videos/winchcombe-falling.mp4"
+    },
+    "foundDate": "2021-02-28"
+  },
+  {
+    "title": "Murchison",
+    "slug" : "murchison",
+    "about": "<p>The Murchison meteorite is a meteorite that fell in Australia in 1969 near Murchison, Victoria. It belongs to the carbonaceous chondrite class, a group of meteorites rich in organic compounds. Due to its mass (over 100 kg or 220 lb) and the fact that it was an observed fall, the Murchison meteorite is one of the most studied of all meteorites.</p><p>In January 2020, cosmochemists reported that the oldest material found on Earth to date are the silicon carbide particles from the Murchison meteorite, which have been determined to be 7 billion years old, about 2.5 billion years older than the 4.54-billion-year age of the Earth and the Solar System.[a] The published study noted that dust lifetime estimates mainly rely on sophisticated theoretical models. These models, however, focus on the more common small dust grains and are based on assumptions with large uncertainties.[3]</p>",
+    "short": "<strong>Presolar Nanodiamonds</strong> Nanodiamonds are a type of \"presolar\" grain, meaning they formed in the outflows or ejecta of stars prior to the formation of our solar system.",
+    "image": "/images/murchison.png",
+    "shadow": "/images/murchison-shadow.svg",
+    "video": "/videos/murchison.mp4",
+    "old": "<strong>7</strong> billion years old",
+    "fallDate": "September 28, 1969",
+    "fallPlace": "Murchison, Victoria, Australia",
+    "composition": ["Iron", "Asteroidal water", "Amino Acids", "Aliphatic Hydrocarbons", "Aromatic Hydrocarbons", "Fullerenes", "Carboxylic Acids", "Hydrocarboxylic Acids", "Purines and Pyrimidines", "Alcohols", "Phosphonic Acids", "Phosphonic Acids"],
+    "type": "Chondrite",
+    "class": "Carbonaceous chondrite",
+    "observedFall": true,
+    "videoFall" : {
+      "description" : "This video is of the Winchcombe fireball, captured by Ben Stanley of AllSky7, and organisation which is part of the UK Fireball Alliance.",
+      "source" : "Natural History Museum",
+      "src" : "/videos/winchcombe-falling.mp4"
+    },
+    "foundDate": "1969-09-28"
+  }
+]

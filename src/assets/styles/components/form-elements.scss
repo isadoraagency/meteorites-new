@@ -1,0 +1,103 @@
+@use "../utils/variables" as *;
+/* custom select*/
+div.fancy-select {
+  position: relative;
+  color: $dark;
+}
+div.fancy-select.disabled {
+  opacity: 0.5;
+}
+div.fancy-select div.trigger {
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  transition: all 240ms ease-out;
+  box-sizing: border-box;
+  box-shadow: none;
+  font-size: 2rem;
+  line-height: 5rem;
+  height: 5rem;
+  font-weight: 400;
+  border-radius: 1rem;
+  border: 1px solid rgba($primary, 0.5);
+  background: #ECEFFF;
+  padding: 0 3rem 0 1.6rem;
+  max-width: 100%;
+  width: 100%;
+  color: $dark;
+  outline: none;
+  &.selected {
+    color: $dark;
+  }
+}
+div.fancy-select div.trigger:after {
+  content: '';
+  position: absolute;
+  right: 2rem;
+  margin-top: -3px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border: 7px solid transparent;
+  border-top: 7px solid $dark;
+}
+div.fancy-select div.trigger.open {
+  background: #fff;
+}
+div.fancy-select ul.options {
+  list-style: none;
+  margin: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  visibility: hidden;
+  opacity: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 8;
+  max-height: 250px;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid rgba($primary, 0.5);
+  border-radius: 1rem;
+  border-top: none;
+  padding: 1rem 2.5rem 1rem 3rem;
+  min-width: 200px;
+  transition: opacity 300ms ease-out, top 300ms ease-out, visibility 300ms ease-out;
+}
+div.fancy-select ul.options.open {
+  visibility: visible;
+  top: 100%;
+  opacity: 1;
+  transition: opacity 300ms ease-out, top 300ms ease-out;
+}
+div.fancy-select ul.options li {
+  padding: 1rem 0;
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  color: $dark;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 150ms ease-out;
+  &:before {
+    display: none;
+  }
+}
+div.fancy-select ul.options li.selected {
+  font-weight: 600;
+  color: $primary;
+}
+div.fancy-select ul.options li.hover {
+  color: $black;
+}
+@media (max-width: 767px) {
+  div.fancy-select div.trigger {
+    height: 4rem;
+    line-height: 4rem;
+    font-size: 1.6rem;
+  }
+}

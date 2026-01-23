@@ -1,0 +1,26 @@
+@use "../utils/variables" as *;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  th, td {
+    padding: 1rem;
+    text-align: left;
+    font-size: $p;
+    border: 1px solid $dark; // Border for each cell
+  }
+
+  th {
+    border-bottom-width: 4px; // Thicker border for header row
+    background-color: $light;
+    font-weight: 600;
+  }
+
+  tr {
+    border-bottom: 1px solid $dark; // Border for each row
+  }
+
+  // Optional: Alternating row colors
+  tr:nth-child(even) {
+    background-color: $light;
+  }
+}

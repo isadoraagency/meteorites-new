@@ -1,0 +1,36 @@
+[
+  {
+    "title" : "Intro",
+    "description": "<h3 class='text-p p2 text-semi-bold'>Articles</h3><p>What is the difference between a meteoroid, a meteor, an asteroid and a comet? <br/><a class='ia-link' target='_blank' href='https://www.bbc.com/'>bbc.co.uk</a></p><p>What’s the Difference Between Asteroids, Comets and Meteors? We Asked a NASA Scientist: Episode 16 <br/><a class='ia-link' target='_blank' href='https://www.nasa.gov/'>nasa.gov</a></p><p>What’s the Difference Between Asteroids, Comets and Meteors? We Asked a NASA Scientist: Episode 16 <br/><a class='ia-link' target='_blank' href='https://www.unistellar.com/'>unistellar.com</a></p><h3 class='text-p p2 text-semi-bold'>Video</h3><p>What is the difference between a meteoroid, a meteor, an asteroid and a comet? <br/><a class='ia-link' target='_blank' href='https://www.youtube.com/c/encyclopaediabritannica'>Encyclopaedia Britannica YT</a></p>"
+
+  },
+  {
+    "title" : "Imilac Meteorite",
+    "description": "<h3 class='text-p p2 text-semi-bold'>Articles</h3><p>The Imilac meteorite: a gem as old as the solar system <br/><a class='ia-link' target='_blank' href='https://www.nhm.ac.uk/'>nhm.ac.uk</a></p>"
+
+  },
+  {
+    "title" : "Mars rock Nakhla Meteorite",
+    "description": "<h3 class='text-p p2 text-semi-bold'>Articles</h3><p>Nakhla meteorite <br/><a class='ia-link' target='_blank' href='https://en.wikipedia.org/wiki/Nakhla_meteorite'>wikipedia.org</a></p><p>The nakhlite meteorites: Augite-rich igneous rocks from Mars <br/> <a class='ia-link' target='_blank' href='https://www.lpi.usra.edu/science/staff/treiman/'>By Allan H. Treiman</a></p><h3 class='text-p p2 text-semi-bold'>Image</h3><p>Image reference for 3D by Mike Fitzpatrick <br/><a class='ia-link' target='_blank' href='https://www.flickr.com/photos/maleny_steve/25979483874/in/photolist-fvaQM3-fffaKF-FzHDrL-2aF96Kq-2aF96Qf-2aF96PJ-Z7GV1E-FzHDRy-2ny9ce4-2ny9g8d-2nybDZZ-2ny9cf6-B3PPx3-2cfsX5T-dzymjN'>flickr.com</a></p>"
+
+  },
+  {
+    "title" : "The Winchcombe Meteorite",
+    "description": "<h3 class='text-p p2 text-semi-bold'>Articles</h3><p>The Winchcombe meteorite, a unique and pristine witness from the outer solar system <br/><a class='ia-link' target='_blank' href='https://www.science.org/doi/10.1126/sciadv.abq3925'>science.org</a></p><p>The Winchcombe meteorite, a unique and pristine witness from the outer solar system <br/> <a class='ia-link' target='_blank' href='https://thewinchcombemeteorite.co.uk'>thewinchcombemeteorite.co.uk</a></p><p>The story of the Winchcombe meteorite <br/><a class='ia-link' target='_blank' href='https://en.wikipedia.org/wiki/Winchcombe_meteorite'>wikipedia.org</a></p>"
+
+  },
+  {
+    "title" : "Murchison Meteorite",
+    "description": "<h3 class='text-p p2 text-semi-bold'>Articles</h3><p>Nanodiamonds in meteorites: properties and astrophysical context <br/><a class='ia-link' target='_blank' href='https://www.researchgate.net/publication/23913052_Evidence_for_Microfossils_in_the_Murchison_Meteorite'>researchgate.net</a></p><p>Murchison meteorite <br/><a class='ia-link' target='_blank' href='https://en.wikipedia.org/wiki/Murchison_meteorite'>wikipedia.org</a></p>"
+  },
+  {
+    "title" : "Are we made of stardust?",
+    "description": "<h3 class='text-p p2 text-semi-bold'>Articles</h3><p>Are we made of stardust? <br/><a class='ia-link' target='_blank' href='https://www.nhm.ac.uk/discover/are-we-really-made-of-stardust.html'>nhm.ac.uk</a></p>"
+
+  },
+  {
+    "title" : "Types of meteorites",
+    "description": "<h3 class='text-p p2 text-semi-bold'>Articles</h3><p>Types of meteorites <br/><a class='ia-link' target='_blank' href='https://www.nhm.ac.uk/discover/types-of-meteorites.html'>nhm.ac.uk</a></p>"
+
+  }
+]

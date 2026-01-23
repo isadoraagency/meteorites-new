@@ -1,0 +1,80 @@
+@use "../../assets/styles/utils/variables" as *;
+.accordion {
+  border-top: 1px solid #8982D9;
+  &:last-child {
+    border-bottom: 1px solid #8982D9;
+  }
+  &-header {
+    position: relative;
+    border: none;
+    padding: 2.5em 5rem 2.5rem 0;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    margin-bottom: 0;
+    cursor: pointer;
+    i {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translate(0, -50%);
+      border-radius: 50%;
+      width: 3.2rem;
+      height: 3.2rem;
+      background: $primary;
+      &:after,
+      &:before {
+        content: '';
+        width: 2rem;
+        height: 2px;
+        background: $info;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -1rem;
+        margin-top: -1px;
+      }
+      &:after {
+        transform: rotate(-90deg);
+      }
+    }
+    &.open {
+      i {
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+  &-content {
+    h3 {
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: $p2;
+      font-weight: 300;
+      margin-bottom: 2rem;
+      padding: 0 2.4rem;
+    }
+    .ia-btn {
+      margin-top: .8rem;
+      &[target='_blank'] {
+        &:after {
+          content: url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.79922 4.39995C7.46785 4.39995 7.19922 4.13132 7.19922 3.79995C7.19922 3.46858 7.46785 3.19995 7.79922 3.19995H12.1992C12.5306 3.19995 12.7992 3.46858 12.7992 3.79995V8.19995C12.7992 8.53132 12.5306 8.79995 12.1992 8.79995C11.8678 8.79995 11.5992 8.53132 11.5992 8.19995V5.24848L4.22348 12.6242C3.98917 12.8585 3.60927 12.8585 3.37495 12.6242C3.14064 12.3899 3.14064 12.01 3.37495 11.7757L10.7507 4.39995H7.79922Z" fill="%23282087"/></svg>');
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+}
+@media (max-width: 500px) {
+  .accordion-content p {
+    padding-right: 2.4rem;
+    font-weight: 400;
+  }
+  .sources-container__bgs {
+    display: none;
+  }
+}

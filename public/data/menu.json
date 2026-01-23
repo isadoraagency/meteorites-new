@@ -1,0 +1,34 @@
+[
+  {
+    "large": [
+      {
+        "title": "Time Capsules"
+
+      },
+      {
+        "title": "Types of Meteorites"
+
+      },
+      {
+        "title": "Made of Stardust"
+
+      }
+    ],
+    "small" : [
+      {
+        "title": "Sources",
+        "action": "openSources"
+
+      },
+      {
+        "title": "Credits",
+        "action": "openCredits"
+
+      },
+      {
+        "title": "About",
+        "action": "openAbout"
+      }
+    ]
+  }
+]

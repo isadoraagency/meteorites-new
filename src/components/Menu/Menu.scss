@@ -1,0 +1,95 @@
+@use "../../assets/styles/utils/variables" as *;
+.main-menu-overlay {
+  position: fixed;
+  bottom: 4rem;
+  left: 4rem;
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 50vw;
+  overflow: hidden;
+  z-index: 99;
+  background: $vyg;
+}
+.menu-button {
+  position: fixed;
+  left: 4rem;
+  bottom: 4rem;
+  z-index: 101;
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 50%;
+  background: $vyg;
+  cursor: pointer;
+  overflow: hidden;
+  svg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: all .3s;
+    &:first-child {
+      width: 3.2rem;
+    }
+    &:last-child {
+      scale: 0;
+    }
+  }
+  &--open {
+    svg:last-child {
+      scale: 1;
+    }
+    svg:first-child {
+      scale: 0;
+    }
+  }
+}
+.main-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  transform: translate(50%, 50%);
+  &__in {
+    svg {
+      margin-bottom: 3rem;
+    }
+  }
+  .ia-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  &__top {
+    list-style-type: none;
+    margin-left: 0;
+    li {
+      line-height: 1.5;
+      margin-bottom: 2.5rem;
+      button {
+        font-weight: 100;
+        color: $primary;
+      }
+    }
+  }
+  &__bottom {
+    list-style-type: none;
+    display: flex;
+    gap: 2.4rem;
+    justify-content: center;
+    color: $primary;
+    margin-bottom: 6.4rem;
+    margin-left: 0;
+    button {
+      color: $primary;
+    }
+  }
+  &__side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.6rem;
+  }
+}
+
