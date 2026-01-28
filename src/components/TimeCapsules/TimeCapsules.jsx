@@ -97,18 +97,18 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
           .to(timeCapsulesDesc2.current, { y: '-50%', opacity: 1,  ease: 'power3.out', onComplete: ()=>{
               if (index + 1 < items.length) {
 
+                setTimeout(() => {
 
                   const nextElement = document.getElementById(items[index+1].slug);
                   if (nextElement) {
-                    console.log(' next element found');
+
                     gsap.to(window, {
                       duration: 0.5,
                       scrollTo: { y: '#' + items[index+1].slug, autoKill: false },
                       ease: 'power2.inOut'
                     });
-                  } else {
-
                   }
+                }, 50)
 
               }else{
 
