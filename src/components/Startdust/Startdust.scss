@@ -1,0 +1,242 @@
+@use "../../assets/styles/utils/variables" as *;
+.stardust-page {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: #110088;
+  &:after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: $black;
+    opacity: 0.2;
+  }
+  &__popup {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    width: 235px;
+    border-radius: 16px;
+    border: 1px solid var(--Border-Glass, rgba(154, 154, 154, 0.50));
+    background:  lightgray -85.368px 3.732px / 172.964% 53.563% no-repeat, radial-gradient(185.7% 115.11% at 92.83% 8.76%, rgba(249, 249, 249, 0.10) 0%, rgba(105, 105, 105, 0.04) 100%);
+    box-shadow: -30px 24px 34px 0 rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(15px);
+    z-index: 99;
+    box-sizing: border-box;
+    padding: 5.3rem 2rem 2rem;
+    text-align: center;
+    &-close {
+      position: absolute;
+      right: 0.9rem;
+      top: 0.7rem;
+    }
+  }
+  &.scrolled {
+    .spline-canvas {
+      top: 0;
+    }
+    .spline-nav {
+      pointer-events: none;
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+    .stardust-page__back {
+      pointer-events: auto;
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+  &.active {
+
+    .spline-nav {
+      pointer-events: auto;
+    }
+    &:after {
+      display: none;
+    }
+    .spline-canvas {
+      &:after {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  }
+  .ia-container {
+    position: relative;
+    z-index: 10;
+    //pointer-events: none;
+  }
+  &__text {
+    position: relative;
+    z-index: 5;
+    padding-top: 17rem;
+    text-align: center;
+    &-in {
+      max-width: 640px;
+      margin: 0 auto;
+
+    }
+    &-1 {
+      max-height: 400px;
+      transition: all .3s;
+    }
+  }
+  &__wrap {
+    position: relative;
+  }
+  &__back {
+    position: absolute;
+    left: 50%;
+    bottom: 2.6rem;
+    z-index: 21;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 50%);
+    transition: opacity .3s;
+    color: $info;
+    background: linear-gradient(103deg, #000D84 40.59%, #2726C1 67.85%, #4F40FF 93.47%) padding-box, conic-gradient(from var(--angle), #A398FF 43.15%, #2827C2 70.17%, #4F40FF 80.66%, #A398FF 100%) border-box;
+  }
+}
+.scroll-explore {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  svg {
+    display: block;
+    margin: 0 auto 1rem;
+  }
+
+}
+.spline-canvas__tooltip {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+  width: 211px;
+  border-radius: 16px;
+  border: 1px solid rgba(154, 154, 154, 0.50);
+  background: rgba($primary, 0.3);
+  box-shadow: -30px 24px 34px 0 rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(15px);
+  z-index: 99;
+  box-sizing: border-box;
+  padding: 2rem;
+  text-align: center;
+}
+.spline-canvas {
+  background: #110088;
+  position: absolute;
+  top: 100%;
+  z-index: 20;
+  height: 100vh;
+  width: 100vw;
+  transition: top 0.5s;
+  &:after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: $black;
+    opacity: 0.2;
+    visibility: visible;
+    transition: opacity .5s, visibility .5s;
+  }
+}
+.select-spline {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 4rem;
+  z-index: 99;
+  transition: transform 0.5s;
+  transform: translate(0, 10rem);
+  .ia-container {
+    position: relative;
+    > div {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+  }
+
+}
+.react-dropdown-select {
+  border: 1px solid $info !important;
+  border-radius: 3rem !important;
+  color: $info !important;
+  font-size: 1.6rem !important;
+  width: auto !important;
+  font-weight: 600 !important;
+  padding: .4rem 1.2rem .4rem 1.6rem !important;
+}
+.react-dropdown-select-dropdown {
+  width: 345px !important;
+  border-radius: 24px !important;
+  padding: 2.4rem !important;
+  border: 1px solid rgba(154, 154, 154, 0.50) !important;
+  background: 172.964% 94.017% no-repeat, radial-gradient(185.7% 115.11% at 92.83% 8.76%, rgba(249, 249, 249, 0.24) 0%, rgba(105, 105, 105, 0.11) 100%) !important;
+  box-shadow: -30px 24px 34px 0px rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(15px) !important;
+  max-height: 350px !important;
+}
+.react-dropdown-select-item {
+  padding: .5rem 0 .5rem 3.2rem !important;
+  line-height: 1.5 !important;
+  font-size: 1.6rem !important;
+  border: none !important;
+  color: $info !important;
+  position: relative;
+  &:hover{
+    background: none !important;
+  }
+  &[aria-label="Upload your own and share!"] {
+    &:before {
+      content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.49129 1.1989C9.77859 0.933701 10.2214 0.933701 10.5087 1.1989L13.7587 4.1989C14.0631 4.47985 14.0821 4.95434 13.8011 5.25871C13.5202 5.56308 13.0457 5.58206 12.7413 5.3011L10.75 3.46299V12.25C10.75 12.6642 10.4142 13 10 13C9.58579 13 9.25 12.6642 9.25 12.25V3.46299L7.25871 5.3011C6.95434 5.58206 6.47985 5.56308 6.1989 5.25871C5.91794 4.95434 5.93692 4.47985 6.24129 4.1989L9.49129 1.1989ZM1.75 13C2.16421 13 2.5 13.3358 2.5 13.75V16.25C2.5 16.9404 3.05964 17.5 3.75 17.5H16.25C16.9404 17.5 17.5 16.9404 17.5 16.25V13.75C17.5 13.3358 17.8358 13 18.25 13C18.6642 13 19 13.3358 19 13.75V16.25C19 17.7688 17.7688 19 16.25 19H3.75C2.23122 19 1 17.7688 1 16.25V13.75C1 13.3358 1.33579 13 1.75 13Z" fill="%23C8C6FF"/></svg>');
+      position: absolute;
+      height: 2rem;
+      width: 2rem;
+      left: 0;
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+  }
+}
+.spline-nav {
+  position: absolute;
+  left: 50%;
+  top: 4.8rem;
+  z-index: 21;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.5s, transform 0.5s;
+
+}
+.react-dropdown-select-item-selected {
+  color: $info !important;
+  background: none !important;
+
+  &:before {
+    content: url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7587 4.1989C13.0631 4.47985 13.0821 4.95435 12.8011 5.25871L6.8011 11.7587C6.66266 11.9087 6.46906 11.9958 6.26499 11.9999C6.06092 12.0039 5.864 11.9247 5.71967 11.7803L3.21967 9.28033C2.92678 8.98744 2.92678 8.51257 3.21967 8.21967C3.51256 7.92678 3.98744 7.92678 4.28033 8.21967L6.22836 10.1677L11.6989 4.24129C11.9798 3.93693 12.4543 3.91795 12.7587 4.1989Z" fill="%23C8C6FF"/></svg>');
+    position: absolute;
+    width: 1.6rem;
+    height: 1.6rem;
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+  }
+}
+.spline-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1.6rem;
+  .ia-btn {
+    background: linear-gradient(180deg, #110088 0%, #110088 100%)  padding-box, conic-gradient(from var(--angle), #A398FF 43.15%, #2827C2 70.17%, #4F40FF 80.66%, #A398FF 100%) border-box;
+    color: $info;
+    min-width: 80px;
+    &.active {
+      color: $primary;
+      background: $ivg padding-box, conic-gradient(from var(--angle), #A398FF 43.15%, #2827C2 70.17%, #4F40FF 80.66%, #A398FF 100%) border-box;
+    }
+  }
+
+}
