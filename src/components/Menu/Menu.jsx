@@ -1,6 +1,10 @@
 import { AnimatePresence, motion} from 'framer-motion'
 import './Menu.scss'
 
+import {gsap, ScrollToPlugin} from 'gsap/all';
+
+gsap.registerPlugin(ScrollToPlugin)
+
 import {useState} from "react";
 import Sources from "../Sources/Sources.jsx";
 import Credits from "../Credits/Credits.jsx";
@@ -9,21 +13,20 @@ import About from "../About/About.jsx";
 export default function Menu({ list }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false)
   const toggleMenu = () => setIsOpenMenu(v => !v)
-
   const [activeModal, setActiveModal] = useState('close');
 
   const handleMenuItemClick = (action) => {
-
     if (action !== 'close') {
       setActiveModal(action);
     }else{
       setActiveModal("close");
     }
-
-
-
-    alert(activeModal)
   };
+
+  const moveToItem = (e, el) => {
+    e.preventDefault();
+    gsap.to(window, {duration: 0, scrollTo: {y: el}});
+  }
 
   return (
     <div className="menu-container">
@@ -135,7 +138,12 @@ export default function Menu({ list }) {
                       <ul className="main-menu__top">
                         {list[0].large.map((item, i) => (
                           <li className="h5" key={`large-item-${i}`}>
-                            <button>{item.title}</button>
+                            <button onClick={(e)=> {
+                                  setIsOpenMenu(false)
+                                  moveToItem(e, '#'+item.action)
+                                }
+                              }
+                            >{item.title}</button>
                           </li>
                         ))}
                       </ul>

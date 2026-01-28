@@ -133,11 +133,13 @@ select, button {
   outline: none;
   -webkit-appearance: none;
 }
-butto,
+butto {
+  border: none;
+}
 button:focus,
 button:hover {
   outline: none;
-  border: none;
+
 
 }
 button {

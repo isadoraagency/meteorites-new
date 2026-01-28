@@ -2,16 +2,16 @@
   {
     "large": [
       {
-        "title": "Time Capsules"
-
+        "title": "Time Capsules",
+        "action": "mars-rock-nakhla"
       },
       {
-        "title": "Types of Meteorites"
-
+        "title": "Types of Meteorites",
+        "action": "Types"
       },
       {
-        "title": "Made of Stardust"
-
+        "title": "Made of Stardust",
+        "action": "Stardust"
       }
     ],
     "small" : [

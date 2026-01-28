@@ -2,11 +2,12 @@ import './TimeCapsules.scss';
 import DOMPurify from "dompurify";
 import {useState, useEffect, useRef} from "react";
 import gsap from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
+import {ScrollTrigger, ScrollToPlugin} from "gsap/all";
 import VideoModal from "../VideoModal/VideoModal.jsx";
+gsap.registerPlugin(ScrollToPlugin);
 
 gsap.registerPlugin(ScrollTrigger);
-export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, toggleNav, item, items}) {
+export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, toggleNav, item, items, handleActiveItem }) {
   const timeCapsules = useRef(null);
   const timeCapsulesContainer = useRef(null);
   const timeCapsulesBg = useRef(null);
@@ -28,6 +29,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      if(item){
       if(index == 0) {
         gsap.set(timeCapsulesBg.current, {scale: 1})
       }
@@ -47,21 +49,21 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             start: 'top bottom',
             end: 'top top',
             scrub: 1.3,
+            onEnter: () => {handleActiveItem(index); toggleNav(true) },
+            onEnterBack: () => {handleActiveItem(index); index == 0 && toggleNav(false)},
+            onLeaveBack: () => handleActiveItem(index - 1 >= 0 ? index - 1 : 0)
           }
         });
-
 
         tl.set(timeCapsules.current, { opacity: 1})
           if(index == 0) {
             tl.to(timeCapsulesBg.current, {
               scale: 3,
               duration: 0.1,
-              ease: 'power3.out',
-              onReverseComplete: ()=>{toggleNav(false)},
-              onComplete: () => {toggleNav(true)}
+              ease: 'power3.out'
             })
           }
-        tl.to(timeCapsulesContainer.current, {opacity: 1, })
+        tl.to(timeCapsulesContainer.current, {opacity: 1 })
 
 
         // gsap.set('.time-capsules-bg', {scale: 5})
@@ -73,6 +75,9 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             end: '+=600%',
             scrub: true,
             pin: true,
+            onEnter: () =>  toggleNav(true),
+            onLeaveBack: () =>  toggleNav(true),
+            onLeave: () =>  lastTimeCapsule && toggleNav(false)
           }
         });
 
@@ -89,8 +94,34 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
           .to(timeCapsulesSpec.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
           .to(timeCapsulesComp.current, { y: '-50%', opacity: 1,  ease: 'power3.out'}, '<')
           .to(timeCapsulesComp.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
-          .to(timeCapsulesDesc2.current, { y: '-50%', opacity: 1,  ease: 'power3.out', onComplete: ()=>{ lastTimeCapsule && toggleNav(false)}, onReverseComplete: ()=>{ toggleNav(true) }},"<")
+          .to(timeCapsulesDesc2.current, { y: '-50%', opacity: 1,  ease: 'power3.out', onComplete: ()=>{
+              if (index + 1 < items.length) {
+
+
+                  const nextElement = document.getElementById(items[index+1].slug);
+                  if (nextElement) {
+                    console.log(' next element found');
+                    gsap.to(window, {
+                      duration: 0.5,
+                      scrollTo: { y: '#' + items[index+1].slug, autoKill: false },
+                      ease: 'power2.inOut'
+                    });
+                  } else {
+
+                  }
+
+              }else{
+
+                gsap.to(window, {
+                  duration: 0.5,
+                  scrollTo: { y: '#Stardust', autoKill: false },
+                  ease: 'power2.inOut'
+                });
+              }
+
+            }},"<")
       }
+        }
      }, timeCapsules)
 
     return () => ctx.revert();
@@ -115,113 +146,119 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
   }
 
   return (
-    <>
-      {
-        item.videoFall && item.videoFall.src && (
-          <VideoModal isVideo={isVideo} video={item.videoFall.src} description={item.videoFall.description} source={item.videoFall.source} toggleVideo={toggleVideo} ></VideoModal>
-        )
-      }
 
 
-      <div className={`time-capsules ${index === 0 ? 'time-capsules-'+index : ''}`} ref={timeCapsules}>
-        {
-          index === 0 && <div className="time-capsules-bg" ref={timeCapsulesBg}></div>
-        }
-        <div className="ia-container" ref={timeCapsulesContainer}>
-          <div className="time-capsules__inner">
-            <div className="time-capsules-heading" ref={timeCapsulesHeading}>
-              <div className="time-capsules-title" ref={timeCapsulesTitle}>{item.title}</div>
-              <div className="time-capsules-meta" ref={timeCapsulesMeta}>
-                <div>
-                  <div className="p"><strong>Fall place: </strong></div>
-                  <div className='p'>{item.fallPlace}</div>
-                </div>
-                <div>
-                  <div className="p">
-                    <strong>Fall date: </strong>
+
+    item && (
+      <>
+        <div className={`time-capsules ${index === 0 ? 'time-capsules-'+index : ''}`}
+             ref={timeCapsules} id={item.slug}>
+          {
+            index === 0 && <div className="time-capsules-bg" ref={timeCapsulesBg}></div>
+          }
+          <div className="ia-container" ref={timeCapsulesContainer}>
+            <div className="time-capsules__inner">
+              <div className="time-capsules-heading" ref={timeCapsulesHeading}>
+                <div className="time-capsules-title" ref={timeCapsulesTitle}>{item.title}</div>
+                <div className="time-capsules-meta" ref={timeCapsulesMeta}>
+                  <div>
+                    <div className="p"><strong>Fall place: </strong></div>
+                    <div className='p'>{item.fallPlace}</div>
                   </div>
-                  <div className="p">{item.fallDate}</div>
+                  <div>
+                    <div className="p">
+                      <strong>Fall date: </strong>
+                    </div>
+                    <div className="p">{item.fallDate}</div>
+                  </div>
+                  <div>
+                    <div className="p"><strong>Age: </strong></div>
+                    <div className="p" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.old)}} />
+                  </div>
                 </div>
-                <div>
-                  <div className="p"><strong>Age: </strong></div>
-                  <div className="p" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.old)}} />
+              </div>
+
+              <div className="time-capsules__container">
+                <div className="time-capsules__spec text--info" >
+                  <ul ref={timeCapsulesSpec} className="spec">
+                    <li className="text-light p3">
+                      <div className="p3 mb-0 text-medium">Type</div>
+                      {item.type}
+                    </li>
+                    <li className="text-light p3">
+                      <div className="p3 mb-0 text-medium">Class</div>
+                      {item.class}
+                    </li>
+                    <li className="text-light p3">
+                      <div className="p3 mb-0 text-medium">Observed fall</div>
+                      {
+                        item.observedFall ? 'Yes' : 'No'
+                      }
+                    </li>
+                    <li className="text-light p3">
+                      <div className="p3 mb-0 text-medium">Found date</div>
+                      {formatDate(item.foundDate)}
+                    </li>
+                  </ul>
+
+                  <div className="time-capsules__desc-2" ref={timeCapsulesDesc2}  dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.short)}} />
+
                 </div>
-              </div>
-            </div>
-
-            <div className="time-capsules__container">
-              <div className="time-capsules__spec text--info" >
-                <ul ref={timeCapsulesSpec} className="spec">
-                  <li className="text-light p3">
-                    <div className="p3 mb-0 text-medium">Type</div>
-                    {item.type}
-                  </li>
-                  <li className="text-light p3">
-                    <div className="p3 mb-0 text-medium">Class</div>
-                    {item.class}
-                  </li>
-                  <li className="text-light p3">
-                    <div className="p3 mb-0 text-medium">Observed fall</div>
-                    {
-                      item.observedFall ? 'Yes' : 'No'
-                    }
-                  </li>
-                  <li className="text-light p3">
-                    <div className="p3 mb-0 text-medium">Found date</div>
-                    {formatDate(item.foundDate)}
-                  </li>
-                </ul>
-
-                <div className="time-capsules__desc-2" ref={timeCapsulesDesc2}  dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.short)}} />
-
-              </div>
-              <div className="time-capsules-video" ref={timeCapsulesVideo}>
-                {
-                  item.videoFall && item.videoFall.src && (
-                    <button className="videoFall" ref={videoFall} onClick={()=>{toggleVideo(true)}}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
-                        <rect x="0.7" y="0.7" width="37.8" height="37.8" rx="18.9" stroke="url(#paint0_linear_1544_11116)" strokeWidth="1.4"/>
-                        <path d="M15.9309 25.8867L15.8228 13.5082C15.813 12.3916 17.0503 11.7135 17.9863 12.3225L27.581 18.5658C28.431 19.1189 28.4292 20.3641 27.5777 20.9148L18.0911 27.05C17.1642 27.6495 15.9405 26.9905 15.9309 25.8867Z" fill="#C8C6FF"/>
-                        <defs>
-                          <linearGradient id="paint0_linear_1544_11116" x1="19.6" y1="-5.20625" x2="19.6" y2="14.0875" gradientUnits="userSpaceOnUse">
-                            <stop stopColor="#908EFF"/>
-                            <stop offset="1" stopColor="#E1D7FF"/>
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                      <span>Watch it falling</span>
-                    </button>
-                  )
-                }
-
-
-                <video
-                  src={item.video}
-                  playsInline
-                  muted
-                  loop
-                  autoPlay
-                  type="video/mp4"
-                  aria-hidden="true">
-                </video>
-              </div>
-
-              <div className="time-capsules__desc text--info">
-                <div className="time-capsules__desc-1" ref={timeCapsulesDesc1} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.short)}} />
-
-                <ul ref={timeCapsulesComp} className="comp">
+                <div className="time-capsules-video" ref={timeCapsulesVideo}>
                   {
-                    item.composition.map((composition, index) => {
-                      return <li className="text-light p3" key={index}>{composition}</li>
-                    })
+                    item.videoFall && item.videoFall.src && (
+                      <button className="videoFall" ref={videoFall} onClick={()=>{toggleVideo(true)}}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                          <rect x="0.7" y="0.7" width="37.8" height="37.8" rx="18.9" stroke="url(#paint0_linear_1544_11116)" strokeWidth="1.4"/>
+                          <path d="M15.9309 25.8867L15.8228 13.5082C15.813 12.3916 17.0503 11.7135 17.9863 12.3225L27.581 18.5658C28.431 19.1189 28.4292 20.3641 27.5777 20.9148L18.0911 27.05C17.1642 27.6495 15.9405 26.9905 15.9309 25.8867Z" fill="#C8C6FF"/>
+                          <defs>
+                            <linearGradient id="paint0_linear_1544_11116" x1="19.6" y1="-5.20625" x2="19.6" y2="14.0875" gradientUnits="userSpaceOnUse">
+                              <stop stopColor="#908EFF"/>
+                              <stop offset="1" stopColor="#E1D7FF"/>
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                        <span>Watch it falling</span>
+                      </button>
+                    )
                   }
-                </ul>
 
+
+                  <video
+                    src={item.video}
+                    playsInline
+                    muted
+                    loop
+                    autoPlay
+                    type="video/mp4"
+                    aria-hidden="true">
+                  </video>
+                </div>
+
+                <div className="time-capsules__desc text--info">
+                  <div className="time-capsules__desc-1" ref={timeCapsulesDesc1} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.short)}} />
+
+                  <ul ref={timeCapsulesComp} className="comp">
+                    {
+                      item.composition.map((composition, index) => {
+                        return <li className="text-light p3" key={index}>{composition}</li>
+                      })
+                    }
+                  </ul>
+
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
+        {item.videoFall && item.videoFall.src && (
+          <VideoModal isVideo={isVideo} video={item.videoFall.src} description={item.videoFall.description} source={item.videoFall.source} toggleVideo={toggleVideo} />
+        )}
+      </>
+    )
+
+
+
+
   )
 }

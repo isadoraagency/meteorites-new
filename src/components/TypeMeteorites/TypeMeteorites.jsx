@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import './TypeMeteorites.scss'
+import {ScrollTrigger, ScrollToPlugin} from "gsap/all";
 
+import './TypeMeteorites.scss'
+gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(ScrollTrigger)
 
 export default function TypeMeteorites({isLoaded}) {
@@ -141,7 +142,7 @@ export default function TypeMeteorites({isLoaded}) {
           trigger: sectionRef.current,
           start: 'top top',
           end: '+=600%',
-          scrub: 1,
+          scrub: 1.5,
           pin: true
         }
       })
@@ -266,6 +267,9 @@ export default function TypeMeteorites({isLoaded}) {
             filter: i === activeIndex ? 'blur(0px)' : 'blur(5px)',
             duration: 1.5,
             ease: 'elastic.out(0.4, 0.5)',
+            onComplete: () => {
+
+            }
           }, "<");
 
 
@@ -276,21 +280,36 @@ export default function TypeMeteorites({isLoaded}) {
           //
           // });
         });
+        if(step !== itemsRef.current.length - 1) {
+          tl.set(itemsTextRef.current[step], {
+            y: -500,
+            autoAlpha: 0,
+            scale: 0.5,
 
-        tl.set(itemsTextRef.current[step], {
-          y: -500,
-          autoAlpha: 0,
-          scale: 0.5,
-          onReverseComplete: () => {
-            itemsRef.current[step].classList.add('active')
-          },
-          onComplete: () => {
-            itemsRef.current.forEach((el)=>{
-              el.classList.remove('active');
-            })
-          }
-        });
+            onReverseComplete: () => {
+              itemsRef.current[step].classList.add('active')
+            },
+            onComplete: () => {
+
+              itemsRef.current.forEach((el) => {
+
+                el.classList.remove('active');
+
+              })
+
+            }
+          });
+        }
+
+
       });
+      tl.to({}, {duration: 0.01, onComplete: () => {
+          gsap.to(window, {
+            duration: 0.5,
+            scrollTo: {y: '#Stardust', autoKill: false},
+            ease: 'power2.inOut'
+          });
+        }})
 
     }, sectionRef)
 
@@ -299,7 +318,7 @@ export default function TypeMeteorites({isLoaded}) {
 
 
   return (
-    <section className="meteorites-section" ref={sectionRef}>
+    <section className="meteorites-section" id="Types" ref={sectionRef}>
       <section className="meteorites-section__in">
 
         <div className="ia-container">

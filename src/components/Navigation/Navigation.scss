@@ -36,6 +36,27 @@
     opacity: 0;
     transform: translate(0, -50%);
     transition: opacity .8s 0.3s, transform 0.8s 0.3s;
+    position: relative;
+    &:before {
+      content: '';
+      display: block;
+      width: .8rem;
+      height: .8rem;
+      opacity: 0;
+      background: $svg;
+      margin-bottom: 1rem;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+      border-radius: 50%;
+      transition: opacity .3s;
+      left: -2.6rem;
+    }
+    &.active {
+      &:before {
+        opacity: 1;
+      }
+    }
     button {
       display: flex;
       justify-content: center;

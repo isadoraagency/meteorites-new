@@ -1,4 +1,5 @@
 import './Intro.scss';
+
 import {useState, useEffect, useRef} from "react";
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -7,7 +8,7 @@ import meteor from '/images/meteor.webp';
 import videoIntro from '/videos/intro-bg.mp4';
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Intro({progress, isLoaded, animationComplete=false, toggleAnimationComplete}) {
+export default function Intro({progress, isLoaded, animationComplete=false, toggleAnimationComplete, isReturningToIntro =false}) {
 
   const introRef = useRef(null);
   const intro1Ref = useRef(null);
@@ -119,7 +120,7 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
     return () => ro.disconnect();
   }, []);
   return (
-    <>
+
 
     <div className="intro" ref={introRef} role="region" aria-label="Introduction sequence">
       <div className="intro-bg" aria-hidden="true">
@@ -165,6 +166,7 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
           </div>
       </div>
     </div>
-    </>
+
+
   )
 }

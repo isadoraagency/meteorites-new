@@ -12,18 +12,15 @@
   cursor: pointer;
   line-height: 1.5;
   font-weight: 500;
-  border: 2px solid #0000;
+  border: 2px solid transparent;
   font-family: $font-heading;
   color: #2827C2;
   background: $vyg padding-box, conic-gradient(from var(--angle), #A398FF 43.15%, #2827C2 70.17%, #4F40FF 80.66%, #A398FF 100%) border-box;
-  border: 2px solid #0000;
-
   box-sizing: border-box;
-  transition: all .15s
-  ease-in;
-  animation: rotate 3s
-  linear infinite paused;
+  transition: all .15s ease-in;
+  animation: rotate 3s linear infinite paused;
   position: relative;
+
   i {
     transition: all .3s;
   }
