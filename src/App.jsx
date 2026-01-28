@@ -5,14 +5,13 @@ import './assets/styles/main.scss';
 
 import TimeCapsules from "./components/TimeCapsules/TimeCapsules.jsx";
 import {useEffect, useState} from "react";
-import LenisProvider from "./LenisProvider";
 import gsap from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
 import Menu from "./components/Menu/Menu.jsx";
 
 import MeteoriteTypes from "./components/TypeMeteorites/TypeMeteorites.jsx";
 import TypeMeteorites from "./components/TypeMeteorites/TypeMeteorites.jsx";
-import Stardust from "./components/Startdust/Startdust.jsx";
+import Stardust from "./components/Stardust/Stardust.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 

@@ -1,5 +1,5 @@
 import Spline from "@splinetool/react-spline";
-import './Startdust.scss';
+import './Stardust.scss';
 import { AnimatePresence, motion} from 'framer-motion'
 import {gsap, ScrollToPlugin, ScrollTrigger} from 'gsap/all';
 
