@@ -91,7 +91,7 @@ function App({onComplete}) {
       .then((response) => response.json())
       .then((data) => {
         setItems(data);
-        console.log(data)
+
       });
 
   }, []);
@@ -100,7 +100,6 @@ function App({onComplete}) {
     // Only set active item if we have items and no active item is selected yet
     if (items.length > 0 && activeItem === null) {
       setActiveItem(0);
-      console.log(activeItem)
     } else if (items.length === 0 && activeItem !== null) {
       // Reset active item if items array becomes empty
       setActiveItem(null);
@@ -111,8 +110,6 @@ function App({onComplete}) {
   const toggleNav = (e)=>{
     setNavActive(e);
   }
-
-
 
   return (
 
@@ -156,14 +153,14 @@ function App({onComplete}) {
           )}
         </>
       )}
-
+      {
+        activeItem > -1 && <Navigation isLoaded={isLoaded} navActive={navActive} activeItem={activeItem} />
+      }
 
       <TypeMeteorites isLoaded={animationComplete} />
 
 
-      {
-        activeItem > -1 && <Navigation isLoaded={isLoaded} navActive={navActive} activeItem={activeItem} />
-      }
+
 
 
       <Stardust isLoaded={animationComplete} onBackToIntro={handleBackToIntro} />

@@ -19,6 +19,9 @@ export default function TypeMeteorites({isLoaded}) {
   const [data, setData] = useState([])
   const containerRef = useRef(null);
   const [R, setR] = useState(0);
+  const preventDefault = (e) => {
+    e.preventDefault();
+  };
 
   useEffect(() => {
     fetch('/data/types.json')
@@ -143,7 +146,8 @@ export default function TypeMeteorites({isLoaded}) {
           start: 'top top',
           end: '+=600%',
           scrub: 1.5,
-          pin: true
+          pin: true,
+
         }
       })
 
@@ -292,10 +296,9 @@ export default function TypeMeteorites({isLoaded}) {
             onComplete: () => {
 
               itemsRef.current.forEach((el) => {
-
                 el.classList.remove('active');
-
               })
+
 
             }
           });
@@ -303,13 +306,7 @@ export default function TypeMeteorites({isLoaded}) {
 
 
       });
-      tl.to({}, {duration: 0.01, onComplete: () => {
-          gsap.to(window, {
-            duration: 0.5,
-            scrollTo: {y: '#Stardust', autoKill: false},
-            ease: 'power2.inOut'
-          });
-        }})
+
 
     }, sectionRef)
 

@@ -65,6 +65,9 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
           }
         tl.to(timeCapsulesContainer.current, {opacity: 1 })
 
+        const preventDefault = (e) => {
+          e.preventDefault();
+        };
 
         // gsap.set('.time-capsules-bg', {scale: 5})
         const tl2 = gsap.timeline({
@@ -95,29 +98,44 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
           .to(timeCapsulesComp.current, { y: '-50%', opacity: 1,  ease: 'power3.out'}, '<')
           .to(timeCapsulesComp.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
           .to(timeCapsulesDesc2.current, { y: '-50%', opacity: 1,  ease: 'power3.out', onComplete: ()=>{
-              if (index + 1 < items.length) {
-
-                setTimeout(() => {
-
+            setTimeout(() => {
+               if (index + 1 < items.length) {
                   const nextElement = document.getElementById(items[index+1].slug);
                   if (nextElement) {
-
+                    window.addEventListener('wheel', preventDefault, { passive: false });
+                    window.addEventListener('touchmove', preventDefault, { passive: false });
                     gsap.to(window, {
                       duration: 0.5,
-                      scrollTo: { y: '#' + items[index+1].slug, autoKill: false },
-                      ease: 'power2.inOut'
+                      scrollTo: { y: nextElement, autoKill: false },
+                      ease: 'power2.inOut',
+                      onComplete: () => {
+                        window.removeEventListener('wheel', preventDefault);
+                        window.removeEventListener('touchmove', preventDefault);
+
+
+                      }
                     });
                   }
-                }, 50)
-
               }else{
+                 const typeElement = document.getElementById('Types');
+                 if(typeElement) {
+                   window.addEventListener('wheel', preventDefault, {passive: false});
+                   window.addEventListener('touchmove', preventDefault, {passive: false});
+                   gsap.to(window, {
+                     duration: 0.5,
+                     scrollTo: {y: typeElement, autoKill: false},
+                     ease: 'power2.inOut',
+                     onComplete: () => {
+                       window.removeEventListener('wheel', preventDefault);
+                       window.removeEventListener('touchmove', preventDefault);
 
-                gsap.to(window, {
-                  duration: 0.5,
-                  scrollTo: { y: '#Stardust', autoKill: false },
-                  ease: 'power2.inOut'
-                });
+
+                     }
+                   });
+                 }
+
               }
+            }, 50)
 
             }},"<")
       }
