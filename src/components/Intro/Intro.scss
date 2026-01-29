@@ -59,23 +59,27 @@
   position: absolute;
   right: 0;
   top: 50%;
-  transform: translateY(100%);
+  transform: translateY(-50%);
   letter-spacing: 0.4rem;
 }
 .intro-4 {
   font-size: 26.4rem;
   white-space: nowrap;
   color: $info;
-  white-space: nowrap;
   font-weight: 100;
   position: absolute;
-  left: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100vw;
   top: 50%;
-  transform: translateY(-50%);
   div {
-    transform: translate(100%, 0);
+    transform: translate(100%, -50%);
     //opacity: 0;
+    position: absolute;
+    top: 50%;
+    width: 100vw;
+    left: 0;
+    white-space: nowrap;
     transition: opacity 0.5s;
   }
 }

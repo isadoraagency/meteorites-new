@@ -110,6 +110,9 @@ function App({onComplete}) {
   const toggleNav = (e)=>{
     setNavActive(e);
   }
+  const formatProgress = (number) => {
+    return number.toString().padStart(3, '0');
+  }
 
   return (
 
@@ -117,7 +120,7 @@ function App({onComplete}) {
 
       <Menu list={menuItems}  />
 
-      <Intro progress={progress} isLoaded={isLoaded} animationComplete={animationComplete} toggleAnimationComplete={toggleAnimationComplete} />
+      <Intro progress={formatProgress(progress)} isLoaded={isLoaded} animationComplete={animationComplete} toggleAnimationComplete={toggleAnimationComplete} />
 
       {items && items.length > 0 && (
         <>
