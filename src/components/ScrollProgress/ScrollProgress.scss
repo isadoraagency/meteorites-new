@@ -1,0 +1,22 @@
+.scroll-progress-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  background: #000;
+}
+.scroll-progress-bar {
+  height: 8px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  width: 0;
+  &:after {
+    content: '';
+    display: block;
+    width: 100vw;
+    height: 100%;
+    background: linear-gradient(90deg, #A398FF 0%, #DFD5FF 49%, #FDFF8D 100%);
+
+  }
+}
