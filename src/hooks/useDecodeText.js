@@ -4,6 +4,8 @@ import SplitText from "gsap/SplitText";
 
 export function useDecodeText(ref, enabled, options = {}) {
   useLayoutEffect(() => {
+    if ( !ref.current) return;
+    const split = new SplitText(ref.current, { type: "words, chars" });
     if (!enabled || !ref.current) return;
 
     const {
@@ -13,11 +15,11 @@ export function useDecodeText(ref, enabled, options = {}) {
       stagger = 0.05,
       changeDelay = 70,
 
-      opacity = 1,
+      opacity = 0,
       blured = 0 // Starting with a visible blur value
     } = options;
 
-    const split = new SplitText(ref.current, { type: "chars" });
+
 
     split.chars.forEach((char, index) => {
       // Set initial blur

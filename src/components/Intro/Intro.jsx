@@ -8,7 +8,7 @@ import meteorImg from '/images/meteor.webp';
 import videoIntro from '/videos/intro-bg.mp4';
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Intro({progress, isLoaded, animationComplete=false, toggleAnimationComplete, isReturningToIntro = false}) {
+export default function Intro({progress, isLoaded, animationComplete=false, toggleAnimationComplete, className='', isReturningToIntro = false}) {
 
   const titleRef = useRef(null);
   const textRef = useRef(null);
@@ -37,7 +37,9 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
     blured: 5,
     opacity: 0.9,
   };
-
+  const preventDefault = (e) => {
+    e.preventDefault();
+  };
   useDecodeText(titleRef, isLoaded);
   useDecodeText(textRef, isLoaded);
   useDecodeText(introText2Ref, triggerIntro2, options);
@@ -88,10 +90,11 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
             trigger: introRef.current,
             start: 'top top',
             end: () => window.innerHeight * 6,
-            scrub: 1.5,
+            scrub: true,
             pin: true,
-            // pinSpacing: false,
+            pinSpacing: true,
             id: "intro-scroll",
+            anticipatePin: 1,
             // markers: true,
             invalidateOnRefresh: true
           }
@@ -121,9 +124,24 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
 
           .to(meteor.current, {top: '110%', opacity: 0,   duration: 0.3 , ease: "power2.inOut", onComplete(){
             window.scrollTo({
-              top: window.innerHeight * 7,
-              behavior: 'smooth'
+              top: window.innerHeight *7,
+              behavior: "smooth"
             });
+            //   const timeC = document.getElementById("mars-rock-nakhla");
+            //   if(timeC) {
+            //     window.addEventListener('wheel', preventDefault, {passive: false});
+            //     window.addEventListener('touchmove', preventDefault, {passive: false});
+            //     gsap.to(window, {
+            //       duration: 0,
+            //       scrollTo: {y: timeC, autoKill: false},
+            //       ease: 'power2.inOut',
+            //       onComplete: () => {
+            //         window.removeEventListener('wheel', preventDefault);
+            //         window.removeEventListener('touchmove', preventDefault);
+            //       }
+            //     });
+            //   }
+
           }}, "<")
       }
     }, introRef)
@@ -140,7 +158,7 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
   }, []);
   return (
 
-    <div className="intro" ref={introRef} role="region" aria-label="Introduction sequence">
+    <div className={`intro ${className}`} ref={introRef} role="region" aria-label="Introduction sequence">
       <div className="intro-bg" ref={introBg} aria-hidden="true">
         <video
           src={videoIntro}

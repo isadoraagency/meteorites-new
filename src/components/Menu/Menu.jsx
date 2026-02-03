@@ -1,19 +1,24 @@
-import { AnimatePresence, motion} from 'framer-motion'
+import { AnimatePresence, motion, useAnimation} from 'framer-motion'
 import './Menu.scss'
 
 import {gsap, ScrollToPlugin} from 'gsap/all';
 
 gsap.registerPlugin(ScrollToPlugin)
 
-import {useState} from "react";
+import {useState, useEffect, useRef} from "react";
 import Sources from "../Sources/Sources.jsx";
 import Credits from "../Credits/Credits.jsx";
 import About from "../About/About.jsx";
+import {useDecodeText} from "../../hooks/useDecodeText.js";
 
 export default function Menu({ list }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false)
-  const toggleMenu = () => setIsOpenMenu(v => !v)
+  const [isTopLinkHover, setIsTopLinkHover] = useState(false)
+
   const [activeModal, setActiveModal] = useState('close');
+  const [topItemActive, setTopItemActive] = useState(false);
+  const topItemsRef = useRef([]);
+
 
   const handleMenuItemClick = (action) => {
     if (action !== 'close') {
@@ -22,11 +27,46 @@ export default function Menu({ list }) {
       setActiveModal("close");
     }
   };
+  const toggleMenu = () => {
+    const newIsOpenMenu = !isOpenMenu;
+    setIsOpenMenu(newIsOpenMenu);
+    if (newIsOpenMenu) {
+      setTimeout(() => {
+        setTopItemActive(true);
+      }, 1000)
+    } else {
+      setTopItemActive(false);
+    }
+  };
 
   const moveToItem = (e, el) => {
     e.preventDefault();
     gsap.to(window, {duration: 0, scrollTo: {y: el}});
   }
+  const controls = useAnimation();
+
+  useEffect(() => {
+    const sequence = async () => {
+      await controls.start("step1");
+      await controls.start("step2");
+      await controls.start("step3");
+    };
+
+    sequence();
+    // setTopItemActive(true);
+  }, []);
+
+  const options = {
+    iterations: 8,
+    speed: 0.1,
+    stagger: 0.02,
+    blured: 5,
+    changeDelay: 3,
+    opacity: 0,
+  };
+  useDecodeText(topItemsRef, topItemActive, options);
+
+
 
   return (
     <div className="menu-container">
@@ -71,41 +111,71 @@ export default function Menu({ list }) {
       </button>
       <AnimatePresence >
         {isOpenMenu && (
-          <motion.div
-            key="menu-root"
-          >
+          <>
           <motion.div
               key="overlay"
               className="main-menu-overlay"
               initial={{
                 width: '6.4rem',
                 height: '6.4rem',
-                borderRadius: '64rem 64rem 64rem 0',
-                opacity: 0,
-                left: 0,
-                bottom: 0,
+                borderRadius: '64rem 64rem 64rem 64rem',
+                opacity: 1,
+                left: '4rem',
+                bottom: '4rem',
+                scale: 1,
               }}
               animate={{
-                width: '100vw',
-                height: '100vh',
-                borderRadius: 0,
-                opacity: 1,
+                bottom: ['4rem', '50%', '50%', '50%', '50%'],
+                y: ['0', '0', '0', '0', '50%'],
+                x: ['0','0', '0', '0','-50%'],
+                left: ['4rem', '4rem', '20%', '20%', '50%'],
+                width: ['6.4rem', '6.4rem', '6.4rem', '64rem', '100%'],
+                height: ['6.4rem', '6.4rem', '6.4rem', '64rem', '100%'],
+                borderRadius: ['64rem', '64rem', '64rem', '64rem', '0rem'],
+                scale: [1, 1, 1, 10, 1],
+                transition: {
+                  duration: 2,
+                  times: [0, 0.25, 0.5, 0.75, 1],
+                  ease: "easeInOut"
+                }
               }}
               exit={{
                 width: '6.4rem',
                 height: '6.4rem',
                 borderRadius: '64rem 64rem 64rem 0',
                 opacity: 0,
+                transition: { duration: 0.5 }
               }}
-              transition={{ duration: 0.5, ease: 'easeInOut' }}
-            ></motion.div>
+
+          ></motion.div>
             <motion.div
               key="menu"
               className="main-menu"
-              initial={{ x: '50%', y: '50%', opacity: 0 }}
-              animate={{ x: 0, y: 0, opacity: 1 }}
-              exit={{ x: '50%', y: '50%', opacity: 0 }}
-              transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
+              initial={{
+                x: 0,
+                y: '30%',
+                opacity: 0
+              }}
+              animate={{
+                x: 0,
+                y: 0,
+                opacity: 1,
+                transition: {
+                  duration: 0.5,
+                  ease: 'easeOut',
+                  delay: 1.5
+                }
+              }}
+              exit={{
+                x: 0,
+                y: '50%',
+                opacity: 0,
+                transition: {
+                  duration: 0.5,
+                  ease: 'easeOut',
+                }
+              }}
+
             >
               <div className="ia-container">
                 <div className="main-menu__in text-center">
@@ -135,30 +205,49 @@ export default function Menu({ list }) {
                   </svg>
                   {list && (
                     <div>
-                      <ul className="main-menu__top">
+                      <ul className={`main-menu__top ${isTopLinkHover ? 'main-menu__top--hover' : ''}`}>
                         {list[0].large.map((item, i) => (
                           <li className="h5" key={`large-item-${i}`}>
-                            <button onClick={(e)=> {
+                            <button
+                              ref={el => {
+                                if (el) topItemsRef.current[i] = el;
+                              }}
+
+
+                              onClick={(e)=> {
                                   setIsOpenMenu(false)
                                   moveToItem(e, '#'+item.action)
                                 }
                               }
+                              onMouseEnter={() => setIsTopLinkHover(true) }
+                              onMouseLeave={() => setIsTopLinkHover(false)}
                             >{item.title}</button>
                           </li>
                         ))}
                       </ul>
-
-                      <ul className="main-menu__bottom">
-                        {list[0].small.map((item, i) => (
-                          <li className="p1" key={`small-item-${i}`}>
-                            <button onClick={()=>handleMenuItemClick(item.action)}>{item.title}</button>
-                          </li>
-                        ))}
-                      </ul>
+                      <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 1.9 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <ul className="main-menu__bottom">
+                          {list[0].small.map((item, i) => (
+                            <li className="p1" key={`small-item-${i}`}>
+                              <button onClick={()=>handleMenuItemClick(item.action)}>{item.title}</button>
+                            </li>
+                          ))}
+                        </ul>
+                      </motion.div>
                     </div>
                   )}
 
-                  <div className="main-menu__side p2 mb-0">
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 1.9 }}
+                    exit={{ opacity: 0 }}
+                    className="main-menu__side p2 mb-0">
                     This site was made of stardust at{' '}
                     <a
                       href="https://isadoradigitalagency.com/"
@@ -170,11 +259,11 @@ export default function Menu({ list }) {
                         alt="Isadora Digital Agency"
                       />
                     </a>
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </motion.div>
-          </motion.div>
+          </>
         )}
         <Sources key="sources-modal"
                   isOpen={ activeModal === 'openSources'} handleMenuItemClick={handleMenuItemClick}/>

@@ -32,11 +32,21 @@ export default function About({isOpen, handleMenuItemClick}) {
               <img className="mb-3" width='182' src='/images/ida-logo.svg' alt='IDA Logo' />
               {
                 data?.text && (
-                  <div className="content-entry "
-                       dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(data.text)}}/>
+                  <motion.div
+                    initial={{opacity: 0, filter: 'blur(5px)', y: '50px'}}
+                    animate={{opacity: 1, filter: 'blur(0)', y: 0}}
+                    exit={{opacity: 0, scale: 0}}
+                    transition={{duration: 0.5, delay: 0.5}}
+                    className="content-entry "
+                    dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(data.text)}}/>
                 )
               }
-
+              <motion.div
+                initial={{opacity: 0, filter: 'blur(5px)', y: '50px'}}
+                animate={{opacity: 1, filter: 'blur(0)', y: 0}}
+                exit={{opacity: 0, scale: 0}}
+                transition={{duration: 0.5, delay: 0.7}}
+              >
               <svg className="mb-2" xmlns="http://www.w3.org/2000/svg" width="56" height="76" viewBox="0 0 56 76" fill="none">
                 <path className="starPulse" d="M10.8452 35.259C23.7792 41.7409 24.3213 43.3142 17.9872 61.1063C17.9592 61.1832 18.0956 61.2391 18.1306 61.1657C26.0316 44.0134 27.5216 43.2652 41.3055 47.6599C41.3964 47.6879 41.4384 47.583 41.3544 47.5411C28.4204 41.0591 27.8783 39.4858 34.2124 21.6938C34.2404 21.6168 34.104 21.5609 34.069 21.6343C26.168 38.7866 24.678 39.5348 10.8941 35.1436C10.8032 35.1156 10.7612 35.2205 10.8452 35.2625V35.259Z" fill="url(#paint0_linear_1605_3916)"/>
                 <path className="starPulse" d="M6.61691 9.76575C11.4357 12.1245 11.6362 12.6973 9.27783 19.1652C9.26689 19.1937 9.31792 19.215 9.3325 19.1865C12.2777 12.9499 12.8318 12.676 17.9641 14.2734C17.9969 14.284 18.0151 14.2449 17.9823 14.2307C13.1635 11.8755 12.9594 11.3027 15.3214 4.83477C15.3323 4.80631 15.2813 4.78497 15.2667 4.81343C12.3215 11.0501 11.7674 11.324 6.63514 9.72662C6.60233 9.71594 6.58411 9.75508 6.61691 9.76931V9.76575Z" fill="url(#paint1_linear_1605_3916)"/>
@@ -61,10 +71,17 @@ export default function About({isOpen, handleMenuItemClick}) {
                   </linearGradient>
                 </defs>
               </svg>
-              <br/>
-              <a href="https://isadoradigitalagency.com/" target="_blank" rel="noreferrer" className="ia-btn">
-                Let’s Talk!
-              </a>
+              </motion.div>
+              <motion.div
+                initial={{opacity: 0, filter: 'blur(5px)', y: '50px'}}
+                animate={{opacity: 1, filter: 'blur(0)', y: 0}}
+                exit={{opacity: 0, scale: 0}}
+                transition={{duration: 0.5, delay: 0.9}}
+              >
+                <a href="https://isadoradigitalagency.com/" target="_blank" rel="noreferrer" className="ia-btn">
+                  Let’s Talk!
+                </a>
+              </motion.div>
             </div>
           </div>
         </motion.div>

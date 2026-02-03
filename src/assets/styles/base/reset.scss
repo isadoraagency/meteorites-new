@@ -78,6 +78,10 @@ body {
   -ms-text-size-adjust: none;
   height: 100%;
   background: $vyg no-repeat center center fixed;
+  cursor: none;
+  *:hover {
+    cursor: none;
+  }
   //
   //&.type-of-meteorites {
   //  background: $dbg no-repeat center center fixed;

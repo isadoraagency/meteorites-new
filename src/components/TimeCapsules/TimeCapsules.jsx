@@ -1,13 +1,14 @@
 import './TimeCapsules.scss';
 import DOMPurify from "dompurify";
 import {useState, useEffect, useRef} from "react";
-import gsap from "gsap";
-import {ScrollTrigger, ScrollToPlugin} from "gsap/all";
+// import gsap from "gsap";
+import {gsap, ScrollTrigger, ScrollToPlugin, MotionPathPlugin} from "gsap/all";
 import VideoModal from "../VideoModal/VideoModal.jsx";
+import {useDecodeText} from "../../hooks/useDecodeText.js";
 gsap.registerPlugin(ScrollToPlugin);
-
 gsap.registerPlugin(ScrollTrigger);
-export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, toggleNav, item, items, handleActiveItem }) {
+gsap.registerPlugin(MotionPathPlugin);
+export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, toggleNav, item, items, handleActiveItem, className = '' }) {
   const timeCapsules = useRef(null);
   const timeCapsulesContainer = useRef(null);
   const timeCapsulesBg = useRef(null);
@@ -22,6 +23,17 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
   const videoFall = useRef(null);
 
   const [isVideo, setIsVideo] = useState(false);
+  const [timeCapsulesTitleActive, setTimeCapsulesTitleActive] = useState(false);
+
+  const options = {
+    iterations: 8,
+    speed: 0.05,
+    stagger: 0.1,
+    blured: 5,
+    changeDelay: 0.1,
+    opacity: 0.9,
+  };
+  useDecodeText(timeCapsulesTitle, timeCapsulesTitleActive, options);
 
   const toggleVideo = (e)=>{
     setIsVideo(e);
@@ -29,14 +41,20 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+
       if(item){
       if(index == 0) {
         gsap.set(timeCapsulesBg.current, {scale: 1})
       }
+
+      gsap.set(timeCapsulesContainer.current, {opacity: 0 })
+        gsap.set(timeCapsules.current, { opacity: 0})
+
+      gsap.set(timeCapsulesTitle.current, {opacity: 0})
       gsap.set(timeCapsulesSpec.current, { opacity: 0, y: '150%'})
-      gsap.set(timeCapsules.current, { opacity: 0})
+
       gsap.set(timeCapsulesMeta.current, { opacity: 0})
-      gsap.set(timeCapsulesHeading.current, { y: '60%'})
+      gsap.set(timeCapsulesHeading.current, { top: '50%'})
       gsap.set(timeCapsulesComp.current, { opacity: 0, y: '150%'})
       if(videoFall.current) {
         gsap.set(videoFall.current, {opacity: 0})
@@ -48,26 +66,27 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             trigger: timeCapsules.current,
             start: 'top bottom',
             end: 'top top',
-            scrub: 1.3,
-            onEnter: () => {handleActiveItem(index); toggleNav(true) },
+            scrub: 0.5,
+            onEnter: () => {handleActiveItem(index); toggleNav(true);
+
+            },
             onEnterBack: () => {handleActiveItem(index); index == 0 && toggleNav(false)},
             onLeaveBack: () => handleActiveItem(index - 1 >= 0 ? index - 1 : 0)
           }
         });
 
-        tl.set(timeCapsules.current, { opacity: 1})
+
           if(index == 0) {
+            tl.set(timeCapsules.current, { opacity: 1})
             tl.to(timeCapsulesBg.current, {
               scale: 3,
               duration: 0.1,
               ease: 'power3.out'
             })
+            tl.to(timeCapsulesContainer.current, {opacity: 1 })
           }
-        tl.to(timeCapsulesContainer.current, {opacity: 1 })
 
-        const preventDefault = (e) => {
-          e.preventDefault();
-        };
+
 
         // gsap.set('.time-capsules-bg', {scale: 5})
         const tl2 = gsap.timeline({
@@ -75,16 +94,29 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
             trigger: timeCapsules.current,
             start: 'top top',
-            end: '+=600%',
+            end: '+=400%',
             scrub: true,
             pin: true,
-            onEnter: () =>  toggleNav(true),
+            pinSpacing: false,
+            id: "TimeCapsules"+item.slug,
+            anticipatePin: 1,
+
+
+            onEnter: () => {
+              toggleNav(true);
+            },
             onLeaveBack: () =>  toggleNav(true),
-            onLeave: () =>  lastTimeCapsule && toggleNav(false)
+            onLeave: () => {
+              lastTimeCapsule && toggleNav(false)
+              setTimeCapsulesTitleActive(false)
+            }
           }
         });
-
-        tl2.to(timeCapsulesHeading.current, {y: '0%', top: 0, ease: 'power3.out'}, )
+        tl2.to(timeCapsules.current, { opacity: 1})
+        tl2.set(timeCapsulesContainer.current, {opacity: 1 })
+          .set(timeCapsulesTitle.current, {opacity: 1, onComplete: () => {setTimeCapsulesTitleActive(true)}}, '<')
+          .to({}, {duration: 0.5})
+          .to(timeCapsulesHeading.current, { top: "0%", ease: 'power3.out'}, )
           .to(timeCapsulesTitle.current, {scale: 1, ease: 'power3.out'}, "<")
           .to(timeCapsulesVideo.current, { scale: 1,  ease: 'power3.out'}, '<')
           .to(timeCapsulesMeta.current, {opacity: 1, duration: 0.2, ease: 'power3.out'})
@@ -97,48 +129,32 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
           .to(timeCapsulesSpec.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
           .to(timeCapsulesComp.current, { y: '-50%', opacity: 1,  ease: 'power3.out'}, '<')
           .to(timeCapsulesComp.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
-          .to(timeCapsulesDesc2.current, { y: '-50%', opacity: 1,  ease: 'power3.out', onComplete: ()=>{
-            setTimeout(() => {
-               if (index + 1 < items.length) {
-                  const nextElement = document.getElementById(items[index+1].slug);
-                  if (nextElement) {
-                    window.addEventListener('wheel', preventDefault, { passive: false });
-                    window.addEventListener('touchmove', preventDefault, { passive: false });
-                    gsap.to(window, {
-                      duration: 0.5,
-                      scrollTo: { y: nextElement, autoKill: false },
-                      ease: 'power2.inOut',
-                      onComplete: () => {
-                        window.removeEventListener('wheel', preventDefault);
-                        window.removeEventListener('touchmove', preventDefault);
+          .to(timeCapsulesDesc2.current, { y: '-50%', opacity: 1,  ease: 'power3.out'},"<")
+            if(index+1 !== items.length) {
+              tl2.to(timeCapsulesVideo.current, {
+                motionPath: {
+                  path: [
+                    {x: "0%", y: "0%"},
+                    {x: "20%", y: "50%"},
+                    {x: "50%", y: "50%"},
+                    {x: "100%", y: "0%"}
+                  ],
+                  curviness: 1.5
+                }, scale: 0.5, ease: 'power3.out'
+              })
+            }else{
+              tl2.to(timeCapsulesVideo.current, {
+               scale: 5
+              })
+            }
+            if(index == 0){
+              tl2.to(timeCapsulesContainer.current, {opacity: 0, ease: 'power3.out'}, '<')
+            }else{
+              tl2.to(timeCapsules.current, {opacity: 0, ease: 'power3.out'}, '<')
+            }
 
 
-                      }
-                    });
-                  }
-              }else{
-                 const typeElement = document.getElementById('Types');
-                 if(typeElement) {
-                   window.addEventListener('wheel', preventDefault, {passive: false});
-                   window.addEventListener('touchmove', preventDefault, {passive: false});
-                   gsap.to(window, {
-                     duration: 0.5,
-                     scrollTo: {y: typeElement, autoKill: false},
-                     ease: 'power2.inOut',
-                     onComplete: () => {
-                       window.removeEventListener('wheel', preventDefault);
-                       window.removeEventListener('touchmove', preventDefault);
-
-
-                     }
-                   });
-                 }
-
-              }
-            }, 50)
-
-            }},"<")
-      }
+          }
         }
      }, timeCapsules)
 
@@ -169,7 +185,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
     item && (
       <>
-        <div className={`time-capsules ${index === 0 ? 'time-capsules-'+index : ''}`}
+        <div className={`time-capsules ${index === 0 ? 'time-capsules-'+index : ''} ${className}`}
              ref={timeCapsules} id={item.slug}>
           {
             index === 0 && <div className="time-capsules-bg" ref={timeCapsulesBg}></div>

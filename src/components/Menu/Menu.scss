@@ -1,4 +1,12 @@
 @use "../../assets/styles/utils/variables" as *;
+//.menu-container {
+//  height: 100%;
+//  width: 100%;
+//  position: fixed;
+//  top: 0;
+//  left: 0;
+//  z-index: 100;
+//}
 .main-menu-overlay {
   position: fixed;
   bottom: 4rem;
@@ -7,20 +15,22 @@
   height: 6.4rem;
   border-radius: 50vw;
   overflow: hidden;
-  z-index: 99;
+  z-index: 999;
   background: $vyg;
+
 }
 .menu-button {
   position: fixed;
   left: 4rem;
   bottom: 4rem;
-  z-index: 101;
+  z-index: 1001;
   width: 6.4rem;
   height: 6.4rem;
   border-radius: 50%;
   background: $vyg;
   cursor: pointer;
   overflow: hidden;
+  transition: left .3s;
   svg {
     position: absolute;
     left: 50%;
@@ -35,6 +45,7 @@
     }
   }
   &--open {
+    left: calc(50% - 3.2rem);
     svg:last-child {
       scale: 1;
     }
@@ -46,7 +57,7 @@
 .main-menu {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 1000;
   overflow: hidden;
   transform: translate(50%, 50%);
   &__in {
@@ -64,12 +75,21 @@
   &__top {
     list-style-type: none;
     margin-left: 0;
+    transition: all .5s;
+    &--hover {
+      transform: scale(1.1);
+    }
     li {
       line-height: 1.5;
       margin-bottom: 2.5rem;
       button {
         font-weight: 100;
         color: $primary;
+        transition: all .3s;
+        &:hover {
+          transform: scale(1.1);
+          color: $white;
+        }
       }
     }
   }
@@ -83,6 +103,11 @@
     margin-left: 0;
     button {
       color: $primary;
+      transition: all .3s;
+      &:hover {
+        transform: scale(1.1);
+        color: $white;
+      }
     }
   }
   &__side {

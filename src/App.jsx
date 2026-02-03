@@ -8,10 +8,10 @@ import {useEffect, useState} from "react";
 import gsap from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
 import Menu from "./components/Menu/Menu.jsx";
-
-import MeteoriteTypes from "./components/TypeMeteorites/TypeMeteorites.jsx";
+import Cursor from "./components/Cursor/Cursor.jsx";
 import TypeMeteorites from "./components/TypeMeteorites/TypeMeteorites.jsx";
 import Stardust from "./components/Stardust/Stardust.jsx";
+import ScrollProgress from "./components/ScrollProgress/ScrollProgress.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -114,17 +114,82 @@ function App({onComplete}) {
     return number.toString().padStart(3, '0');
   }
 
+
+
+  // useEffect(() => {
+  //   if (animationComplete) {
+  //
+  //     const sections = [
+  //       '.intro-section',
+  //       ...Array.from({length: items.length}, (_, i) => `.time-capsule-${i}`),
+  //       '.type-meteorites-section',
+  //       '.stardust-section'
+  //     ];
+  //
+  //     ScrollTrigger.create({
+  //       snap: {
+  //         snapTo: (progress, self) => {
+  //
+  //           const snapPoints = sections.map((_, i) => i / (sections.length - 1));
+  //           let closest = snapPoints.reduce((prev, curr) => {
+  //             return (Math.abs(curr - progress) < Math.abs(prev - progress) ? curr : prev);
+  //           });
+  //           return closest;
+  //         },
+  //         duration: {min: 0.2, max: 0.9},
+  //         delay: 0.1,
+  //         ease: "power2.inOut"
+  //       }
+  //     });
+  //
+  //     return () => {
+  //       ScrollTrigger.getAll().forEach(st => st.kill());
+  //     };
+  //   }
+  // }, [animationComplete, items.length]);
+  useEffect(() => {
+
+    if (animationComplete) {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      const scrollableHeight = docHeight - windowHeight;
+
+      const scrollProgress = scrollableHeight > 0
+        ? (scrollTop / scrollableHeight) * 100
+        : 0;
+
+      setProgress(Math.round(scrollProgress));
+    };
+
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }
+}, [animationComplete]);
+
+
   return (
 
     <>
-
+      <Cursor />
       <Menu list={menuItems}  />
 
-      <Intro progress={formatProgress(progress)} isLoaded={isLoaded} animationComplete={animationComplete} toggleAnimationComplete={toggleAnimationComplete} />
+      <Intro className="intro-section"
+             progress={formatProgress(progress)} isLoaded={isLoaded} animationComplete={animationComplete} toggleAnimationComplete={toggleAnimationComplete} />
+
 
       {items && items.length > 0 && (
-        <>
+        <div id="time-capsules">
           <TimeCapsules
+            className={`time-capsule-0}`}
             key={`capsule-${items[0].slug || 0}`}
             isLoaded={animationComplete}
             index={0}
@@ -141,6 +206,7 @@ function App({onComplete}) {
                 const actualIndex = idx + 1;
                 return (
                   <TimeCapsules
+                    className={`time-capsule-${actualIndex}`}
                     key={`capsule-${item.slug || actualIndex}`}
                     isLoaded={animationComplete}
                     index={actualIndex}
@@ -154,19 +220,17 @@ function App({onComplete}) {
               })}
             </div>
           )}
-        </>
+        </div>
       )}
+
       {
         activeItem > -1 && <Navigation isLoaded={isLoaded} navActive={navActive} activeItem={activeItem} />
       }
+      <TypeMeteorites isLoaded={animationComplete} className="type-meteorites-section"  />
 
-      <TypeMeteorites isLoaded={animationComplete} />
+      <Stardust isLoaded={animationComplete} onBackToIntro={handleBackToIntro} className="stardust-section" />
 
-
-
-
-
-      <Stardust isLoaded={animationComplete} onBackToIntro={handleBackToIntro} />
+      {animationComplete && <ScrollProgress progress={progress} />}
 
     </>
   )

@@ -58,19 +58,64 @@ const Stardust = ({isLoaded, onBackToIntro
   useEffect(() => {
     const ctxs = gsap.context(() => {
       if (isLoaded) {
+        // const StardustBg = document.getElementById('Stardust-bg');
+        // const tl = gsap.timeline({
+        //   scrollTrigger: {
+        //     trigger: sturdust.current,
+        //     start: 'top bottom',
+        //     end: 'top top',
+        //     scrub: true,
+        //     id: "sturdust-start",
+        //     // pinSpacing: false
+        //   }
+        // })
+        // tl.to(StardustBg, {duration: 1, y: "0", ease: 'power2.inOut'})
+        //
+
+
         // const tl = gsap.timeline({
           ScrollTrigger.create({
             trigger: sturdust.current,
             start: 'top top',
             pin: true,
             end: '+=200%',
+            // pinSpacing: true,
+            id: "stardust-scroll",
+            anticipatePin: 1,
             // markers: true,
             // onUpdate: (self) =>{ self.progress > 0.2 && setPopupActive(true)},
             onEnter: () => {
               setPopupActive(true);
+              // const typesSection = document.getElementById('Types');
+              // if (typesSection) {
+              //   gsap.set(typesSection, {
+              //     position: 'fixed',
+              //     top: 0,
+              //     left: 0,
+              //     width: '100%',
+              //     zIndex: 1
+              //   });
+              // }
             },
-            onEnterBack: () => {setPopupActive(false); setMove(false)},
-            onLeaveBack: () => {setPopupActive(false); setMove(false)},
+            onEnterBack: () => {setPopupActive(false); setMove(false)
+              const typesSection = document.getElementById('Types');
+              // if (typesSection) {
+              //   gsap.set(typesSection, {
+              //     clearProps: 'position,top,left,width,zIndex'
+              //   });
+              // }
+
+
+            },
+            onLeaveBack: () => {setPopupActive(false); setMove(false)
+              // const typesSection = document.getElementById('Types');
+              // if (typesSection) {
+              //   gsap.set(typesSection, {
+              //     clearProps: 'position,top,left,width,zIndex'
+              //   });
+              // }
+
+            },
           })
         // });
       }
@@ -80,8 +125,9 @@ const Stardust = ({isLoaded, onBackToIntro
 
 
   return (
-    <>
-      <div id="Stardust" ref={sturdust} className={`stardust-page ${move ? 'active scrolled' : ''} ${popupActive ? 'scrolled' : ''}`}
+    <div id="Stardust" >
+      <div id="Stardust-bg"></div>
+      <div ref={sturdust} id="stardust-page" className={`stardust-page ${move ? 'active scrolled' : ''} ${popupActive ? 'scrolled' : ''}`}
         >
         {
           popupActive && (
@@ -180,7 +226,7 @@ const Stardust = ({isLoaded, onBackToIntro
           </button>
 
       </div>
-    </>
+    </div>
   )
 }
 export default Stardust;
