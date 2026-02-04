@@ -1,7 +1,7 @@
 import './ScrollProgress.scss';
-export default function ScrollProgress ({ progress }){
+export default function ScrollProgress ({ progress = 0}){
   return (
-    <div className="scroll-progress-container">
+    <div className="scroll-progress-container" style={progress > 0 ? {display: 'block'} : {display: 'none'}}>
       <div
         className="scroll-progress-bar"
         style={{ width: `${progress}%` }}

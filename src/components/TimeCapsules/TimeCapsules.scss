@@ -24,6 +24,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100%;
   }
   &-heading {
     position: relative;
@@ -64,11 +65,13 @@
   }
   &-video {
     width: 70%;
-    height: auto;
+    height: 70vh;
     flex: 1;
-    transform: scale(1.2);
     video {
       max-width: 100%;
+      max-height: 100%;
+      height: auto;
+      width: auto;
     }
   }
   &__container {
@@ -161,9 +164,9 @@
 }
 #time-capsules {
   .pin-spacer {
-    height: 390vh !important;
+    height: 500vh !important;
     &.pin-spacer-TimeCapsulesmurchison {
-      height: 430vh !important;
+      height: 600vh !important;
     }
   }
 }

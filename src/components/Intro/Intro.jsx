@@ -1,15 +1,13 @@
-import './Intro.scss';
-
 import {useState, useEffect, useRef} from "react";
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useDecodeText } from "../../hooks/useDecodeText";
+import './Intro.scss';
 import meteorImg from '/images/meteor.webp';
 import videoIntro from '/videos/intro-bg.mp4';
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Intro({progress, isLoaded, animationComplete=false, toggleAnimationComplete, className='', isReturningToIntro = false}) {
-
+export default function Intro({progress, isLoaded, animationComplete= false, toggleAnimationComplete, className=''}) {
   const titleRef = useRef(null);
   const textRef = useRef(null);
   const meteor = useRef(null);
@@ -19,7 +17,6 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
   const intro2Ref = useRef(null);
   const intro3Ref = useRef(null);
   const intro4Ref = useRef(null);
-
   const introText2Ref = useRef(null);
   const introText3Ref = useRef(null);
   const introText5Ref = useRef(null);
@@ -37,9 +34,7 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
     blured: 5,
     opacity: 0.9,
   };
-  const preventDefault = (e) => {
-    e.preventDefault();
-  };
+
   useDecodeText(titleRef, isLoaded);
   useDecodeText(textRef, isLoaded);
   useDecodeText(introText2Ref, triggerIntro2, options);
@@ -51,13 +46,11 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
     const ctx2 = gsap.context(() => {
       gsap.set(intro1Ref.current,{opacity: 0})
       if (isLoaded) {
-
         gsap.to('.intro-counter', {
           opacity: 0,
           duration: 0.5,
           ease: 'power3.out'
         })
-
         gsap.fromTo(intro1Ref.current, {
           opacity: 0,
           y: '100%',
@@ -71,10 +64,8 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
           onComplete: () => {
             toggleAnimationComplete();
           }
-
         })
       }
-
     }, introRef)
     return () => ctx2.revert();
   }, [isLoaded])
@@ -101,48 +92,34 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
         });
 
         tl
-          .fromTo(intro1Ref.current, {y: '-50%', opacity: 1},{y: -200, opacity: 0, ease: "power2.inOut"
-          })
-          .to(introBg.current, {filter: 'blur(0px)', ease: 'power3.out'}, '<')
-          .to(intro2Ref.current,  {opacity: 1, ease: "power2.inOut", onStart: () => setTriggerIntro2(true)})
-          .to(intro2Ref.current, {y: '-60%', opacity: 0, ease: "power2.inOut"})
-          .to(intro3Ref.current, {y: '-50%', opacity: 1, ease: "power2.inOut", onStart: () => setTriggerIntro3(true)})
-          .to(intro3Ref.current, {y: '-60%', opacity: 0, ease: "power2.inOut"})
-          .to(introBg.current, {width: '100%', height: '70%', borderRadius: '50vh', duration: 1, ease: "power2.inOut"})
-          .to(intro4Ref.current, {x: '0%', duration: 1, ease: "power2.inOut"}, '<')
+          .fromTo(intro1Ref.current, {y: '-50%', opacity: 1},{y: '-100%', opacity: 0, ease: "power2.inOut"})
+          .to(introBg.current, {filter: 'blur(0px)', ease: 'power3.out', onStart: () => setTriggerIntro2(false)}, '<')
+          .set(intro2Ref.current,  {opacity: 1, ease: "power2.inOut", onComplete: () => setTriggerIntro2(true)})
+          .to({}, {duration: 0.5, onComplete: () => setTriggerIntro3(false)})
+          .to(intro2Ref.current, { opacity: 0, ease: "power2.inOut"})
+          .set(intro3Ref.current, {opacity: 1, ease: "power2.inOut", onComplete: () => setTriggerIntro3(true)})
+          .to({}, {duration: 0.5})
+          .to(intro3Ref.current, { opacity: 0, ease: "power2.inOut"})
+          .to(introBg.current, {width: '100%', height: '70%', borderRadius: '50vh', duration: 1.5, ease: "power2.inOut"})
+          .to(intro4Ref.current, {x: '-10%', duration: 1.5, ease: "power2.inOut"}, '<')
           .to(intro4Ref.current, {opacity: 0, x: '-50%', duration: 1, ease: "power2.inOut" })
           .to(introBg.current, {width: '40%', height: '30%', borderRadius: '30vh', duration: 1, ease: "power2.inOut"}, "<")
-          .to(introBg.current, {width: '90px', height: '90px', borderRadius: '30vh', duration: 0.5, ease: "power2.inOut"})
+          .to(introBg.current, {width: '90px', height: '90px', borderRadius: '30vh', duration: 0.5, ease: "power2.inOut", onComplete: () => setTriggerIntro5(false)})
           .to(introBg.current, {opacity: 0, duration: 0.5, ease: "power2.inOut"})
-
-          .to(introText5Ref.current, {y: '0', opacity: '1',  duration: 0.5, ease: "power2.inOut", onStart: () => setTriggerIntro5(true)})
+          .set(introText5Ref.current, {opacity: '1', ease: "power2.inOut", onComplete: () => setTriggerIntro5(true)},"-=0.1")
+          .to({}, {duration: 0.5, onComplete: () => setTriggerIntro6(false)})
           .to(meteor.current, {top: '40%', scale: 1, opacity: '1',  duration: 2, ease: "power2.inOut"}, "<")
-          .to(introText5Ref.current, {y: '-50%', opacity: '0',  duration: 0.5, ease: "power2.inOut"}, '-=1')
-          .to('.intro-6', {y: '-50%', opacity: '1',  duration: 0.5, ease: "power2.inOut", onStart: () => setTriggerIntro6(true)},'-=.7' )
+          .to(introText5Ref.current, {opacity: '0',  duration: 0.5, ease: "power2.inOut"}, '-=1')
+          .set('.intro-6', { opacity: '1', ease: "power2.inOut", onComplete: () => setTriggerIntro6(true)})
+          .to({}, {duration: 0.5})
           .to(meteor.current, {top: '100%', opacity: 0.5, scale: 1.8, duration: 0.3, ease: "power2.inOut"})
           .to('.intro-6', { opacity: '0',  duration: 0.3, ease: "power2.inOut"})
-
           .to(meteor.current, {top: '110%', opacity: 0,   duration: 0.3 , ease: "power2.inOut", onComplete(){
             window.scrollTo({
               top: window.innerHeight *7,
               behavior: "smooth"
             });
-            //   const timeC = document.getElementById("mars-rock-nakhla");
-            //   if(timeC) {
-            //     window.addEventListener('wheel', preventDefault, {passive: false});
-            //     window.addEventListener('touchmove', preventDefault, {passive: false});
-            //     gsap.to(window, {
-            //       duration: 0,
-            //       scrollTo: {y: timeC, autoKill: false},
-            //       ease: 'power2.inOut',
-            //       onComplete: () => {
-            //         window.removeEventListener('wheel', preventDefault);
-            //         window.removeEventListener('touchmove', preventDefault);
-            //       }
-            //     });
-            //   }
-
-          }}, "<")
+          }}, "-=0.4")
       }
     }, introRef)
     return () => ctx.revert();
@@ -177,18 +154,18 @@ export default function Intro({progress, isLoaded, animationComplete=false, togg
         <div className="intro-counter lg text--info text-light text-title" aria-live="polite" aria-atomic="true">{progress}%</div>
         <div className="intro-1" ref={intro1Ref}>
           <div className="lg text-title text--info text-light mb-2"  ref={titleRef}>WE ARE MADE OF STARDUST</div>
-          <p className="h6 text--info" ref={textRef}>A tale of beginnings by Isadora Agency</p>
+          <p className="h6 text--info mb-0" ref={textRef}>A tale of beginnings by Isadora Agency</p>
         </div>
         <div className="intro-2" ref={intro2Ref}>
           <div className="fz-5 text-upper text--info text-title" ref={introText2Ref}>ACCORDING TO Planetary scientistS and stardust expertS, nearly all the elements in the human body were made in a star and many have come through several supernovas.</div>
         </div>
         <div className="intro-3" ref={intro3Ref}>
-          <div className="fz-5 text-upper text--info text-title" ref={introText3Ref}>THEY KNOW THIS THANKS TO THE STUDY OF METEORITES.</div>
+          <div className="fz-5 text-upper text--info text-title mb-0" ref={introText3Ref}>THEY KNOW THIS THANKS TO THE STUDY OF METEORITES.</div>
         </div>
-        <div className="intro-5 fz-5 text-title text-upper" ref={introText5Ref}>
+        <div className="intro-5 fz-5 text-title text-upper mb-0" ref={introText5Ref}>
           Meteorites are far older than any terrestrial rock, acting as snapshots of the solar system before planets even existed.
         </div>
-        <div className="intro-6 fz-5 text-title text-upper" ref={introText6Ref}>
+        <div className="intro-6 fz-5 text-title text-upper mb-0" ref={introText6Ref}>
           So in a way they are like Time Capsules, this site is dedicated to them.
         </div>
         <div className="intro-meteor" ref={meteor}>

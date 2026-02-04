@@ -13,7 +13,6 @@
     inset: 50px 0 0 0;
     border-radius: 50%;
     background: conic-gradient(from -75deg at 50% 50.8%, rgba(0, 0, 0, 0.70) 0deg, rgba(144, 142, 255, 0.70) 70deg, rgba(0, 0, 0, 0.70) 170deg, rgba(0, 0, 0, 0.70) 280deg);
-    filter: blur(24.44444465637207px);
     background-size: cover;
     background-position: center;
     filter: blur(24.44444465637207px);
@@ -57,10 +56,9 @@
   width: 80%;
   height: 0;
   padding-bottom: 80%;
-  top: 65%;
+  top: 15%;
   left: 50%;
-
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0%);
   &__line {
     position: absolute;
     inset: 0;
@@ -103,9 +101,9 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0);
   width: 880px;
-  max-width: 100%;
+  max-width: 80%;
   text-align: center;
    h3 {
      text-transform: uppercase;

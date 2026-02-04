@@ -38,6 +38,11 @@ const Stardust = ({isLoaded, onBackToIntro
   const [move, setMove] = useState(false);
   const [popupActive, setPopupActive] = useState(false);
   const sturdust = useRef(null);
+
+  const splineRef = useRef(null);
+  const [splineApp, setSplineApp] = useState(null);
+
+
   //
   useEffect(() => {
     const handleWheel = (e) => {
@@ -123,6 +128,38 @@ const Stardust = ({isLoaded, onBackToIntro
     return () => ctxs.revert();
   }, [isLoaded])
 
+  const onSplineLoad = (splineApp) => {
+    // Store the spline app reference
+    splineRef.current = splineApp;
+
+    // Get current viewport dimensions
+    const viewportHeight = window.innerHeight;
+
+    // Check if we can access the camera controls
+    if (splineApp && splineApp.runtime && splineApp.runtime.camera) {
+      // First try the runtime camera approach
+      const cameraZoom = viewportHeight < 768 ? 0.7 :
+        viewportHeight < 1024 ? 0.85 : 1;
+
+      // Apply zoom by adjusting the camera position
+      // Move the camera back to simulate zooming out
+      const camera = splineApp.runtime.camera;
+
+      // Instead of directly setting zoom, adjust the position
+      // Increase the z position to zoom out (move camera backward)
+      if (viewportHeight < 768) {
+        // Move camera back for small screens
+        camera.position.z *= 1.5;
+      }
+    } else if (splineApp && splineApp.setZoom) {
+      // Alternative: try using setZoom method if available
+      const zoomLevel = viewportHeight < 768 ? 0.5 :
+        viewportHeight < 1024 ? 0.55 : 1;
+      splineApp.setZoom(zoomLevel);
+    }
+  };
+
+
 
   return (
     <div id="Stardust" >
@@ -180,7 +217,7 @@ const Stardust = ({isLoaded, onBackToIntro
           <div className="spline-canvas">
 
             {
-              currentOption && <Spline scene={currentOption.spline}/>
+              currentOption && <Spline scene={currentOption.spline} onLoad={onSplineLoad}/>
             }
             {
               currentOption && move && (

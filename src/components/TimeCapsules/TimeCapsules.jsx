@@ -67,11 +67,11 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             start: 'top bottom',
             end: 'top top',
             scrub: 0.5,
-            onEnter: () => {handleActiveItem(index); toggleNav(true);
+            onEnter: () => {toggleNav(true);
 
             },
-            onEnterBack: () => {handleActiveItem(index); index == 0 && toggleNav(false)},
-            onLeaveBack: () => handleActiveItem(index - 1 >= 0 ? index - 1 : 0)
+            onEnterBack: () => {index == 0 && toggleNav(false)},
+            // onLeaveBack: () => handleActiveItem(index - 1 >= 0 ? index - 1 : 0)
           }
         });
 
@@ -94,21 +94,19 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
             trigger: timeCapsules.current,
             start: 'top top',
-            end: '+=400%',
-            scrub: true,
+            end: '+=600%',
+            scrub: 1.5,
             pin: true,
             pinSpacing: false,
             id: "TimeCapsules"+item.slug,
             anticipatePin: 1,
-
-
-            onEnter: () => {
-              toggleNav(true);
-            },
-            onLeaveBack: () =>  toggleNav(true),
+            onEnter: () =>{ toggleNav(true); handleActiveItem(index)},
+            onEnterBack: () => handleActiveItem(index),
+            onLeaveBack: () =>{ toggleNav(true); handleActiveItem(index - 1 >= 0 ? index - 1 : 0)},
             onLeave: () => {
               lastTimeCapsule && toggleNav(false)
               setTimeCapsulesTitleActive(false)
+
             }
           }
         });
@@ -129,8 +127,13 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
           .to(timeCapsulesSpec.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
           .to(timeCapsulesComp.current, { y: '-50%', opacity: 1,  ease: 'power3.out'}, '<')
           .to(timeCapsulesComp.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
-          .to(timeCapsulesDesc2.current, { y: '-50%', opacity: 1,  ease: 'power3.out'},"<")
+
+          tl2.to(timeCapsulesDesc2.current, { y: '-50%', opacity: 1,  ease: 'power3.out'},"<")
+
             if(index+1 !== items.length) {
+
+
+
               tl2.to(timeCapsulesVideo.current, {
                 motionPath: {
                   path: [
@@ -143,6 +146,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                 }, scale: 0.5, ease: 'power3.out'
               })
             }else{
+              tl2.set(videoFall.current, {opacity: 0})
               tl2.to(timeCapsulesVideo.current, {
                scale: 5
               })

@@ -49,7 +49,8 @@
   left: 50%;
   width: 100%;
   text-align: center;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0);
+
 }
 .intro-2,
 .intro-3 {
@@ -61,6 +62,7 @@
   top: 50%;
   transform: translateY(-50%);
   letter-spacing: 0.4rem;
+  transition: opacity .5s;
 }
 .intro-4 {
   font-size: 26.4rem;
@@ -93,6 +95,7 @@
   transform: translate(-50%, -50%);
   text-align: center;
   opacity: 0;
+  transition: opacity .5s;
 }
 .intro-7 {
   max-width: 640px;
