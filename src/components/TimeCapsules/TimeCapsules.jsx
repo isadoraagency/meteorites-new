@@ -79,7 +79,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
           if(index == 0) {
             tl.set(timeCapsules.current, { opacity: 1})
             tl.to(timeCapsulesBg.current, {
-              scale: 3,
+              scale: 4,
               duration: 0.1,
               ease: 'power3.out'
             })
