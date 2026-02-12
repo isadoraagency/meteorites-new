@@ -34,6 +34,7 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
     blured: 5,
     opacity: 0.9,
   };
+  const mm = gsap.matchMedia()
 
   useDecodeText(titleRef, isLoaded);
   useDecodeText(textRef, isLoaded);
@@ -73,6 +74,16 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+
+
+      mm.add({
+        isDesktop: "(min-width: 1024px)",
+        isTablet: "(min-width: 768px) and (max-width: 1023px)",
+        isMobile: "(max-width: 767px)"
+      }, (context) => {
+        const { isDesktop, isTablet, isMobile } = context.conditions
+
+
       gsap.set(intro1Ref.current, { opacity: 0 })
       gsap.set(meteor.current, { scale: 0.6, top: '-100%', opacity: 0 })
 
@@ -138,13 +149,19 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
         .to(intro3Ref.current, { opacity: 0, ease: "power2.inOut" })
         .to(
           introBg.current,
-          { width: '100%', height: '70%', borderRadius: '50vh', duration: 1.5, ease: "power2.inOut" }
+          { width: isMobile ? '95%' : '100%', height: isMobile ? '90%': '70%', borderRadius: '50vh', duration: 1.5, ease: "power2.inOut" }
         )
         .to(
           intro4Ref.current,
           { x: '0%', duration: 1.5, ease: "power2.inOut" },
           '<'
         )
+        // if(isMobile){
+        //   tl.to(
+        //     intro4Ref.current,
+        //     { x: '-100%', duration: 1, ease: "power2.inOut" }
+        //   )
+        // }
 
       // ======================
       // 4 animation
@@ -163,7 +180,7 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
         )
         .to(
           intro4Ref.current,
-          { opacity: 0, x: '-50%', duration: 1,
+          { opacity: 0, x: '-100%', duration: 1,
             ease: "power2.inOut"
           }, '<'
         )
@@ -230,7 +247,7 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
       tl.addLabel("intro-7")
 
     }, introRef)
-
+    })
     return () => ctx.revert()
   }, [animationComplete])
 
@@ -323,8 +340,8 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
       <div className="ia-container">
         <div className="intro-counter lg text--info text-light text-title" aria-live="polite" aria-atomic="true">{progress}%</div>
         <div className="intro-1" ref={intro1Ref}>
-          <div className="lg text-title text--info text-light mb-2"  ref={titleRef}>WE ARE MADE OF STARDUST</div>
-          <p className="h6 text--info mb-0" ref={textRef}>A tale of beginnings by Isadora Agency</p>
+          <div className="lg text-title text--info text-light mb-2"  ref={titleRef}>WE ARE MADE <br/>OF STARDUST</div>
+          <p className="h6 text--info mb-0 text-light" ref={textRef}>A tale of beginnings <br/>by Isadora Agency</p>
         </div>
         <div className="intro-2" ref={intro2Ref}>
           <div className="fz-5 text-upper text--info text-title" ref={introText2Ref}>ACCORDING TO Planetary scientistS and stardust expertS, nearly all the elements in the human body were made in a star and many have come through several supernovas.</div>

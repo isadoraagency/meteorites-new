@@ -25,11 +25,12 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    max-width: 100%;
   }
   &-heading {
     position: relative;
     top: 50%;
-    transform: translateY(-50%);
+    //transform: translateY(-50%);
     width: 100%;
     z-index: 20;
   }
@@ -39,7 +40,7 @@
     align-items: center;
     width: 100%;
     opacity: 0;
-    transform: translate(0, 20%);
+    //transform: translate(0, 20%);
     gap: 2.4rem;
     .p {
       display: inline-block;
@@ -150,6 +151,7 @@
   position: absolute;
   top: 40%;
   left: 50%;
+  transform: translate(-50%, 0);
   text-align: center;
   color: $info;
   z-index: 10;
@@ -168,5 +170,40 @@
     &.pin-spacer-TimeCapsulesmurchison {
       //height: 21300px !important;
     }
+  }
+}
+@media (max-width: 767px) {
+  .time-capsules-meta {
+    display: block;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .time-capsules__container {
+    flex-direction: column;
+  }
+  .time-capsules-heading {
+    position: absolute;
+    left: 0;
+    padding-top: 3rem;
+  }
+  .time-capsules-video {
+    order: 0;
+  }
+  .time-capsules__spec {
+    order: 1;
+  }
+  .time-capsules__inner {
+    display: block;
+
+  }
+  .time-capsules__container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    //transform: translateY(-50%);
+  }
+  .time-capsules__spec,
+  .time-capsules__desc {
+    width: calc(100% - 5rem);
   }
 }

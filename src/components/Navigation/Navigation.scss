@@ -152,3 +152,39 @@
     transform: translate(0%, 70%) scale(1);
   }
 }
+@media (max-width: 767px) {
+  .meteorite-nav {
+    top: auto;
+    right: 50%;
+    transform: translate(50%, 0%);
+    bottom: 8.4rem;
+    padding: .5rem 2rem;
+    &:before{
+      max-width: 90px;
+      height: 100%;
+      border-radius: 45px;
+      transition: opacity .3s, max-width  0.8s;
+    }
+    &.active {
+      &:before {
+        max-width: 100%;
+      }
+      li {
+        transform: translate(0, 0);
+      }
+    }
+    ul {
+      display: flex;
+      justify-content: center;
+      gap: 1.6rem;
+    }
+    li {
+      width: 34px;
+      margin-bottom: 0;
+      transform: translate(-50%, 0);
+      button {
+        height: 60px;
+      }
+    }
+  }
+}

@@ -118,3 +118,15 @@
   }
 }
 
+@media (max-width: 767px) {
+  .menu-button {
+    width: 4.8rem;
+    height: 4.8rem;
+    left: 50%;
+    bottom: 2rem;
+    transform: translateX(-50%);
+  }
+  .main-menu__side {
+    flex-direction: column;
+  }
+}

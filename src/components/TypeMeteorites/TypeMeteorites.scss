@@ -159,3 +159,17 @@
     }
   }
 }
+@media (max-width: 767px) {
+  .meteorites-title {
+    font-size: 3.2rem;
+    white-space: normal;
+    width: calc(100% - 2.5rem);
+    text-align: center;
+  }
+  .main-menu__top {
+    margin-bottom: 6rem;
+    li {
+      margin-bottom: 1.6rem;
+    }
+  }
+}

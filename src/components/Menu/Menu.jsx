@@ -140,9 +140,6 @@ export default function Menu({ list }) {
                 }
               }}
               exit={{
-                width: '6.4rem',
-                height: '6.4rem',
-                borderRadius: '64rem 64rem 64rem 0',
                 opacity: 0,
                 transition: { duration: 0.5 }
               }}
@@ -233,7 +230,7 @@ export default function Menu({ list }) {
                       >
                         <ul className="main-menu__bottom">
                           {list[0].small.map((item, i) => (
-                            <li className="p1" key={`small-item-${i}`}>
+                            <li className="p1 mb-0" key={`small-item-${i}`}>
                               <button onClick={()=>handleMenuItemClick(item.action)}>{item.title}</button>
                             </li>
                           ))}
@@ -247,7 +244,7 @@ export default function Menu({ list }) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 1.9 }}
                     exit={{ opacity: 0 }}
-                    className="main-menu__side p2 mb-0">
+                    className="main-menu__side p1 mb-0">
                     This site was made of stardust at{' '}
                     <a
                       href="https://isadoradigitalagency.com/"

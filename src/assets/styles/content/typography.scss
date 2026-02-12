@@ -149,23 +149,29 @@ ul {
 }
 
 @media (max-width: 767px) {
-  h1,.h1,h2,.h2 {
-    font-size: 4.4rem;
+  //h1,.h1,h2,.h2 {
+  //  font-size: 4.4rem;
+  //}
+  //h3,.h3 {
+  //  font-size: 3rem;
+  //}
+  //
+  //h4,.h4,
+  //h5,.h5 {
+  //  font-size: 2.2rem;
+  //}
+  //
+  //
+  h5, .h5 {
+    font-size: 3.2rem;
   }
-  h3,.h3 {
-    font-size: 3rem;
+  h6, .h6 {
+    font-size: 1.8rem;
   }
-
-  h4,.h4,
-  h5,.h5 {
-    font-size: 2.2rem;
-  }
-
-
-
-
-
   .fz-5 {
+    font-size: 1.6rem;
+  }
+  .fz-6 {
     font-size: 1.8rem;
   }
 

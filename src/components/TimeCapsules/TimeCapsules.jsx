@@ -24,6 +24,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
   const [isVideo, setIsVideo] = useState(false);
   const [timeCapsulesTitleActive, setTimeCapsulesTitleActive] = useState(false);
+  const mm = gsap.matchMedia()
 
   const options = {
     iterations: 8,
@@ -41,123 +42,151 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      mm.add({
+        isDesktop: "(min-width: 1024px)",
+        isTablet: "(min-width: 768px) and (max-width: 1023px)",
+        isMobile: "(max-width: 767px)"
+      }, (context) => {
+        const {isDesktop, isTablet, isMobile} = context.conditions
 
-      if(item){
-      if(index == 0) {
-        gsap.set(timeCapsulesBg.current, {scale: 1})
-      }
-
-      gsap.set(timeCapsulesContainer.current, {opacity: 0 })
-        gsap.set(timeCapsules.current, { opacity: 0})
-
-      gsap.set(timeCapsulesTitle.current, {opacity: 0})
-      gsap.set(timeCapsulesSpec.current, { opacity: 0, y: '150%'})
-
-      gsap.set(timeCapsulesMeta.current, { opacity: 0})
-      gsap.set(timeCapsulesHeading.current, { top: '50%'})
-      gsap.set(timeCapsulesComp.current, { opacity: 0, y: '150%'})
-      if(videoFall.current) {
-        gsap.set(videoFall.current, {opacity: 0})
-      }
-      if (isLoaded) {
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: timeCapsules.current,
-            start: 'top bottom',
-            end: 'top top',
-            scrub: 1,
-            snap: {
-              snapTo: "labelsDirectional",
-              duration: { min: 0.3, max: 2 },
-              ease: "power2.out",
-            },
-            onEnter: () => {toggleNav(true);
-
-            },
-            onEnterBack: () => {index == 0 && toggleNav(false)},
-            // onLeaveBack: () => handleActiveItem(index - 1 >= 0 ? index - 1 : 0)
+        if (item) {
+          if (index == 0) {
+            gsap.set(timeCapsulesBg.current, {scale: 1})
           }
-        });
 
-          if(index == 0) {
-            tl.set(timeCapsules.current, { opacity: 1})
-            tl.to(timeCapsulesBg.current, {
-              scale: 4,
-              duration: 0.1,
-              ease: 'power3.out'
-            })
-            // tl.to(timeCapsulesContainer.current, {opacity: 1})
-            //   .set(timeCapsulesTitle.current, {opacity: 1, onComplete: () => {setTimeCapsulesTitleActive(true)}}, '<')
+          gsap.set(timeCapsulesContainer.current, {opacity: 0})
+          gsap.set(timeCapsules.current, {opacity: 0})
+
+          gsap.set(timeCapsulesTitle.current, {opacity: 0, scale: isMobile ? 1.2 : 3})
+          gsap.set(timeCapsulesSpec.current, {opacity: 0, y: '150%'})
+
+          gsap.set(timeCapsulesMeta.current, {opacity: 0})
+          gsap.set(timeCapsulesHeading.current, {top: '50%', y: '-50%'})
+          gsap.set(timeCapsulesComp.current, {opacity: 0, y: '150%'})
+
+          if(isMobile){
+            gsap.set('.time-capsules__container', {top: "50%", y: '-50%'})
           }
 
 
+          if (videoFall.current) {
+            gsap.set(videoFall.current, {opacity: 0})
+          }
+          if (isLoaded) {
 
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: timeCapsules.current,
+                start: 'top bottom',
+                end: 'top top',
+                scrub: 1,
+                snap: {
+                  snapTo: "labelsDirectional",
+                  duration: {min: 0.3, max: 2},
+                  ease: "power2.out",
+                },
+                onEnter: () => {
+                  toggleNav(true);
 
-        // gsap.set('.time-capsules-bg', {scale: 5})
-        const tl2 = gsap.timeline({
-          scrollTrigger: {
+                },
+                onEnterBack: () => {
+                  index == 0 && toggleNav(false)
+                },
+                // onLeaveBack: () => handleActiveItem(index - 1 >= 0 ? index - 1 : 0)
+              }
+            });
 
-            trigger: timeCapsules.current,
-            start: 'top top',
-            // end: '+=600%',
-            end: "+=20000",
-            scrub: 1,
-            pin: true,
-            pinSpacing: false,
-            id: "TimeCapsules"+item.slug,
-            anticipatePin: 1,
-            snap: {
-              snapTo: "labelsDirectional",
-              duration: { min: 0.3, max: 2 },
-              ease: "power2.out",
-            },
-            onEnter: () =>{ toggleNav(true); handleActiveItem(index) },
-            onEnterBack: () => {handleActiveItem(index)
-              index == 0 && toggleNav(false)
-            },
-            onLeaveBack: () =>{ toggleNav(true); handleActiveItem(index - 1 >= 0 ? index - 1 : 0)},
-            onLeave: () => {
-              lastTimeCapsule && toggleNav(false)
-              setTimeCapsulesTitleActive(false)
-
+            if (index == 0) {
+              tl.set(timeCapsules.current, {opacity: 1})
+              tl.to(timeCapsulesBg.current, {
+                scale: 5,
+                duration: 0.1,
+                ease: 'power3.out'
+              })
+              // tl.to(timeCapsulesContainer.current, {opacity: 1})
+              //   .set(timeCapsulesTitle.current, {opacity: 1, onComplete: () => {setTimeCapsulesTitleActive(true)}}, '<')
             }
-          }
-        });
-        tl2.addLabel('timecapsules-1' )
-          tl2.set(timeCapsulesContainer.current, { opacity: 1})
 
-          if(index !== 0) {
-            tl2.to(timeCapsules.current, {opacity: 1, duration: 0.02 })
-          }else{
-            tl2.set(timeCapsules.current, {opacity: 1 })
-          }
-          tl2.set(timeCapsulesTitle.current, {opacity: 1, onComplete: () => {setTimeCapsulesTitleActive(true)}}, '<')
 
-          .addLabel('timecapsules-2')
-          .to(timeCapsulesHeading.current, { top: "0%", ease: 'power3.out'})
-          .to(timeCapsulesTitle.current, {scale: 1, ease: 'power3.out'}, "<")
-          .to(timeCapsulesVideo.current, { scale: 1,  ease: 'power3.out'}, '<')
-          .to(timeCapsulesMeta.current, {opacity: 1, duration: 0.2, ease: 'power3.out'})
-          if(videoFall.current) {
-            tl2.to(videoFall.current, {opacity: 1, duration: 0.2, ease: 'power3.out'}, "<")
-          }
-          tl2.to(timeCapsulesDesc1.current, { y: '-50%', opacity: 1,  ease: 'power3.out'}, '<')
-          .addLabel('timecapsules-3')
-          .to(timeCapsulesDesc1.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
-          .to(timeCapsulesSpec.current, { y: '-50%', opacity: 1,  ease: 'power3.out'}, '<')
+            // gsap.set('.time-capsules-bg', {scale: 5})
+            const tl2 = gsap.timeline({
+              scrollTrigger: {
 
-          .addLabel('timecapsules-4')
-          .to(timeCapsulesSpec.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
-          .to(timeCapsulesComp.current, { y: '-50%', opacity: 1,  ease: 'power3.out'}, '<')
+                trigger: timeCapsules.current,
+                start: 'top top',
+                // end: '+=600%',
+                end: "+=20000",
+                scrub: 1,
+                pin: true,
+                pinSpacing: false,
+                id: "TimeCapsules" + item.slug,
+                anticipatePin: 1,
+                snap: {
+                  snapTo: "labelsDirectional",
+                  duration: {min: 0.3, max: 2},
+                  ease: "power2.out",
+                },
+                onEnter: () => {
+                  toggleNav(true);
+                  handleActiveItem(index)
+                },
+                onEnterBack: () => {
+                  handleActiveItem(index)
+                  index == 0 && toggleNav(false)
+                },
+                onLeaveBack: () => {
+                  toggleNav(true);
+                  handleActiveItem(index - 1 >= 0 ? index - 1 : 0)
+                },
+                onLeave: () => {
+                  lastTimeCapsule && toggleNav(false)
+                  setTimeCapsulesTitleActive(false)
 
-          .addLabel('timecapsules-5')
-          .to(timeCapsulesComp.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
-          tl2.to(timeCapsulesDesc2.current, { y: '-50%', opacity: 1,  ease: 'power3.out'},"<")
+                }
+              }
+            });
+            tl2.addLabel('timecapsules-1')
+            tl2.set(timeCapsulesContainer.current, {opacity: 1})
 
-            .addLabel('timecapsules-6')
-            if(index+1 !== items.length) {
+            if (index !== 0) {
+              tl2.to(timeCapsules.current, {opacity: 1, duration: 0.02})
+            } else {
+              tl2.set(timeCapsules.current, {opacity: 1})
+            }
+            tl2.set(timeCapsulesTitle.current, {
+              opacity: 1, onComplete: () => {
+                setTimeCapsulesTitleActive(true)
+              }
+            }, '<')
 
+              .addLabel('timecapsules-2')
+              .to(timeCapsulesHeading.current, {top: "0%", y: '0%', ease: 'power3.out'})
+              .to(timeCapsulesTitle.current, {scale: 1, ease: 'power3.out'}, "<")
+              .to(timeCapsulesVideo.current, {scale: 1, ease: 'power3.out'}, '<')
+              .to(timeCapsulesMeta.current, {opacity: 1, duration: 0.2, ease: 'power3.out'})
+            if (videoFall.current) {
+              tl2.to(videoFall.current, {opacity: 1, duration: 0.2, ease: 'power3.out'}, "<")
+            }
+            if(isMobile){
+              tl2.to(timeCapsulesMeta.current, {opacity: 0, duration: 0.2, ease: 'power3.out'})
+                .to('.time-capsules__container', {top: "70px", y: '0%', ease: 'power3.out'}, "<")
+            }
+
+            tl2.to(timeCapsulesDesc1.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, '<')
+              .addLabel('timecapsules-3')
+              .to(timeCapsulesDesc1.current, {y: '-150%', opacity: 0, ease: 'power3.out'})
+              .to(timeCapsulesSpec.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, '<')
+
+              .addLabel('timecapsules-4')
+              .to(timeCapsulesSpec.current, {y: '-150%', opacity: 0, ease: 'power3.out'})
+              .to(timeCapsulesComp.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, '<')
+
+              .addLabel('timecapsules-5')
+              .to(timeCapsulesComp.current, {y: '-150%', opacity: 0, ease: 'power3.out'})
+            tl2.to(timeCapsulesDesc2.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, "<")
+
+              .addLabel('timecapsules-6')
+            if (index + 1 !== items.length) {
 
 
               tl2.to(timeCapsulesVideo.current, {
@@ -171,22 +200,23 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                   curviness: 1.5
                 }, scale: 0.5, ease: 'power3.out'
               })
-            }else{
+            } else {
               tl2.set(videoFall.current, {opacity: 0})
               tl2.to(timeCapsulesVideo.current, {
-               scale: 5
+                scale: 5
               })
             }
-            if(index == 0){
+            if (index == 0) {
               tl2.to(timeCapsulesContainer.current, {opacity: 0, ease: 'power3.out'}, '<')
-            }else{
+            } else {
               tl2.to(timeCapsules.current, {opacity: 0, ease: 'power3.out'}, '<')
             }
-           tl2.addLabel('timecapsules-7')
+            tl2.addLabel('timecapsules-7')
 
 
           }
         }
+      })
      }, timeCapsules)
 
     return () => ctx.revert();
