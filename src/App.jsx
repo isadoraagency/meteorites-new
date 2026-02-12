@@ -24,12 +24,8 @@ function App({onComplete}) {
   const [progress, setProgress] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
   const [animationComplete, setAnimationComplete] = useState(false);
-  const [returningToIntro, setReturningToIntro] = useState(false);
 
   const handleBackToIntro = () => {
-    setReturningToIntro(true);
-    // setAnimationComplete(false);
-
     // Scroll to top to ensure proper positioning
     window.scrollTo(0, 0);
   };

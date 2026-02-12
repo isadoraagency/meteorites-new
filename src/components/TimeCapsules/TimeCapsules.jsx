@@ -66,7 +66,12 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             trigger: timeCapsules.current,
             start: 'top bottom',
             end: 'top top',
-            scrub: 0.5,
+            scrub: 1,
+            snap: {
+              snapTo: "labelsDirectional",
+              duration: { min: 0.3, max: 2 },
+              ease: "power2.out",
+            },
             onEnter: () => {toggleNav(true);
 
             },
@@ -75,7 +80,6 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
           }
         });
 
-
           if(index == 0) {
             tl.set(timeCapsules.current, { opacity: 1})
             tl.to(timeCapsulesBg.current, {
@@ -83,8 +87,10 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
               duration: 0.1,
               ease: 'power3.out'
             })
-            tl.to(timeCapsulesContainer.current, {opacity: 1 })
+            // tl.to(timeCapsulesContainer.current, {opacity: 1})
+            //   .set(timeCapsulesTitle.current, {opacity: 1, onComplete: () => {setTimeCapsulesTitleActive(true)}}, '<')
           }
+
 
 
 
@@ -94,14 +100,22 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
             trigger: timeCapsules.current,
             start: 'top top',
-            end: '+=600%',
-            scrub: 1.5,
+            // end: '+=600%',
+            end: "+=20000",
+            scrub: 1,
             pin: true,
             pinSpacing: false,
             id: "TimeCapsules"+item.slug,
             anticipatePin: 1,
-            onEnter: () =>{ toggleNav(true); handleActiveItem(index)},
-            onEnterBack: () => handleActiveItem(index),
+            snap: {
+              snapTo: "labelsDirectional",
+              duration: { min: 0.3, max: 2 },
+              ease: "power2.out",
+            },
+            onEnter: () =>{ toggleNav(true); handleActiveItem(index) },
+            onEnterBack: () => {handleActiveItem(index)
+              index == 0 && toggleNav(false)
+            },
             onLeaveBack: () =>{ toggleNav(true); handleActiveItem(index - 1 >= 0 ? index - 1 : 0)},
             onLeave: () => {
               lastTimeCapsule && toggleNav(false)
@@ -110,11 +124,18 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             }
           }
         });
-        tl2.to(timeCapsules.current, { opacity: 1})
-        tl2.set(timeCapsulesContainer.current, {opacity: 1 })
-          .set(timeCapsulesTitle.current, {opacity: 1, onComplete: () => {setTimeCapsulesTitleActive(true)}}, '<')
-          .to({}, {duration: 0.5})
-          .to(timeCapsulesHeading.current, { top: "0%", ease: 'power3.out'}, )
+        tl2.addLabel('timecapsules-1' )
+          tl2.set(timeCapsulesContainer.current, { opacity: 1})
+
+          if(index !== 0) {
+            tl2.to(timeCapsules.current, {opacity: 1, duration: 0.02 })
+          }else{
+            tl2.set(timeCapsules.current, {opacity: 1 })
+          }
+          tl2.set(timeCapsulesTitle.current, {opacity: 1, onComplete: () => {setTimeCapsulesTitleActive(true)}}, '<')
+
+          .addLabel('timecapsules-2')
+          .to(timeCapsulesHeading.current, { top: "0%", ease: 'power3.out'})
           .to(timeCapsulesTitle.current, {scale: 1, ease: 'power3.out'}, "<")
           .to(timeCapsulesVideo.current, { scale: 1,  ease: 'power3.out'}, '<')
           .to(timeCapsulesMeta.current, {opacity: 1, duration: 0.2, ease: 'power3.out'})
@@ -122,14 +143,19 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             tl2.to(videoFall.current, {opacity: 1, duration: 0.2, ease: 'power3.out'}, "<")
           }
           tl2.to(timeCapsulesDesc1.current, { y: '-50%', opacity: 1,  ease: 'power3.out'}, '<')
+          .addLabel('timecapsules-3')
           .to(timeCapsulesDesc1.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
           .to(timeCapsulesSpec.current, { y: '-50%', opacity: 1,  ease: 'power3.out'}, '<')
+
+          .addLabel('timecapsules-4')
           .to(timeCapsulesSpec.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
           .to(timeCapsulesComp.current, { y: '-50%', opacity: 1,  ease: 'power3.out'}, '<')
-          .to(timeCapsulesComp.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
 
+          .addLabel('timecapsules-5')
+          .to(timeCapsulesComp.current, { y: '-150%', opacity: 0,  ease: 'power3.out'})
           tl2.to(timeCapsulesDesc2.current, { y: '-50%', opacity: 1,  ease: 'power3.out'},"<")
 
+            .addLabel('timecapsules-6')
             if(index+1 !== items.length) {
 
 
@@ -156,6 +182,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             }else{
               tl2.to(timeCapsules.current, {opacity: 0, ease: 'power3.out'}, '<')
             }
+           tl2.addLabel('timecapsules-7')
 
 
           }

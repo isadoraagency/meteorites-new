@@ -103,7 +103,10 @@
 }
 .intro-meteor {
   position: absolute;
-  top: 0;
+  top: -100%;
   left: 50%;
-  transform: translate(-50%, -100%);
+  transform: translate(-50%, 0);
+}
+.pin-spacer-intro-scroll {
+  height: 20000px  !important;
 }

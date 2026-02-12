@@ -164,9 +164,9 @@
 }
 #time-capsules {
   .pin-spacer {
-    height: 500vh !important;
+    height: calc(20000px - 25vh) !important;
     &.pin-spacer-TimeCapsulesmurchison {
-      height: 600vh !important;
+      //height: 21300px !important;
     }
   }
 }

@@ -198,12 +198,17 @@ export default function TypeMeteorites({isLoaded, className}) {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: '+=600%',
-          scrub: 1.2,
+          end: '+=10000px',
+          scrub: 1,
           pin: true,
-          pinSpacing: false,
+          // pinSpacing: false,
           id: "type-meteorites-scroll",
           anticipatePin: 1,
+          snap: {
+            snapTo: "labelsDirectional",
+            duration: { min: 0.3, max: 2 },
+            ease: "power2.out",
+          },
           onEnter: () => {
             gsap.set(titleRef.current, {
               autoAlpha: 1,
@@ -235,6 +240,7 @@ export default function TypeMeteorites({isLoaded, className}) {
       //   // duration: 1,
       //   // ease: 'power3.out'
       // })
+      tl.addLabel("type-1")
       tl.to(titleRef.current, {duration: 0.5})
 
 
@@ -262,8 +268,8 @@ export default function TypeMeteorites({isLoaded, className}) {
             // rotation: -angle * 360 / Math.PI,
             scale: 0.8 + progress * 0.2,
             filter: `blur(${(1 - progress) * 5}px)`,
-            duration: 0.1,
-            ease: 'none'
+            duration: 0.5,
+            // ease: 'none'
           });
         }
 
@@ -294,18 +300,18 @@ export default function TypeMeteorites({isLoaded, className}) {
         duration: 0.6
       }, "<")
 
+      tl.addLabel("type-2")
       // Show description
-      tl.set(descRef.current, {
+      tl.to(descRef.current, {
         autoAlpha: 1,
         y: 0,
-
         onComplete: () => {
           setAnimateMainDesc(true);
           setTimeout(() => {
             setAnimateMainDesc(false);
           }, 2000);
         }
-      }, "-=2")
+      }, "-=1")
 
       // Show circle outline
       tl.to(circleRef.current, {
@@ -323,20 +329,29 @@ export default function TypeMeteorites({isLoaded, className}) {
 
       // Rest of the timeline for cycling through items...
       data.forEach((item, step) => {
-        const activeIndex = (0 + step) % POSITIONS.length;
 
+        const activeIndex = (0 + step) % POSITIONS.length;
+        tl.addLabel("type-3-"+step)
         tl.set(itemsTextRef.current[step], {
           autoAlpha: 1,
-          onReverseComplete: () => {
-            itemsRef.current.forEach((el)=>{
-              el.classList.remove('active');
-              handleItemDeactivation()
-            })
-          },
           onComplete: () => {
-            itemsRef.current[step].classList.add('active');
-            handleItemActivation(step)
-          }
+            // Clear previous active states
+            itemsRef.current.forEach(el => {
+              if (el) el.classList.remove('active');
+            });
+            // Set new active state
+            handleItemActivation(step);
+
+          },
+          onReverseComplete: () => {
+            if (step > 0) {
+              handleItemActivation(step - 1);
+            } else {
+              handleItemDeactivation();
+            }
+
+          },
+
         });
 
         itemsRef.current.forEach((el, i) => {
@@ -347,7 +362,7 @@ export default function TypeMeteorites({isLoaded, className}) {
             y: pos.y,
             scale: i === activeIndex ? 1 : 0.8,
             filter: i === activeIndex ? 'blur(0px)' : 'blur(5px)',
-            duration: 1.5,
+            duration: 2.5,
             ease: 'elastic.out(0.4, 0.5)'
           }, "<");
         });
@@ -355,21 +370,23 @@ export default function TypeMeteorites({isLoaded, className}) {
         if(step !== itemsRef.current.length - 1) {
           tl.set(itemsTextRef.current[step], {
             autoAlpha: 0,
-            onReverseComplete: () => {
-              itemsRef.current[step].classList.add('active')
+            onComplete: () => {
               handleItemDeactivation();
             },
-            onComplete: () => {
-              itemsRef.current.forEach((el) => {
-                el.classList.remove('active');
-                handleItemDeactivation(step)
-              })
+            onReverseComplete: () => {
+              // When scrolling back, reactivate this item
+              handleItemActivation(step);
             }
           });
         }
-      });
 
-      tl.to({}, {duration: 2});
+
+      });
+      tl.addLabel("type-4")
+      tl.to(containerRef.current, {opacity: 0, duration: 1.5}, '+=1')
+      tl.to(centerRef.current, {opacity: 0, duration: 1.5})
+      tl.addLabel("type-5")
+
     }, sectionRef)
 
     return () => ctx.revert()
