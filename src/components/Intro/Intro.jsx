@@ -113,6 +113,7 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
           { filter: 'blur(0px)', ease: 'power3.out', onStart: () => setTriggerIntro2(false) },
           '<'
         )
+        .to(introRef.current, {background: "transparent"}, '<')
         .set(
           intro2Ref.current,
           { opacity: 1, onComplete: () => setTriggerIntro2(true) }, '-=.1'
