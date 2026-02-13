@@ -320,14 +320,14 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
 
                   <video
-                    src={item.video}
                     playsInline
                     muted
                     loop
                     autoPlay
-                    type="video/mp4"
-                    aria-hidden="true">
+                  >
+                    <source src={item.video} type="video/mp4" />
                   </video>
+
                 </div>
 
                 <div className="time-capsules__desc text--info">
