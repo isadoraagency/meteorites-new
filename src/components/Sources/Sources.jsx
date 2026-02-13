@@ -83,6 +83,22 @@ export default function  Sources ({isOpen,handleMenuItemClick}){
               <div className="sources-container">
                 <div className="sources-container__in">
                   <h2 className="h3 text-light text-center mb-1" ref={titleRef}>Sources</h2>
+                  <div className="mobile-video">
+                    <motion.video
+                      initial={{opacity: 0, x: "-100px"}}
+                      animate={{opacity: 1, x: 0}}
+                      exit={{opacity: 0, x: "-100px"}}
+                      transition={{duration: 0.5, delay: 1.2}}
+
+                      src={videoSrc}
+                      playsInline
+                      muted
+                      loop
+                      autoPlay
+                      type="video/mp4"
+                      aria-hidden="true"
+                    ></motion.video>
+                  </div>
                   <motion.div
                     initial={{opacity: 0, y: 20, maxHeight: '0px' }}
                     animate={{opacity: 1, y: 0, maxHeight: '2000px' }}

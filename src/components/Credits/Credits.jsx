@@ -87,7 +87,7 @@ export default function Credits ({handleMenuItemClick, isOpen }){
                 exit={{opacity: 0, scale: 0}}
                 transition={{duration: 0.5, delay: 0.9}}
               >
-                <p className="fz-6">This site was made of stardust by</p>
+                <p className="fz-6 bottom-notice">This site was made of stardust by</p>
                 <a href="https://isadoradigitalagency.com/" target="_blank" rel="noreferrer">
                   <img src="/images/ida-logo.svg" alt="IDA Logo"/>
                 </a>

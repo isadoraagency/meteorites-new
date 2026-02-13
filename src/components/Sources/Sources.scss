@@ -47,3 +47,37 @@
     }
   }
 }
+.mobile-video {
+  display: none;
+}
+@media (max-width: 767px) {
+  .sources-wrap {
+    .ia-container {
+      max-height: 100%;
+      overflow-y: auto;
+    }
+  }
+  .sources-container {
+    max-width: 100%;
+
+    &__in {
+      background: none;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+    }
+    .p2 {
+
+
+    }
+  }
+  .sources-container__bgs {
+    display: none;
+  }
+  .mobile-video {
+    display: block;
+    overflow: hidden;
+    border-radius: 99rem;
+    margin: 2.4rem 0;
+  }
+}

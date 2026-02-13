@@ -45,7 +45,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  max-width: 595px;
+  width: 595px;
+  max-width: calc(100% - 5rem);
   transform: translate(-50%, -50%);
   color: #B7AFFF;
   letter-spacing: 0.4rem;
@@ -160,6 +161,10 @@
   }
 }
 @media (max-width: 767px) {
+  .meteorites-center h3 {
+    font-size: 3.2rem;
+    margin-bottom: 1.6rem;
+  }
   .meteorites-title {
     font-size: 3.2rem;
     white-space: normal;
@@ -171,5 +176,47 @@
     li {
       margin-bottom: 1.6rem;
     }
+  }
+  .meteorites-circle {
+    width: 120%;
+    left: -10%;
+    transform: translate(0, 0);
+    padding-bottom: 120%;
+  }
+  .meteorites-center {
+    max-width: 100%;
+  }
+  .meteorite-item {
+    width: 86px;
+    height: 120px;
+  }
+  .meteorites-circle__line {
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+  }
+  .meteorite-item {
+    &__text {
+      gap: 0;
+      flex-direction: column;
+      &-left,
+      &-right {
+        width: calc(100% - 5rem);
+        margin: 0 auto;
+        text-align: center !important;
+        p {
+          font-size: 1.4rem;
+        }
+      }
+    }
+
+  }
+  .meteorite-item__sub-title {
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 1.6rem;
+  }
+  .meteorite-item__info {
+    transform: translate(0, -50%);
   }
 }

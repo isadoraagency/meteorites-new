@@ -167,14 +167,20 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             if (videoFall.current) {
               tl2.to(videoFall.current, {opacity: 1, duration: 0.2, ease: 'power3.out'}, "<")
             }
-            if(isMobile){
-              tl2.to(timeCapsulesMeta.current, {opacity: 0, duration: 0.2, ease: 'power3.out'})
-                .to('.time-capsules__container', {top: "70px", y: '0%', ease: 'power3.out'}, "<")
+
+
+            if(!isMobile){
+              tl2.to(timeCapsulesDesc1.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, "<")
             }
 
-            tl2.to(timeCapsulesDesc1.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, '<')
-              .addLabel('timecapsules-3')
-              .to(timeCapsulesDesc1.current, {y: '-150%', opacity: 0, ease: 'power3.out'})
+              if(isMobile){
+                tl2.addLabel('timecapsules-3-0')
+                tl2.to(timeCapsulesDesc1.current, {y: '-50%', opacity: 1, ease: 'power3.out'})
+                tl2.to(timeCapsulesMeta.current, {opacity: 0, duration: 0.2, ease: 'power3.out'}, '<' )
+                  .to('.time-capsules__container', {top: "150px", y: '0%', ease: 'power3.out'}, "<")
+              }
+            tl2.addLabel('timecapsules-3')
+              tl2.to(timeCapsulesDesc1.current, {y: '-150%', opacity: 0, ease: 'power3.out'})
               .to(timeCapsulesSpec.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, '<')
 
               .addLabel('timecapsules-4')

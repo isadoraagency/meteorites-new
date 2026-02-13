@@ -70,11 +70,14 @@
   .close {
     width: 4rem;
     height: 4rem;
+    background: none;
     i {
       &:before,
       &:after {
-        height: 2.6rem;
-        margin-top: -1.3rem;
+        height: 1.6rem;
+        margin-top: -.8rem;
+        width: 1px;
+        margin-left: -.5px;
       }
     }
   }

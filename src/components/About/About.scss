@@ -8,6 +8,9 @@
   height: 100%;
   padding-top: 7rem;
   box-sizing: border-box;
+  .h6 {
+    line-height: 1.5;
+  }
   .ia-container {
     position: relative;
     display: flex;
@@ -27,5 +30,12 @@
     top: 2.4rem;
     right: 2.4rem;
 
+  }
+}
+@media (max-width: 767px) {
+  .about {
+    .h6 {
+      font-size: 2rem;
+    }
   }
 }

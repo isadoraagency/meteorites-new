@@ -138,34 +138,34 @@
   @include button($button-padding-lg, $button-font-size-lg);
 }
 @media (max-width: 1024px) {
-  .ia-btn--sm {
-    @include button($button-padding-sm, 1.2rem);
-  }
-  .ia-btn--md {
-    @include button(1rem 2rem, 1.6rem);
-  }
-  .ia-btn {
-    @include button(1rem 2rem, 1.6rem);
-  }
-  .ia-btn--lg {
-    @include button(1.6rem 2rem, 1.6rem);
-  }
+  //.ia-btn--sm {
+  //  @include button($button-padding-sm, 1.2rem);
+  //}
+  //.ia-btn--md {
+  //  @include button(1rem 2rem, 1.6rem);
+  //}
+  //.ia-btn {
+  //  @include button(1rem 2rem, 1.6rem);
+  //}
+  //.ia-btn--lg {
+  //  @include button(1.6rem 2rem, 1.6rem);
+  //}
 }
 
-@media (max-width: 812px) {
+@media (max-width: 767px) {
 
-  .ia-btn--md {
-    @include button(1rem 2rem, 1.4rem);
-  }
-  .ia-btn {
-    @include button(1rem 2rem, 1.4rem);
-  }
-  .ia-btn--lg {
-    @include button(1.6rem 2rem, 1.6rem);
-  }
-  .ia-btn--sm {
-    @include button(0.4rem 1.2rem, 1.4rem);
-  }
+  //.ia-btn--md {
+  //  @include button(1rem 2rem, 1.4rem);
+  //}
+  //.ia-btn {
+  //  @include button(1rem 2rem, 1.4rem);
+  //}
+  //.ia-btn--lg {
+  //  @include button(1.6rem 2rem, 1.6rem);
+  //}
+  //.ia-btn--sm {
+  //  @include button(0.4rem 1.2rem, 1.4rem);
+  //}
   .play-btn {
     width: 4rem;
     height: 4rem;
