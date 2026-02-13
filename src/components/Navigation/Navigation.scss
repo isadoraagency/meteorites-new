@@ -182,9 +182,18 @@
       width: 34px;
       margin-bottom: 0;
       transform: translate(-50%, 0);
+      &:before {
+        left: 50%;
+        top: -1.6rem;
+        width: .6rem;
+        height: .6rem;
+        transform: translate(-50%, 0);
+
+      }
       button {
-        height: 60px;
+        height: 46px;
       }
     }
   }
+
 }
