@@ -12,6 +12,7 @@ import Cursor from "./components/Cursor/Cursor.jsx";
 import TypeMeteorites from "./components/TypeMeteorites/TypeMeteorites.jsx";
 import Stardust from "./components/Stardust/Stardust.jsx";
 import ScrollProgress from "./components/ScrollProgress/ScrollProgress.jsx";
+import Footer from "./components/Footer/Footer.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -177,9 +178,9 @@ function App({onComplete}) {
     <>
       <Cursor />
       <Menu list={menuItems}  />
-
+      <Footer isLoaded={animationComplete}/>
       <Intro className="intro-section"
-             progress={formatProgress(progress)} isLoaded={isLoaded} animationComplete={animationComplete} toggleAnimationComplete={toggleAnimationComplete} />
+             progress={formatProgress(progress)} isLoaded={isLoaded} animationComplete={animationComplete} toggleAnimationComplete={toggleAnimationComplete}  />
 
 
       {items && items.length > 0 && (

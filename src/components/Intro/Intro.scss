@@ -20,6 +20,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    text-shadow: 0 0 5px rgba(0,0,0,0.9);
   }
 }
 .intro-bg {
@@ -53,6 +54,7 @@
   width: 100%;
   text-align: center;
   transform: translate(-50%, 0);
+  text-shadow: 0 0 5px rgba(0,0,0,0.9);
   br {
     display: none;
   }
@@ -68,6 +70,7 @@
   transform: translateY(-50%);
   letter-spacing: 0.4rem;
   transition: opacity .5s;
+  text-shadow: 0 0 5px rgba(0,0,0,0.9);
 }
 .intro-4 {
   font-size: 26.4rem;
@@ -79,6 +82,7 @@
   transform: translate(-50%, -50%);
   width: 100vw;
   top: 50%;
+  text-shadow: 0 0 5px rgba(0,0,0,0.9);
   div {
     transform: translate(100%, -50%);
     //opacity: 0;
@@ -103,6 +107,7 @@
   text-align: center;
   opacity: 0;
   transition: opacity .5s;
+
 }
 .intro-7 {
   max-width: 640px;
@@ -119,7 +124,7 @@
   }
 }
 .pin-spacer-intro-scroll {
-  height: 20000px  !important;
+  height: 10000px   !important;
 }
 @media (max-width: 767px) {
   .lg {

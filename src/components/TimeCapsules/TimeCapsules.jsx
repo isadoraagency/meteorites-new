@@ -115,7 +115,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                 trigger: timeCapsules.current,
                 start: 'top top',
                 // end: '+=600%',
-                end: "+=20000",
+                end: "+=10000",
                 scrub: 1,
                 pin: true,
                 pinSpacing: false,
