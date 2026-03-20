@@ -118,13 +118,13 @@
   left: 50%;
   transform: translate(-50%, 0);
   max-height: 48vh;
-  img {
+  video {
     max-height: 48vh;
     width: auto;
   }
 }
 .pin-spacer-intro-scroll {
-  height: 10000px   !important;
+  height: 10000px !important;
 }
 @media (max-width: 767px) {
   .lg {

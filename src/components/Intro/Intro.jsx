@@ -4,11 +4,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useDecodeText } from "../../hooks/useDecodeText";
 import './Intro.scss';
 import meteorImg from '/images/meteor.webp';
+import meteorVideo from '/videos/Meteorite-Loop.mov';
+import meteorVideoW from '/videos/Meteorite-Loop.webm';
 import videoIntro from '/videos/intro-bg.mp4';
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Intro({progress, isLoaded, animationComplete= false, toggleAnimationComplete, className=''}) {
-
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const titleRef = useRef(null);
   const textRef = useRef(null);
   const meteor = useRef(null);
@@ -245,21 +247,20 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
           { top: '150%', opacity: 0.5, scale: 1.8, duration: 0.3, ease: "power2.inOut" }
         )
         .to('.intro-6', { opacity: 0, duration: 0.3 })
-        .set(document.body.querySelector('.footer'), {color: '#B7AFFF'}, "<-.5")
+        .set(document.body.querySelector('.footer'), {color: '#B7AFFF'})
         .to(
           meteor.current,
           {
             opacity: 0,
-            // duration: 1,
+            duration: 0.7,
             ease: "power2.inOut",
             onComplete() {
               window.scrollTo({
-                top: 10000 + window.innerHeight,
-                behavior: "smooth"
+                top: 10000,
+                // behavior: "smooth"
               })
             }
-          },
-          "-=0.1"
+          }
         )
       tl.addLabel("intro-7")
 
@@ -374,7 +375,7 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
           So in a way they are like Time Capsules, this site is dedicated to them.
         </div>
         <div className="intro-meteor" ref={meteor}>
-          <img src={meteorImg} alt="meteor" aria-hidden="true"/>
+          <video src={isSafari ? meteorVideo : meteorVideoW} autoPlay loop muted playsInline className="w-100 h-100" />
         </div>
       </div>
     </div>

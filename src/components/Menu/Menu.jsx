@@ -109,39 +109,55 @@ export default function Menu({ list }) {
           </defs>
         </svg>
       </button>
+      <div className={isOpenMenu ? 'main-menu-overlay main-menu-overlay--open' : 'main-menu-overlay'}></div>
       <AnimatePresence >
         {isOpenMenu && (
           <>
           <motion.div
               key="overlay"
-              className="main-menu-overlay"
+
               initial={{
                 width: '6.4rem',
                 height: '6.4rem',
-                borderRadius: '64rem 64rem 64rem 64rem',
+                borderRadius: '64rem',
                 opacity: 1,
                 left: '4rem',
-                bottom: '4rem',
-                scale: 1,
+                bottom: '0%',
+                y: '-4rem',
+                // scale: 1,
               }}
               animate={{
-                bottom: ['4rem', '50%', '50%', '50%', '50%'],
-                y: ['0', '0', '0', '0', '50%'],
-                x: ['0','0', '0', '0','-50%'],
-                left: ['4rem', '4rem', '20%', '20%', '50%'],
-                width: ['6.4rem', '6.4rem', '6.4rem', '64rem', '100%'],
-                height: ['6.4rem', '6.4rem', '6.4rem', '64rem', '100%'],
-                borderRadius: ['64rem', '64rem', '64rem', '64rem', '0rem'],
-                scale: [1, 1, 1, 10, 1],
+                y: '50%',
+                x: '-4rem',
+                left: '0',
+                width: '100%',
+                height: '100%',
+                borderRadius: '0',
+                bottom: '50%',
                 transition: {
-                  duration: 2,
-                  times: [0, 0.25, 0.5, 0.75, 1],
+                  duration: 1.5,
+                  // times: [0, 0.35, 0.65, 1],
                   ease: "easeInOut"
                 }
               }}
+              // animate={{
+              //   bottom: ['4rem', '50%', '50%', '50%'],
+              //   y: ['0', '0', '0', '50%'],
+              //   x: ['0','0', '0', '-50%'],
+              //   left: ['4rem', '4rem', '4rem', '50%'],
+              //   width: ['6.4rem', '6.4rem', '6.4rem',  '100%'],
+              //   height: ['6.4rem', '6.4rem', '6.4rem',  '100%'],
+              //   borderRadius: ['64rem', '64rem', '64rem', '0rem'],
+              //   scale: [1, 1, 100, 1],
+              //   transition: {
+              //     duration: 2,
+              //     times: [0, 0.35, 0.65, 1],
+              //     ease: "easeInOut"
+              //   }
+              // }}
               exit={{
-                opacity: 0,
-                transition: { duration: 0.5 }
+               opacity: 0,
+                duration: 0.5,
               }}
 
           ></motion.div>

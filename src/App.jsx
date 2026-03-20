@@ -178,7 +178,7 @@ function App({onComplete}) {
     <>
       <Cursor />
       <Menu list={menuItems}  />
-      <Footer isLoaded={animationComplete}/>
+
       <Intro className="intro-section"
              progress={formatProgress(progress)} isLoaded={isLoaded} animationComplete={animationComplete} toggleAnimationComplete={toggleAnimationComplete}  />
 
@@ -219,7 +219,7 @@ function App({onComplete}) {
           )}
         </div>
       )}
-
+      <Footer isLoaded={animationComplete}/>
       {
         activeItem > -1 && <Navigation isLoaded={isLoaded} navActive={navActive} activeItem={activeItem} />
       }

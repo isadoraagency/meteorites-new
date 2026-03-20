@@ -42,6 +42,9 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+
+
+
       mm.add({
         isDesktop: "(min-width: 1024px)",
         isTablet: "(min-width: 768px) and (max-width: 1023px)",
@@ -223,6 +226,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
           }
         }
       })
+
      }, timeCapsules)
 
     return () => ctx.revert();
