@@ -14,7 +14,7 @@ import {useDecodeText} from "../../hooks/useDecodeText.js";
 export default function Menu({ list }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false)
   const [isTopLinkHover, setIsTopLinkHover] = useState(false)
-
+  const [isMounted, setIsMounted] = useState(false);
   const [activeModal, setActiveModal] = useState('close');
   const [topItemActive, setTopItemActive] = useState(false);
   const topItemsRef = useRef([]);
@@ -25,6 +25,7 @@ export default function Menu({ list }) {
       setActiveModal(action);
     }else{
       setActiveModal("close");
+
     }
   };
   const toggleMenu = () => {
@@ -35,6 +36,7 @@ export default function Menu({ list }) {
         setTopItemActive(true);
       }, 1000)
     } else {
+      setIsMounted(true);
       setTopItemActive(false);
     }
   };
@@ -71,7 +73,12 @@ export default function Menu({ list }) {
   return (
     <div className="menu-container">
       <button
-        className={isOpenMenu ? 'menu-button menu-button--open' : 'menu-button'}
+
+        className={`menu-button  
+    ${isOpenMenu ? 'menu-button--open' : ''} 
+    ${isMounted && !isOpenMenu ? 'menu-button--close' : ''}`
+        }
+
         onClick={toggleMenu}
         aria-label="menu button"
       >
@@ -109,7 +116,12 @@ export default function Menu({ list }) {
           </defs>
         </svg>
       </button>
-      <div className={isOpenMenu ? 'main-menu-overlay main-menu-overlay--open' : 'main-menu-overlay'}></div>
+      <div
+        className={`main-menu-overlay 
+    ${isOpenMenu ? 'main-menu-overlay--open' : ''} 
+    ${isMounted && !isOpenMenu ? 'main-menu-overlay--close' : ''}`
+        }
+      />
       <AnimatePresence >
         {isOpenMenu && (
           <>

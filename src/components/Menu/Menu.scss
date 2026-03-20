@@ -17,10 +17,14 @@
   overflow: hidden;
   z-index: 999;
   background: $vyg;
+
+
   &--open {
     animation: openOverlay 2s linear forwards;
   }
-
+  &--close {
+    animation: closeOverlay 2s linear forwards;
+  }
 }
 .menu-button {
   position: fixed;
@@ -33,28 +37,89 @@
   background: $vyg;
   cursor: pointer;
   overflow: hidden;
-  transition: opacity .3s 1s;
+  opacity: 1;
   svg {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    transition: all .3s;
+    transition: all .3s 1s;
+
     &:first-child {
       width: 3.2rem;
+
     }
     &:last-child {
       scale: 0;
+      //transition-delay: 1s;
     }
   }
   &--open {
     left: calc(50% - 3.2rem);
+    opacity: 0;
+    animation: menuButton 0.5s 1.5s linear forwards;
     svg:last-child {
       scale: 1;
     }
     svg:first-child {
       scale: 0;
     }
+  }
+  &--close {
+    opacity: 1;
+    transition: left 0s 2s;
+    animation: menuButtonV 2.3s linear forwards;
+  }
+}
+@keyframes menuButton {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes menuButtonV {
+  0% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes closeOverlay {
+  0% {
+    transform: translate(0, 0) scale(1);
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  40% {
+    transform: translate(0, 0) scale(3);
+    width: 50vw;
+    height: 50vw;
+    border-radius: 50%;
+  }
+
+  70% {
+    transform: translate(0, -40vh) scale(1);
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: 50%;
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: 50%;
   }
 }
 @keyframes openOverlay {
@@ -65,15 +130,12 @@
     border-radius: 50%;
   }
 
-
   30% {
     transform: translate(0, -40vh) scale(1);
     width: 6.4rem;
     height: 6.4rem;
     border-radius: 50%;
   }
-
-
   60% {
     transform: translate(0, 0) scale(3);
     border-radius: 50%;
@@ -113,7 +175,7 @@
     margin-left: 0;
     transition: all .5s;
     &--hover {
-      transform: scale(1.1);
+      //transform: scale(1.1);
     }
     li {
       line-height: 1.5;
