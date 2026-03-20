@@ -6,7 +6,7 @@ import videoSrc from '/videos/source.mp4';
 import {useDecodeText} from "../../hooks/useDecodeText.js";
 export default function  Sources ({isOpen,handleMenuItemClick}){
   const [items, setItems] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(null);
   const [titleActive, setTitleActive] = useState(false);
 
   const titleRef = useRef(null);
@@ -50,17 +50,17 @@ export default function  Sources ({isOpen,handleMenuItemClick}){
       {isOpen && (
         <motion.div
           className="sources-wrap"
-          initial={{opacity: 0, scale: 0, borderRadius: '1000px'}}
-          animate={{opacity: 1, scale: 1, borderRadius: '0px'}}
-          exit={{opacity: 0, scale: 0}}
-          transition={{duration: 0.5}}
+          initial={{opacity: 0, scale: 0, y: '50%', borderRadius: '2000px'}}
+          animate={{opacity: 1, scale: 1, y: '0%', borderRadius: '0px'}}
+          exit={{opacity: 0, scale: 0, y: '50%', borderRadius: '2000px'}}
+          transition={{duration: 1}}
         >
             <button className="close" aria-label="close" onClick={()=>handleMenuItemClick('close')}><i></i></button>
-            <motion.div
-              initial={{opacity: 0, scale: 0}}
-              animate={{opacity: 1, scale: 1}}
-              exit={{opacity: 0, scale: 0}}
-              transition={{duration: 0.5, delay: 0.45}}
+            <div
+              initial={{opacity: 0, scale: 0, y: '50%'}}
+              animate={{opacity: 1, scale: 1, y: '0%'}}
+              exit={{opacity: 0, scale: 0, y: '50%'}}
+              transition={{duration: 1, delay: 1}}
               className="ia-container">
               <div
 
@@ -69,7 +69,7 @@ export default function  Sources ({isOpen,handleMenuItemClick}){
                   initial={{opacity: 0, x: "-100px"}}
                   animate={{opacity: 1, x: 0}}
                   exit={{opacity: 0, x: "-100px"}}
-                  transition={{duration: 0.5, delay: 1.2}}
+                  transition={{duration: 1, delay: 1.8}}
 
                   src={videoSrc}
                   playsInline
@@ -81,14 +81,21 @@ export default function  Sources ({isOpen,handleMenuItemClick}){
                 ></motion.video>
               </div>
               <div className="sources-container">
-                <div className="sources-container__in">
+                <motion.div className={`sources-container__in
+                ${activeIndex  || activeIndex === 0 ? 'active' : ''}
+                `}
+                            initial={{opacity: 0, y: '50%', scale: 0.2}}
+                            animate={{opacity: 1, y: '0', scale: 1}}
+                            exit={{opacity: 0, y: '50%', scale: 0}}
+                            transition={{duration: 1, delay: 0.8}}
+                >
                   <h2 className="h3 text-light text-center mb-1" ref={titleRef}>Sources</h2>
                   <div className="mobile-video">
                     <motion.video
                       initial={{opacity: 0, x: "-100px"}}
                       animate={{opacity: 1, x: 0}}
                       exit={{opacity: 0, x: "-100px"}}
-                      transition={{duration: 0.5, delay: 1.2}}
+                      transition={{duration: 0.5, delay: 1.8}}
 
                       src={videoSrc}
                       playsInline
@@ -100,10 +107,10 @@ export default function  Sources ({isOpen,handleMenuItemClick}){
                     ></motion.video>
                   </div>
                   <motion.div
-                    initial={{opacity: 0, y: 20, maxHeight: '0px' }}
-                    animate={{opacity: 1, y: 0, maxHeight: '2000px' }}
-                    exit={{opacity: 0, y: 20, maxHeight: '0px'}}
-                    transition={{duration: 0.5, delay: 1}}
+                    initial={{opacity: 0, y: 20 }}
+                    animate={{opacity: 1, y: 0}}
+                    exit={{opacity: 0, y: 20}}
+                    transition={{duration: 1, delay: 1.8}}
                     className="sources-accordion">
                     {
                       items && items.map((item, i) => <Accordion key={i} title={item.title} activeIndex={activeIndex}
@@ -111,9 +118,9 @@ export default function  Sources ({isOpen,handleMenuItemClick}){
                                                                  index={i}>{item.description}</Accordion>)
                     }
                   </motion.div>
-                </div>
+                </motion.div>
               </div>
-            </motion.div>
+            </div>
 
         </motion.div>
       )}

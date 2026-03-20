@@ -35,7 +35,7 @@ const Accordion = ({ title, children, activeIndex, setActiveIndex, index }) => {
       <div
         ref={contentRef}
         className="accordion-content"
-        style={{ height: `${height}px`, overflow: 'hidden', transition: '0.35s height' }}
+        style={{ height: `${height}px`, overflow: 'hidden', transition: 'height 0.8s ease-in-out' }}
       >
         <div className="accordion-inner" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(children, {
             ADD_ATTR: ['target', 'rel']
