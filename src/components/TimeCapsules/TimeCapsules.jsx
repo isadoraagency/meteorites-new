@@ -16,10 +16,12 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
   const timeCapsulesTitle = useRef(null);
   const timeCapsulesMeta = useRef(null);
   const timeCapsulesVideo = useRef(null);
+  const timeCapsulesVideoBG = useRef(null);
   const timeCapsulesDesc2 = useRef(null);
   const timeCapsulesDesc1 = useRef(null);
   const timeCapsulesSpec = useRef(null);
   const timeCapsulesComp = useRef(null);
+
   const videoFall = useRef(null);
 
   const [isVideo, setIsVideo] = useState(false);
@@ -165,6 +167,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
               .addLabel('timecapsules-2')
               .to(timeCapsulesHeading.current, {top: "0%", y: '0%', ease: 'power3.out'})
               .to(timeCapsulesTitle.current, {scale: 1, ease: 'power3.out'}, "<")
+              .to(timeCapsulesVideoBG.current, {opacity: 0, ease: 'power3.out'}, "<")
               .to(timeCapsulesVideo.current, {scale: 1, ease: 'power3.out'}, '<')
               .to(timeCapsulesMeta.current, {opacity: 1, duration: 0.2, ease: 'power3.out'})
             if (videoFall.current) {
@@ -337,7 +340,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                   >
                     <source src={item.video} type="video/mp4" />
                   </video>
-
+                <div className="time-capsules-video__after" ref={timeCapsulesVideoBG}></div>
                 </div>
 
                 <div className="time-capsules__desc text--info">
