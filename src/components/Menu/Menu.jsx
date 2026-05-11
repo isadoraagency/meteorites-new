@@ -1,9 +1,9 @@
 import { AnimatePresence, motion, useAnimation} from 'framer-motion'
 import './Menu.scss'
 
-import {gsap, ScrollToPlugin} from 'gsap/all';
+import {gsap, ScrollToPlugin, ScrollTrigger} from 'gsap/all';
 
-gsap.registerPlugin(ScrollToPlugin)
+gsap.registerPlugin(ScrollToPlugin, ScrollTrigger)
 
 import {useState, useEffect, useRef} from "react";
 import Sources from "../Sources/Sources.jsx";
@@ -43,7 +43,29 @@ export default function Menu({ list }) {
 
   const moveToItem = (e, el) => {
     e.preventDefault();
-    gsap.to(window, {duration: 0, scrollTo: {y: el}});
+    
+    // Disable all ScrollTriggers snapping during scroll
+    const triggers = ScrollTrigger.getAll();
+    triggers.forEach(st => {
+      if (st.vars.snap) {
+        st.disable(false);
+      }
+    });
+
+    gsap.to(window, {
+      duration: 0.8,
+      scrollTo: {y: el, autoKill: true},
+      ease: "power2.inOut",
+      onComplete: () => {
+        // Re-enable ScrollTriggers
+        triggers.forEach(st => {
+          if (st.vars.snap) {
+            st.enable(false);
+          }
+        });
+        ScrollTrigger.refresh();
+      }
+    });
   }
   const controls = useAnimation();
 
