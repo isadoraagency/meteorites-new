@@ -1,6 +1,7 @@
 import {useState, useEffect, useRef} from "react";
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { addDecodeToTimeline } from "../../hooks/addDecodeToTimeline";
 import { useDecodeText } from "../../hooks/useDecodeText";
 import './Intro.scss';
 import meteorImg from '/images/meteor.webp';
@@ -25,9 +26,9 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
   const introText3Ref = useRef(null);
   const introText5Ref = useRef(null);
   const introText6Ref = useRef(null);
-
-  const [triggerIntro2, setTriggerIntro2] = useState(false);
-  const [triggerIntro3, setTriggerIntro3] = useState(false);
+  //
+  // const [triggerIntro2, setTriggerIntro2] = useState(false);
+  // const [triggerIntro3, setTriggerIntro3] = useState(false);
   const [triggerIntro5, setTriggerIntro5] = useState(false);
   const [triggerIntro6, setTriggerIntro6] = useState(false);
 
@@ -42,8 +43,10 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
 
   useDecodeText(titleRef, isLoaded);
   useDecodeText(textRef, isLoaded);
-  useDecodeText(introText2Ref, triggerIntro2, options);
-  useDecodeText(introText3Ref, triggerIntro3, options);
+
+  // useDecodeText(introText2Ref, triggerIntro2, options);
+  // useDecodeText(introText3Ref, triggerIntro3, options);
+
   useDecodeText(introText5Ref, triggerIntro5, options);
   useDecodeText(introText6Ref, triggerIntro6, options);
 
@@ -128,14 +131,15 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
         }, '<')
         .to(
           introBg.current,
-          { filter: 'blur(0px)', ease: 'power3.out', onStart: () => setTriggerIntro2(false) },
+          { filter: 'blur(0px)', ease: 'power3.out' },
           '<'
         )
         .to(introRef.current, {background: "transparent"}, '<')
         .set(
           intro2Ref.current,
-          { opacity: 1, onComplete: () => setTriggerIntro2(true) }, '-=.1'
+          { opacity: 1}, '-=.1'
         )
+        addDecodeToTimeline(tl, introText2Ref.current, options);
 
       // ======================
       // 2 animation
@@ -148,8 +152,9 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
         }, '<')
         .set(
           intro3Ref.current,
-          { opacity: 1, onComplete: () => setTriggerIntro3(true) }
+          { opacity: 1 }
         )
+        addDecodeToTimeline(tl, intro3Ref.current, options);
 
       // ======================
       // 3 animation
@@ -270,66 +275,6 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
     return () => ctx.revert()
   }, [animationComplete])
 
-
-  // useEffect(() => {
-  //   const ctx = gsap.context(() => {
-  //     gsap.set(intro1Ref.current,{opacity: 0})
-  //     gsap.set(meteor,{scale: 0.6})
-  //
-  //     if (animationComplete) {
-  //       const tl = gsap.timeline({
-  //         scrollTrigger: {
-  //           trigger: introRef.current,
-  //           start: 'top top',
-  //           end: () => window.innerHeight * 6,
-  //           scrub: true,
-  //           pin: true,
-  //           pinSpacing: true,
-  //           id: "intro-scroll",
-  //           anticipatePin: 1,
-  //           // markers: true,
-  //           invalidateOnRefresh: true
-  //         }
-  //       });
-  //       //firs section
-  //       tl
-  //         .fromTo(intro1Ref.current, {y: '-50%', opacity: 1},{y: '-100%', opacity: 0, ease: "power2.inOut"})
-  //         .to(introBg.current, {filter: 'blur(0px)', ease: 'power3.out', onStart: () => setTriggerIntro2(false)}, '<')
-  //         .set(intro2Ref.current,  {opacity: 1, ease: "power2.inOut", onComplete: () => setTriggerIntro2(true)})
-  //         .to({}, {duration: 0.5, onComplete: () => setTriggerIntro3(false)})
-  //          //2 animation
-  //         .to(intro2Ref.current, { opacity: 0, ease: "power2.inOut"})
-  //         .set(intro3Ref.current, {opacity: 1, ease: "power2.inOut", onComplete: () => setTriggerIntro3(true)})
-  //         .to({}, {duration: 0.5})
-  //         //3 animation
-  //         .to(intro3Ref.current, { opacity: 0, ease: "power2.inOut"})
-  //         .to(introBg.current, {width: '100%', height: '70%', borderRadius: '50vh', duration: 1.5, ease: "power2.inOut"})
-  //         .to(intro4Ref.current, {x: '-10%', duration: 1.5, ease: "power2.inOut"}, '<')
-  //         //4 animation
-  //         .to(intro4Ref.current, {opacity: 0, x: '-50%', duration: 1, ease: "power2.inOut" })
-  //         .to(introBg.current, {width: '40%', height: '30%', borderRadius: '30vh', duration: 1, ease: "power2.inOut"}, "<")
-  //         .to(introBg.current, {width: '90px', height: '90px', borderRadius: '30vh', duration: 0.5, ease: "power2.inOut", onComplete: () => setTriggerIntro5(false)})
-  //         .to(introBg.current, {opacity: 0, duration: 0.5, ease: "power2.inOut"})
-  //         .set(introText5Ref.current, {opacity: '1', ease: "power2.inOut", onComplete: () => setTriggerIntro5(true)},"-=0.1")
-  //         .to({}, {duration: 0.5, onComplete: () => setTriggerIntro6(false)})
-  //         //5 animation
-  //         .to(meteor.current, {top: '40%', scale: 1, opacity: '1',  duration: 2, ease: "power2.inOut"}, "<")
-  //         .to(introText5Ref.current, {opacity: '0',  duration: 0.5, ease: "power2.inOut"}, '-=1')
-  //         .set('.intro-6', { opacity: '1', ease: "power2.inOut", onComplete: () => setTriggerIntro6(true)})
-  //         .to({}, {duration: 0.5})
-  //         //6 animation
-  //         .to(meteor.current, {top: '100%', opacity: 0.5, scale: 1.8, duration: 0.3, ease: "power2.inOut"})
-  //         .to('.intro-6', { opacity: '0',  duration: 0.3, ease: "power2.inOut"})
-  //         .to(meteor.current, {top: '110%', opacity: 0,   duration: 0.3 , ease: "power2.inOut", onComplete(){
-  //             window.scrollTo({
-  //               top: window.innerHeight *7,
-  //               behavior: "smooth"
-  //             });
-  //           }}, "-=0.4")
-  //     }
-  //   }, introRef)
-  //   return () => ctx.revert();
-  // }, [animationComplete])
 
   useEffect(() => {
     const ro = new ResizeObserver(() => {
