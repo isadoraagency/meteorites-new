@@ -275,6 +275,15 @@
   max-height: 140px;
   overflow: hidden;
 }
+@media (max-width: 1550px) {
+  .time-capsules__container {
+    padding-right: 120px;
+    box-sizing: border-box;
+  }
+  .time-capsules__desc {
+    width: 200px;
+  }
+}
 @media (max-width: 767px) {
   .time-capsules-meta {
     display: block;

@@ -215,26 +215,26 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                 .to(timeCapsulesComp.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, '<')
 
               .addLabel('timecapsules-6')
-            if (index + 1 !== items.length) {
-
-
-              tl2.to(timeCapsulesVideo.current, {
-                motionPath: {
-                  path: [
-                    {x: "0%", y: "0%"},
-                    {x: "20%", y: "50%"},
-                    {x: "50%", y: "50%"},
-                    {x: "100%", y: "0%"}
-                  ],
-                  curviness: 1.5
-                }, scale: 0.5, ease: 'power3.out'
-              })
-            } else {
+            // if (index + 1 !== items.length) {
+            //
+            //
+            //   tl2.to(timeCapsulesVideo.current, {
+            //     motionPath: {
+            //       path: [
+            //         {x: "0%", y: "0%"},
+            //         {x: "20%", y: "50%"},
+            //         {x: "50%", y: "50%"},
+            //         {x: "100%", y: "0%"}
+            //       ],
+            //       curviness: 1.5
+            //     }, scale: 0.5, ease: 'power3.out'
+            //   })
+            // } else {
               tl2.set(videoFall.current, {opacity: 0})
               tl2.to(timeCapsulesVideo.current, {
                 scale: 5
               })
-            }
+            // }
             if (index == 0) {
               tl2.to(timeCapsulesContainer.current, {opacity: 0, ease: 'power3.out'}, '<')
             } else {
