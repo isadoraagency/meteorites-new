@@ -1,26 +1,27 @@
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect} from "react";
 import './Navigation.scss';
-import {gsap, ScrollToPlugin} from 'gsap/all';
+import {gsap, ScrollToPlugin, ScrollTrigger} from 'gsap/all';
 
-gsap.registerPlugin(ScrollToPlugin)
+gsap.registerPlugin(ScrollToPlugin, ScrollTrigger)
 export default function Navigation ({navActive, activeItem}){
-  const [item, setItem] = useState(null);
   const [items, setItems] = useState([]);
   useEffect(() => {
     fetch('/data/meteorites.json')
       .then((response) => response.json())
       .then((data) => {
         setItems(data);
-
-        setItem(data[0]);
-
       });
 
   }, []);
 
   const moveToItem = (e, el) => {
     e.preventDefault();
-    gsap.to(window, {duration: 0, scrollTo: {y: el}});
+    const st = ScrollTrigger.getById("TimeCapsules" + el.replace('#', ''));
+    if (st) {
+      gsap.to(window, {duration: 0.8, scrollTo: {y: st.start}, ease: "power2.inOut"});
+    } else {
+      gsap.to(window, {duration: 0.8, scrollTo: {y: el}, ease: "power2.inOut"});
+    }
   }
 
   return (

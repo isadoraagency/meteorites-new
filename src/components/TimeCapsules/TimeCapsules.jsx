@@ -8,7 +8,7 @@ import {useDecodeText} from "../../hooks/useDecodeText.js";
 gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(MotionPathPlugin);
-export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, toggleNav, item, items, handleActiveItem, className = '' }) {
+export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, toggleNav, item, items, activeItem, handleActiveItem, className = '' }) {
   const timeCapsules = useRef(null);
   const timeCapsulesContainer = useRef(null);
   const timeCapsulesBg = useRef(null);
@@ -144,7 +144,13 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                   toggleNav(true);
                   handleActiveItem(index)
                 },
+                onUpdate: (self) => {
+                   if (self.isActive && activeItem !== index) {
+                      handleActiveItem(index);
+                   }
+                },
                 onEnterBack: () => {
+                  toggleNav(true);
                   handleActiveItem(index)
                   index == 0 && toggleNav(false)
                 },

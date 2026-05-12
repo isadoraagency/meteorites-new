@@ -195,6 +195,7 @@ function App({onComplete}) {
             toggleNav={toggleNav}
             lastTimeCapsule={items.length === 1}
             handleActiveItem={handleActiveItem}
+            activeItem={activeItem}
           />
 
           {items.length > 1 && (
@@ -209,6 +210,7 @@ function App({onComplete}) {
                     index={actualIndex}
                     item={item}
                     items={items}
+                    activeItem={activeItem}
                     toggleNav={toggleNav}
                     lastTimeCapsule={actualIndex + 1 === items.length}
                     handleActiveItem={handleActiveItem}
