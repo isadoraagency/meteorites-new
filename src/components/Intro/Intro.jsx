@@ -259,13 +259,13 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
             opacity: 0,
             duration: 0.7,
             ease: "power2.inOut",
-            onUpdate() {
-              if (this.progress() === 1 && Math.abs(window.scrollY - 10000) < 500) {
-                window.scrollTo({
-                  top: 10000,
-                })
-              }
-            }
+            // onUpdate() {
+            //   if (this.progress() === 1 && Math.abs(window.scrollY - 10000) < 500) {
+            //     window.scrollTo({
+            //       top: 10000,
+            //     })
+            //   }
+            // }
           }
         )
       tl.addLabel("intro-7")

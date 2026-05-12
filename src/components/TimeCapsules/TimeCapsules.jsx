@@ -21,10 +21,12 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
   const timeCapsulesDesc1 = useRef(null);
   const timeCapsulesSpec = useRef(null);
   const timeCapsulesComp = useRef(null);
+  const timeCapsulesReadMore = useRef(null);
 
   const videoFall = useRef(null);
 
   const [isVideo, setIsVideo] = useState(false);
+  const [isRead, setIsRead] = useState(false);
   const [timeCapsulesTitleActive, setTimeCapsulesTitleActive] = useState(false);
   const mm = gsap.matchMedia()
 
@@ -34,13 +36,20 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
     stagger: 0.1,
     blured: 5,
     changeDelay: 0.1,
-    opacity: 0.9,
+    opacity: 0,
   };
   useDecodeText(timeCapsulesTitle, timeCapsulesTitleActive, options);
 
   const toggleVideo = (e)=>{
     setIsVideo(e);
   }
+
+  const toggleRead = ()=>{
+    setIsRead(!isRead);
+  }
+  useEffect(() => {
+
+  }, [isRead]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -62,7 +71,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
           gsap.set(timeCapsulesContainer.current, {opacity: 0})
           gsap.set(timeCapsules.current, {opacity: 0})
 
-          gsap.set(timeCapsulesTitle.current, {opacity: 0, scale: isMobile ? 1.2 : 3})
+          gsap.set(timeCapsulesTitle.current, {opacity: 1, scale: isMobile ? 1.2 : 3})
           gsap.set(timeCapsulesSpec.current, {opacity: 0, y: '150%'})
 
           gsap.set(timeCapsulesMeta.current, {opacity: 0})
@@ -186,16 +195,18 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                   .to('.time-capsules__container', {top: "150px", y: '0%', ease: 'power3.out'}, "<")
               }
             tl2.addLabel('timecapsules-3')
-              tl2.to(timeCapsulesDesc1.current, {y: '-150%', opacity: 0, ease: 'power3.out'})
-              .to(timeCapsulesSpec.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, '<')
+              tl2.to(timeCapsulesDesc1.current, {y: '-650%', opacity: 0, ease: 'power3.out'})
+                .to(timeCapsulesDesc2.current, {y: '0%', opacity: 1, ease: 'power3.out'}, "<")
+
 
               .addLabel('timecapsules-4')
-              .to(timeCapsulesSpec.current, {y: '-150%', opacity: 0, ease: 'power3.out'})
-              .to(timeCapsulesComp.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, '<')
+
+              .to(timeCapsulesDesc2.current, {y: '-150%', opacity: 0, ease: 'power3.out'})
+              .to(timeCapsulesSpec.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, '<')
 
               .addLabel('timecapsules-5')
-              .to(timeCapsulesComp.current, {y: '-150%', opacity: 0, ease: 'power3.out'})
-            tl2.to(timeCapsulesDesc2.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, "<")
+              .to(timeCapsulesSpec.current, {y: '-150%', opacity: 0, ease: 'power3.out'})
+                .to(timeCapsulesComp.current, {y: '-50%', opacity: 1, ease: 'power3.out'}, '<')
 
               .addLabel('timecapsules-6')
             if (index + 1 !== items.length) {
@@ -234,6 +245,8 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
 
     return () => ctx.revert();
   }, [isLoaded])
+
+
 
   function formatDate(dateString) {
     // Check if dateString is in the format YYYY-MM-DD
@@ -303,13 +316,13 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                         item.observedFall ? 'Yes' : 'No'
                       }
                     </li>
-                    <li className="text-light p3">
-                      <div className="p3 mb-0 text-medium">Found date</div>
+                    <li className="text-light p2">
+                      <div className="p2 mb-0 text-medium">Found date</div>
                       {formatDate(item.foundDate)}
                     </li>
                   </ul>
 
-                  <div className="time-capsules__desc-2" ref={timeCapsulesDesc2}  dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.short)}} />
+
 
                 </div>
                 <div className="time-capsules-video" ref={timeCapsulesVideo}>
@@ -344,15 +357,34 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                 </div>
 
                 <div className="time-capsules__desc text--info">
-                  <div className="time-capsules__desc-1" ref={timeCapsulesDesc1} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.short)}} />
+                  <div className="time-capsules__desc-1" ref={timeCapsulesDesc1} >
+                    <div className={`${isRead ? 'active' : ''} time-capsules__read`}  ref={timeCapsulesReadMore} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.about)}} />
+                    <button className="time-capsules__read-more" onClick={toggleRead} >Read {isRead ? 'less' : 'more'}</button>
+                  </div>
 
-                  <ul ref={timeCapsulesComp} className="comp">
-                    {
-                      item.composition.map((composition, index) => {
-                        return <li className="text-light p3" key={index}>{composition}</li>
-                      })
-                    }
-                  </ul>
+                  <div className="time-capsules__desc-2" ref={timeCapsulesDesc2}>
+                    <div className="meteorite-capsule__line">
+                      <div className="meteorite-capsule__line-cut">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="230" height="139" viewBox="0 0 230 139"
+                             fill="none">
+                          <path
+                            d="M49.4982 3V2.5H49.1466L49.0277 2.83095L49.4982 3ZM224.333 3C224.333 4.47276 225.527 5.66667 227 5.66667C228.473 5.66667 229.667 4.47276 229.667 3C229.667 1.52724 228.473 0.333333 227 0.333333C225.527 0.333333 224.333 1.52724 224.333 3ZM1.47056 138.169L49.9688 3.16905L49.0277 2.83095L0.529443 137.831L1.47056 138.169ZM49.4982 3.5H227V2.5H49.4982V3.5Z"
+                            fill="#C8C6FF"></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.short)}}></div>
+                  </div>
+                  <div className="time-capsules__composite" ref={timeCapsulesComp}>
+                    <div className="time-capsules__composite-title p1 text-bold mb-1">Composition</div>
+                    <ul className="comp">
+                      {
+                        item.composition.map((composition, index) => {
+                          return <li className="text-light p2" key={index}>{composition}</li>
+                        })
+                      }
+                    </ul>
+                  </div>
 
                 </div>
               </div>

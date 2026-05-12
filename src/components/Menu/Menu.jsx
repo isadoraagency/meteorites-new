@@ -43,7 +43,9 @@ export default function Menu({ list }) {
 
   const moveToItem = (e, el) => {
     e.preventDefault();
-    
+
+    // gsap.to(window, {duration: 0, scrollTo: {y: el}});
+
     // Disable all ScrollTriggers snapping during scroll
     const triggers = ScrollTrigger.getAll();
     triggers.forEach(st => {
@@ -53,7 +55,7 @@ export default function Menu({ list }) {
     });
 
     gsap.to(window, {
-      duration: 0.8,
+      duration: 0,
       scrollTo: {y: el, autoKill: true},
       ease: "power2.inOut",
       onComplete: () => {
