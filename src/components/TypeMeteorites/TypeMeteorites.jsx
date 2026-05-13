@@ -7,7 +7,7 @@ import {useDecodeText} from "../../hooks/useDecodeText.js";
 gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(ScrollTrigger)
 
-export default function TypeMeteorites({isLoaded, className}) {
+export default function TypeMeteorites({isLoaded, isJumping, className, toggleNav}) {
   const sectionRef = useRef(null)
   const titleRef = useRef(null)
   const descRef = useRef(null)
@@ -204,21 +204,35 @@ export default function TypeMeteorites({isLoaded, className}) {
           // pinSpacing: false,
           id: "type-meteorites-scroll",
           anticipatePin: 1,
-          snap: {
+          snap: isJumping ? false : {
             snapTo: "labelsDirectional",
             duration: { min: 0.3, max: 2 },
             ease: "power2.out",
           },
           onEnter: () => {
+            if (isJumping) return;
+            toggleNav && toggleNav(true);
             gsap.set(titleRef.current, {
               autoAlpha: 1,
               onComplete: () => {
+                if (isJumping) return;
                 setAnimateMainTitle(true);
-                setTimeout(() => setAnimateMainTitle(false), 2000);
+                setTimeout(() => {
+                  if (!isJumping) setAnimateMainTitle(false);
+                }, 2000);
               }
             });
           },
+          onEnterBack: () => {
+            if (isJumping) return;
+            toggleNav && toggleNav(true);
+          },
+          onLeave: () => {
+            if (isJumping) return;
+            toggleNav && toggleNav(false);
+          },
           onLeaveBack: () => {
+            if (isJumping) return;
             gsap.set(titleRef.current, {
               autoAlpha: 0,
             });
@@ -306,9 +320,10 @@ export default function TypeMeteorites({isLoaded, className}) {
         autoAlpha: 1,
         y: 0,
         onComplete: () => {
+          if (isJumping) return;
           setAnimateMainDesc(true);
           setTimeout(() => {
-            setAnimateMainDesc(false);
+            if (!isJumping) setAnimateMainDesc(false);
           }, 2000);
         }
       }, "-=1")

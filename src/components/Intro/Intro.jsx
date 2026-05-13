@@ -10,7 +10,7 @@ import meteorVideoW from '/videos/Meteorite-Loop.webm';
 import videoIntro from '/videos/intro-bg.mp4';
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Intro({progress, isLoaded, animationComplete= false, toggleAnimationComplete, className=''}) {
+export default function Intro({progress, isLoaded, animationComplete= false, toggleAnimationComplete, isJumping, className='', toggleNav}) {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const titleRef = useRef(null);
   const textRef = useRef(null);
@@ -108,7 +108,19 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
           anticipatePin: 1,
           invalidateOnRefresh: true,
 
-          snap: {
+          onEnter: () => {
+             if (isJumping) return;
+             toggleNav && toggleNav(false);
+          },
+          onEnterBack: () => {
+             if (isJumping) return;
+             toggleNav && toggleNav(false);
+          },
+          onLeave: () => {
+             if (isJumping) return;
+             toggleNav && toggleNav(true);
+          },
+          snap: isJumping ? false : {
             snapTo: "labelsDirectional",
             duration: { min: 0.3, max: 2 },
             ease: "power2.out",
@@ -207,7 +219,9 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
             borderRadius: '30vh',
             duration: 1.5,
             ease: "power1.inOut",
-            onComplete: () => setTriggerIntro5(false)
+            onComplete: () => {
+              if (!isJumping) setTriggerIntro5(false);
+            }
           }
         )
         .to(introBgVideo.current, {
@@ -231,7 +245,7 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
         .to(introBg.current, { opacity: 0, duration: 1 })
         .set(
           introText5Ref.current,
-          { opacity: 1, onComplete: () => setTriggerIntro5(true) },
+          { opacity: 1, onComplete: () => { if (!isJumping) setTriggerIntro5(true) } },
           "-=0.1"
         )
 
@@ -251,7 +265,7 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
         )
         .set(
           '.intro-6',
-          { opacity: 1, onComplete: () => setTriggerIntro6(true) }, '-=0.1'
+          { opacity: 1, onComplete: () => { if (!isJumping) setTriggerIntro6(true) } }, '-=0.1'
         )
 
       // ======================

@@ -25,6 +25,7 @@ function App({onComplete}) {
   const [progress, setProgress] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [isJumping, setIsJumping] = useState(false);
 
   const handleBackToIntro = () => {
     // Scroll to top to ensure proper positioning
@@ -180,7 +181,7 @@ function App({onComplete}) {
       <Menu list={menuItems}  />
 
       <Intro className="intro-section"
-             progress={formatProgress(progress)} isLoaded={isLoaded} animationComplete={animationComplete} toggleAnimationComplete={toggleAnimationComplete}  />
+             progress={formatProgress(progress)} isLoaded={isLoaded} animationComplete={animationComplete} toggleAnimationComplete={toggleAnimationComplete} isJumping={isJumping} toggleNav={toggleNav}  />
 
 
       {items && items.length > 0 && (
@@ -196,6 +197,7 @@ function App({onComplete}) {
             lastTimeCapsule={items.length === 1}
             handleActiveItem={handleActiveItem}
             activeItem={activeItem}
+            isJumping={isJumping}
           />
 
           {items.length > 1 && (
@@ -214,6 +216,7 @@ function App({onComplete}) {
                     toggleNav={toggleNav}
                     lastTimeCapsule={actualIndex + 1 === items.length}
                     handleActiveItem={handleActiveItem}
+                    isJumping={isJumping}
                   />
                 );
               })}
@@ -223,9 +226,9 @@ function App({onComplete}) {
       )}
       <Footer isLoaded={animationComplete}/>
       {
-        activeItem > -1 && <Navigation isLoaded={isLoaded} navActive={navActive} activeItem={activeItem} />
+        activeItem > -1 && <Navigation isLoaded={isLoaded} navActive={navActive} activeItem={activeItem} handleActiveItem={handleActiveItem} setIsJumping={setIsJumping} />
       }
-      <TypeMeteorites isLoaded={animationComplete} className="type-meteorites-section"  />
+      <TypeMeteorites isLoaded={animationComplete} className="type-meteorites-section" isJumping={isJumping} toggleNav={toggleNav} />
 
       <Stardust isLoaded={animationComplete} onBackToIntro={handleBackToIntro} className="stardust-section" />
 

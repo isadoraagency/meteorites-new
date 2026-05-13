@@ -8,7 +8,7 @@ import {useDecodeText} from "../../hooks/useDecodeText.js";
 gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(MotionPathPlugin);
-export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, toggleNav, item, items, activeItem, handleActiveItem, className = '' }) {
+export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, toggleNav, item, activeItem, handleActiveItem, isJumping, className = '' }) {
   const timeCapsules = useRef(null);
   const timeCapsulesContainer = useRef(null);
   const timeCapsulesBg = useRef(null);
@@ -61,7 +61,7 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
         isTablet: "(min-width: 768px) and (max-width: 1023px)",
         isMobile: "(max-width: 767px)"
       }, (context) => {
-        const {isDesktop, isTablet, isMobile} = context.conditions
+        const {isMobile} = context.conditions
 
         if (item) {
           if (index == 0) {
@@ -94,17 +94,20 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                 start: 'top center',
                 end: 'top top',
                 scrub: 1,
-                snap: {
+                snap: isJumping ? false : {
                   snapTo: "labelsDirectional",
                   duration: {min: 0.3, max: 0.5},
                   ease: "power2.out",
                 },
                 onEnter: () => {
-                  toggleNav(true);
-
+                  if (!isJumping) {
+                    toggleNav(true);
+                  }
                 },
                 onEnterBack: () => {
-                  index == 0 && toggleNav(false)
+                  if (!isJumping) {
+                    toggleNav(true)
+                  }
                 },
                 // onLeaveBack: () => handleActiveItem(index - 1 >= 0 ? index - 1 : 0)
               }
@@ -135,33 +138,42 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                 pinSpacing: false,
                 id: "TimeCapsules" + item.slug,
                 anticipatePin: 1,
-                snap: {
+                snap: isJumping ? false : {
                   snapTo: "labelsDirectional",
                   duration: {min: 0.3, max: 2},
                   ease: "power2.out",
                 },
                 onEnter: () => {
-                  toggleNav(true);
-                  handleActiveItem(index)
+                  if (!isJumping) {
+                    toggleNav(true);
+                  }
                 },
                 onUpdate: (self) => {
-                   if (self.isActive && activeItem !== index) {
-                      handleActiveItem(index);
+                   if (!isJumping && self.isActive) {
+                      // Only update if we are significantly into the section
+                      // or if we are scrolling backwards and just entered
+                      if (self.direction === -1 && self.progress < 0.98 && activeItem !== index) {
+                        handleActiveItem(index);
+                      } else if (self.direction === 1 && self.progress > 0.02 && activeItem !== index) {
+                        handleActiveItem(index);
+                      }
                    }
                 },
                 onEnterBack: () => {
                   toggleNav(true);
-                  handleActiveItem(index)
-                  index == 0 && toggleNav(false)
+                  if (!isJumping) {
+                    handleActiveItem(index)
+                  }
                 },
                 onLeaveBack: () => {
-                  toggleNav(true);
-                  handleActiveItem(index - 1 >= 0 ? index - 1 : 0)
+                   // When leaving first item backwards into Intro, hide nav
+                   if (!isJumping && index === 0) {
+                     toggleNav(false);
+                   }
                 },
                 onLeave: () => {
-                  lastTimeCapsule && toggleNav(false)
-                  setTimeCapsulesTitleActive(false)
-
+                  // Keep nav visible when leaving capsules down towards TypeMeteorites
+                  // only hide when leaving TypeMeteorites (handled in TypeMeteorites.jsx)
                 }
               }
             });
@@ -174,8 +186,12 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
               tl2.set(timeCapsules.current, {opacity: 1})
             }
             tl2.set(timeCapsulesTitle.current, {
-              opacity: 1, onComplete: () => {
-                setTimeCapsulesTitleActive(true)
+              opacity: 1,
+              onComplete: () => {
+                if (!isJumping) setTimeCapsulesTitleActive(true)
+              },
+              onReverseComplete: () => {
+                if (!isJumping) setTimeCapsulesTitleActive(true)
               }
             }, '<')
 
@@ -291,17 +307,17 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                 <div className="time-capsules-title" ref={timeCapsulesTitle}>{item.title}</div>
                 <div className="time-capsules-meta" ref={timeCapsulesMeta}>
                   <div>
-                    <div className="p"><strong>Fall place: </strong></div>
-                    <div className='p'>{item.fallPlace}</div>
+                    <div className="p"><strong>Fall place:</strong>&nbsp;</div>
+                    <div className='p'> {item.fallPlace}</div>
                   </div>
                   <div>
                     <div className="p">
-                      <strong>Fall date: </strong>
+                      <strong>Fall date:</strong>&nbsp;
                     </div>
                     <div className="p">{item.fallDate}</div>
                   </div>
                   <div>
-                    <div className="p"><strong>Age: </strong></div>
+                    <div className="p"><strong>Age:</strong></div>&nbsp;
                     <div className="p" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.old)}} />
                   </div>
                 </div>
@@ -310,22 +326,22 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
               <div className="time-capsules__container">
                 <div className="time-capsules__spec text--info" >
                   <ul ref={timeCapsulesSpec} className="spec">
-                    <li className="text-light p3">
-                      <div className="p3 mb-0 text-medium">Type</div>
+                    <li className="text-light p2">
+                      <div className="p2 mb-0 text-bold">Type</div>
                       {item.type}
                     </li>
-                    <li className="text-light p3">
-                      <div className="p3 mb-0 text-medium">Class</div>
+                    <li className="text-light p2">
+                      <div className="p2 mb-0 text-bold">Class</div>
                       {item.class}
                     </li>
-                    <li className="text-light p3">
-                      <div className="p3 mb-0 text-medium">Observed fall</div>
+                    <li className="text-light p2">
+                      <div className="p2 mb-0 text-bold">Observed fall</div>
                       {
                         item.observedFall ? 'Yes' : 'No'
                       }
                     </li>
                     <li className="text-light p2">
-                      <div className="p2 mb-0 text-medium">Found date</div>
+                      <div className="p2 mb-0 text-bold">Found date</div>
                       {formatDate(item.foundDate)}
                     </li>
                   </ul>
