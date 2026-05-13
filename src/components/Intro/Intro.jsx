@@ -126,9 +126,6 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
           { y: '-50%', opacity: 1 },
           { y: '-100%', opacity: 0, ease: "power2.inOut" }
         )
-        .to(introBgVideo.current, {
-          scale: 1.2
-        }, '<')
         .to(
           introBg.current,
           { filter: 'blur(0px)', ease: 'power3.out' },
@@ -139,7 +136,16 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
           intro2Ref.current,
           { opacity: 1}, '-=.1'
         )
-        addDecodeToTimeline(tl, introText2Ref.current, options);
+
+      const decodeDuration2 = (introText2Ref.current.textContent.length - 1) * options.stagger + options.iterations * options.speed;
+      const startDecode2 = tl.duration() - 0.1;
+      tl.to(introBgVideo.current, {
+        scale: 1.2,
+        duration: decodeDuration2,
+        ease: "none"
+      }, startDecode2);
+      addDecodeToTimeline(tl, introText2Ref.current, options, startDecode2);
+
 
       // ======================
       // 2 animation
@@ -147,14 +153,19 @@ export default function Intro({progress, isLoaded, animationComplete= false, tog
       tl.addLabel("intro-2")
 
         .to(intro2Ref.current, { opacity: 0, ease: "power2.inOut" })
-        .to(introBgVideo.current, {
-          scale: 1.1
-        }, '<')
         .set(
           intro3Ref.current,
           { opacity: 1 }
-        )
-        addDecodeToTimeline(tl, intro3Ref.current, options);
+        );
+
+      const decodeDuration3 = (introText3Ref.current.textContent.length - 1) * options.stagger + options.iterations * options.speed;
+      const startDecode3 = tl.duration();
+      tl.to(introBgVideo.current, {
+        scale: 1.1,
+        duration: decodeDuration3,
+        ease: "none"
+      }, startDecode3);
+      addDecodeToTimeline(tl, intro3Ref.current, options, startDecode3);
 
       // ======================
       // 3 animation

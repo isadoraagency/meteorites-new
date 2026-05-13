@@ -1,7 +1,7 @@
 import gsap from "gsap";
 import SplitText from "gsap/SplitText";
 
-export function addDecodeToTimeline(tl, el, options = {}) {
+export function addDecodeToTimeline(tl, el, options = {}, position) {
   if (!el) return;
 
   const {
@@ -18,8 +18,8 @@ export function addDecodeToTimeline(tl, el, options = {}) {
   // Set initial state immediately (outside the timeline)
   gsap.set(split.chars, { opacity, filter: `blur(${blured}px)` });
 
-  // Stamp position once so all chars share the same start point in the TL
-  const startTime = tl.duration();
+  // Use provided position or current timeline duration
+  const startTime = position !== undefined ? position : tl.duration();
 
   split.chars.forEach((char, index) => {
     const original = char.textContent;

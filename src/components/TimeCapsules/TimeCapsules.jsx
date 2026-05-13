@@ -91,12 +91,12 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             const tl = gsap.timeline({
               scrollTrigger: {
                 trigger: timeCapsules.current,
-                start: 'top bottom',
+                start: 'top center',
                 end: 'top top',
                 scrub: 1,
                 snap: {
                   snapTo: "labelsDirectional",
-                  duration: {min: 0.3, max: 2},
+                  duration: {min: 0.3, max: 0.5},
                   ease: "power2.out",
                 },
                 onEnter: () => {
@@ -230,7 +230,9 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
             //     }, scale: 0.5, ease: 'power3.out'
             //   })
             // } else {
+            if (videoFall.current) {
               tl2.set(videoFall.current, {opacity: 0})
+            }
               tl2.to(timeCapsulesVideo.current, {
                 scale: 5
               })
