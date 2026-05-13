@@ -211,7 +211,7 @@ export default function TypeMeteorites({isLoaded, isJumping, className, toggleNa
           },
           onEnter: () => {
             if (isJumping) return;
-            toggleNav && toggleNav(true);
+            toggleNav && toggleNav(false);
             gsap.set(titleRef.current, {
               autoAlpha: 1,
               onComplete: () => {
@@ -225,7 +225,7 @@ export default function TypeMeteorites({isLoaded, isJumping, className, toggleNa
           },
           onEnterBack: () => {
             if (isJumping) return;
-            toggleNav && toggleNav(true);
+            toggleNav && toggleNav(false);
           },
           onLeave: () => {
             if (isJumping) return;

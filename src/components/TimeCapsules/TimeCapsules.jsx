@@ -104,11 +104,6 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                     toggleNav(true);
                   }
                 },
-                onEnterBack: () => {
-                  if (!isJumping) {
-                    toggleNav(true)
-                  }
-                },
                 // onLeaveBack: () => handleActiveItem(index - 1 >= 0 ? index - 1 : 0)
               }
             });
@@ -160,9 +155,9 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                    }
                 },
                 onEnterBack: () => {
-                  toggleNav(true);
                   if (!isJumping) {
-                    handleActiveItem(index)
+                    toggleNav(true);
+                    handleActiveItem(index);
                   }
                 },
                 onLeaveBack: () => {
@@ -172,8 +167,10 @@ export default function TimeCapsules({isLoaded, index = 0, lastTimeCapsule, togg
                    }
                 },
                 onLeave: () => {
-                  // Keep nav visible when leaving capsules down towards TypeMeteorites
-                  // only hide when leaving TypeMeteorites (handled in TypeMeteorites.jsx)
+                  // Hide nav when leaving the last capsule down towards TypeMeteorites
+                  if (!isJumping && item === lastTimeCapsule) {
+                    toggleNav(false);
+                  }
                 }
               }
             });

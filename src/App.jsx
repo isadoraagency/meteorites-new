@@ -194,7 +194,7 @@ function App({onComplete}) {
             item={items[0]}
             items={items}
             toggleNav={toggleNav}
-            lastTimeCapsule={items.length === 1}
+            lastTimeCapsule={items[0] === items[items.length - 1]}
             handleActiveItem={handleActiveItem}
             activeItem={activeItem}
             isJumping={isJumping}
@@ -214,7 +214,7 @@ function App({onComplete}) {
                     items={items}
                     activeItem={activeItem}
                     toggleNav={toggleNav}
-                    lastTimeCapsule={actualIndex + 1 === items.length}
+                    lastTimeCapsule={item === items[items.length - 1]}
                     handleActiveItem={handleActiveItem}
                     isJumping={isJumping}
                   />
