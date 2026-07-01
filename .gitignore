@@ -33,3 +33,5 @@ next-env.d.ts
 skills-lock.json
 .agents/skills/
 .claude/skills/
+
+certificates
