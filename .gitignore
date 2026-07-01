@@ -31,3 +31,5 @@ next-env.d.ts
 .cursor
 .agent
 skills-lock.json
+.agents/skills/
+.claude/skills/

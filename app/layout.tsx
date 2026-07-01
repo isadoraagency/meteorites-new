@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import "../src/assets/styles/main.scss";
+import "../styles/main.scss";
 
 export const metadata: Metadata = {
   title: "meteorites-landing",
