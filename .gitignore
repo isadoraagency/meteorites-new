@@ -26,3 +26,8 @@ next-env.d.ts
 *.njsproj
 *.sln
 *.sw?
+
+# AI tools
+.cursor
+.agent
+skills-lock.json
