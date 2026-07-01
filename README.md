@@ -1,16 +1,23 @@
-# React + Vite
+# Meteorites Landing
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Next.js (App Router) + TypeScript project, using GSAP/ScrollTrigger for scroll-driven animation, Framer Motion for UI transitions, and Spline for the 3D "Stardust" scene.
 
-Currently, two official plugins are available:
+## Getting started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+Open [http://localhost:3000](http://localhost:3000).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Scripts
 
-## Expanding the ESLint configuration
+- `npm run dev` — start the Next.js dev server
+- `npm run build` — production build
+- `npm run start` — serve the production build
+- `npm run lint` — run ESLint
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Content
+
+All content is currently served as static JSON from `public/data/*.json` (no backend/CMS yet).

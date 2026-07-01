@@ -92,7 +92,7 @@
 
   &.active {
     border-radius: 999px;
-    background: url(<path-to-image>) lightgray 50% / cover no-repeat, radial-gradient(325.9% 99.36% at 53.72% 1.55%, rgba(249, 249, 249, 0.24) 0%, rgba(105, 105, 105, 0.11) 100%);
+    background: lightgray, radial-gradient(325.9% 99.36% at 53.72% 1.55%, rgba(249, 249, 249, 0.24) 0%, rgba(105, 105, 105, 0.11) 100%);
     box-shadow: 0 0.225px 1.802px 0 rgba(255, 255, 255, 0.70) inset, 0 3.604px 1.802px 0 rgba(255, 255, 255, 0.40) inset, 0 4.505px 9.011px 0 rgba(255, 255, 255, 0.70) inset;
     backdrop-filter: blur(3.378990888595581px);
   }
