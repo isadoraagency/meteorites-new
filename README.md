@@ -49,6 +49,38 @@ Content is being migrated from static JSON to Storyblok:
 
 `lib/StoryblokProvider.tsx` initializes the Storyblok Bridge client-side so the Visual Editor can highlight blocks and push live updates.
 
+## Setting up the Storyblok Visual Editor (preview)
+
+This is mainly for content editors. The Visual Editor lets you see the live site next to the content form and preview changes before publishing.
+
+### One-time setup (per space)
+
+1. Make sure the site is running. For local editing a developer must have the dev server up (`npm run dev` → https://localhost:3000). The preview **must be served over HTTPS** — Storyblok won't embed an insecure page.
+2. In Storyblok, go to **Settings → Visual Editor**.
+3. Set the **default environment (preview URL)** to the URL of the running site, e.g.:
+   - `https://localhost:3000/` for local development, or
+   - the deployed preview/staging URL once one exists.
+4. Click **Save**.
+
+You can add more than one environment (e.g. "Local" and "Staging") and switch between them from the dropdown at the top of the Visual Editor.
+
+### Editing content
+
+1. Go to **Content** and open a story (currently only `menu` is wired up — see the [Content](#content) section).
+2. The right side shows the live preview; the left side shows the content form (blocks/fields).
+3. Click a block either in the form or directly on the preview — the Storyblok Bridge highlights it and scrolls the form to the matching field.
+4. Edit the fields. Changes appear in the preview in real time, **without saving**.
+5. When you're happy:
+   - **Save** — stores a draft. The app in development mode fetches drafts, so devs and other editors can see it, but it's not live.
+   - **Publish** — makes the content live (production reads the published version).
+
+### Troubleshooting
+
+- **Blank preview / "refused to connect"** — the site isn't running at the configured preview URL, or the URL uses `http://` instead of `https://`. Ask a developer to start the dev server or fix the URL in **Settings → Visual Editor**.
+- **Certificate warning on localhost** — open `https://localhost:3000` directly in a browser tab first and accept the self-signed certificate, then reload the Visual Editor.
+- **Changes don't highlight/update live** — the Storyblok Bridge isn't loading. Check with a developer that `NEXT_PUBLIC_STORYBLOK_PREVIEW_TOKEN` is set in the app's `.env`.
+- **Story shows old content on the site** — you saved but didn't **Publish** (or vice versa: production only shows published content).
+
 ## Project structure
 
 ```
