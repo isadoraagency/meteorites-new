@@ -22,6 +22,8 @@ interface IntroProps {
   isJumping: boolean;
   className?: string;
   toggleNav?: (value: boolean) => void;
+  title?: string;
+  subtitle?: string;
 }
 
 export default function Intro({
@@ -32,6 +34,8 @@ export default function Intro({
   isJumping,
   className = "",
   toggleNav,
+  title,
+  subtitle,
 }: IntroProps) {
   const isSafari =
     typeof navigator !== "undefined" && /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -373,12 +377,34 @@ export default function Intro({
         </div>
         <div className="intro-1" ref={intro1Ref}>
           <div className="lg text-title text--info text-light mb-2" ref={titleRef}>
-            WE ARE MADE <br />
-            OF STARDUST
+            {title ? (
+              title.split("\n").map((line, i) => (
+                <span key={i}>
+                  {line}
+                  {i < title.split("\n").length - 1 && <br />}
+                </span>
+              ))
+            ) : (
+              <>
+                WE ARE MADE <br />
+                OF STARDUST
+              </>
+            )}
           </div>
           <p className="h6 text--info mb-0 text-light" ref={textRef}>
-            A tale of beginnings <br />
-            by Isadora Agency
+            {subtitle ? (
+              subtitle.split("\n").map((line, i) => (
+                <span key={i}>
+                  {line}
+                  {i < subtitle.split("\n").length - 1 && <br />}
+                </span>
+              ))
+            ) : (
+              <>
+                A tale of beginnings <br />
+                by Isadora Agency
+              </>
+            )}
           </p>
         </div>
         <div className="intro-2" ref={intro2Ref}>

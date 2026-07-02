@@ -14,15 +14,29 @@ import Stardust from "./Stardust/Stardust";
 import ScrollProgress from "./ScrollProgress/ScrollProgress";
 import Footer from "./Footer/Footer";
 import type { Meteorite, MenuData } from "../types/content";
+import { useStoryblokState } from "@storyblok/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface AppProps {
   menu: MenuData;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialStory?: any;
   onComplete?: () => void;
 }
 
-function App({ menu, onComplete }: AppProps) {
+function App({ menu, initialStory, onComplete }: AppProps) {
+  const story = useStoryblokState(initialStory) as any;
+
+  const heroBlock = story?.content?.body?.find(
+    (block: { component?: string }) => block.component === "hero-section"
+  );
+  const heroTitle =
+    heroBlock?.title || story?.content?.hero_title || story?.content?.title;
+  const heroSubtitle =
+    heroBlock?.subtitle ||
+    story?.content?.hero_subtitle ||
+    story?.content?.subtitle;
   const [items, setItems] = useState<Meteorite[]>([]);
   const [navActive, setNavActive] = useState(false);
   const [activeItem, setActiveItem] = useState<number | null>(null);
@@ -129,6 +143,8 @@ function App({ menu, onComplete }: AppProps) {
       <Menu list={menu} />
 
       <Intro
+        title={heroTitle}
+        subtitle={heroSubtitle}
         progress={formatProgress(progress)}
         isLoaded={isLoaded}
         animationComplete={animationComplete}
