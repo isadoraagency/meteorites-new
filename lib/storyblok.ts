@@ -1,5 +1,15 @@
 import { storyblokInit, apiPlugin, getStoryblokApi } from "@storyblok/react/rsc";
 import type { MenuData, MenuLink } from "../types/content";
+import {
+  getBackgroundBlurPx,
+  getBackgroundGradientFromConfig,
+  getHeroBlock,
+  getHeroTextPair,
+  getScrollProgressGradientFromConfig,
+  getStoryblokAssetAlt,
+  getStoryblokAssetUrl,
+  getStoryblokRichTextPlain,
+} from "./storyblok-utils";
 // Static fallback so the app never breaks if the Storyblok story doesn't
 // exist yet (or the API is unreachable). This is the same data the app used
 // to fetch client-side from /data/menu.json.
@@ -59,3 +69,14 @@ export async function getStoryStoryblok(slug: string, preview = false) {
     return null;
   }
 }
+
+export {
+  getBackgroundBlurPx,
+  getBackgroundGradientFromConfig,
+  getHeroBlock,
+  getHeroTextPair,
+  getScrollProgressGradientFromConfig,
+  getStoryblokAssetAlt,
+  getStoryblokAssetUrl,
+  getStoryblokRichTextPlain,
+};

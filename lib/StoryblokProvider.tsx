@@ -1,22 +1,29 @@
 "use client";
 
 import { storyblokInit, apiPlugin } from "@storyblok/react/rsc";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
-// Client-side init. This is what loads the Storyblok Bridge into the browser
-// so the Visual Editor can highlight blocks and push live updates. The
-// `NEXT_PUBLIC_` token is safe to expose — it's the preview token, same value
-// as the server side but readable in the browser (required by the bridge).
-storyblokInit({
-  accessToken: process.env.NEXT_PUBLIC_STORYBLOK_PREVIEW_TOKEN,
-  use: [apiPlugin],
-  apiOptions: { region: "eu" },
-});
+let bridgeInitialized = false;
 
+// Loads the Storyblok Bridge only when the server passes a preview token
+// (Visual Editor iframe with ?_storyblok). Regular visitors never receive it.
 export default function StoryblokProvider({
   children,
+  previewAccessToken,
 }: {
   children: ReactNode;
+  previewAccessToken?: string;
 }) {
+  useEffect(() => {
+    if (!previewAccessToken || bridgeInitialized) return;
+
+    storyblokInit({
+      accessToken: previewAccessToken,
+      use: [apiPlugin],
+      apiOptions: { region: "eu" },
+    });
+    bridgeInitialized = true;
+  }, [previewAccessToken]);
+
   return children;
 }

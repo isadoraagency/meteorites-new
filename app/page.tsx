@@ -1,5 +1,11 @@
 import App from "../components/App";
-import { getMenu, getStoryStoryblok } from "../lib/storyblok";
+import {
+  getBackgroundGradientFromConfig,
+  getMenu,
+  getScrollProgressGradientFromConfig,
+  getStoryStoryblok,
+} from "../lib/storyblok";
+import type { SiteGlobalConfigurationsBlock } from "../types/storyblok";
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -13,10 +19,29 @@ export default async function Home({ searchParams }: PageProps) {
     resolvedParams._storyblok !== undefined ||
     resolvedParams._storyblok_tk !== undefined;
 
-  const [menu, story] = await Promise.all([
+  const [menu, story, globalConfigStory] = await Promise.all([
     getMenu(),
     getStoryStoryblok("home", isPreview),
+    getStoryStoryblok("site-global-configurations", isPreview),
   ]);
 
-  return <App menu={menu} initialStory={story} />;
+  const globalConfig =
+    globalConfigStory?.content as SiteGlobalConfigurationsBlock | undefined;
+  const backgroundGradient = getBackgroundGradientFromConfig(globalConfig);
+  const scrollGradient = getScrollProgressGradientFromConfig(globalConfig);
+
+  return (
+    <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `:root { --site-bg-gradient: ${backgroundGradient}; --site-bg-gradient-scroll: ${scrollGradient}; }`,
+        }}
+      />
+      <App
+        menu={menu}
+        initialStory={story}
+        initialGlobalConfig={globalConfigStory}
+      />
+    </>
+  );
 }

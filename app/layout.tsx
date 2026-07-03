@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import type { ReactNode } from "react";
 import StoryblokProvider from "../lib/StoryblokProvider";
 import "../styles/main.scss";
@@ -12,11 +13,19 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const isStoryblokPreview = (await headers()).get("x-storyblok-preview") === "1";
+
   return (
     <html lang="en">
       <body>
-        <StoryblokProvider>{children}</StoryblokProvider>
+        <StoryblokProvider
+          previewAccessToken={
+            isStoryblokPreview ? process.env.STORYBLOK_PREVIEW_TOKEN : undefined
+          }
+        >
+          {children}
+        </StoryblokProvider>
       </body>
     </html>
   );

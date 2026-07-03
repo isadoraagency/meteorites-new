@@ -14,29 +14,26 @@ import Stardust from "./Stardust/Stardust";
 import ScrollProgress from "./ScrollProgress/ScrollProgress";
 import Footer from "./Footer/Footer";
 import type { Meteorite, MenuData } from "../types/content";
+import type { StoryblokStory } from "../types/storyblok";
+import SiteTheme from "./SiteTheme/SiteTheme";
+import { getHeroBlock } from "../lib/storyblok-utils";
 import { useStoryblokState } from "@storyblok/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface AppProps {
   menu: MenuData;
+  // Full story payload from the Storyblok CDN — typed loosely until all blocks are mapped.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialStory?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialGlobalConfig?: any;
   onComplete?: () => void;
 }
 
-function App({ menu, initialStory, onComplete }: AppProps) {
-  const story = useStoryblokState(initialStory) as any;
-
-  const heroBlock = story?.content?.body?.find(
-    (block: { component?: string }) => block.component === "hero-section"
-  );
-  const heroTitle =
-    heroBlock?.title || story?.content?.hero_title || story?.content?.title;
-  const heroSubtitle =
-    heroBlock?.subtitle ||
-    story?.content?.hero_subtitle ||
-    story?.content?.subtitle;
+function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) {
+  const story = useStoryblokState(initialStory ?? null) as StoryblokStory | null;
+  const hero = getHeroBlock(story);
   const [items, setItems] = useState<Meteorite[]>([]);
   const [navActive, setNavActive] = useState(false);
   const [activeItem, setActiveItem] = useState<number | null>(null);
@@ -139,12 +136,12 @@ function App({ menu, initialStory, onComplete }: AppProps) {
 
   return (
     <>
+      <SiteTheme initialConfig={initialGlobalConfig} />
       <Cursor />
       <Menu list={menu} />
 
       <Intro
-        title={heroTitle}
-        subtitle={heroSubtitle}
+        hero={hero}
         progress={formatProgress(progress)}
         isLoaded={isLoaded}
         animationComplete={animationComplete}

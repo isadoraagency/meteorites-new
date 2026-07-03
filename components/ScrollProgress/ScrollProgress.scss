@@ -1,3 +1,5 @@
+@use "../../styles/utils/variables" as *;
+
 .scroll-progress-container {
   position: fixed;
   top: 0;
@@ -16,7 +18,7 @@
     display: block;
     width: 100vw;
     height: 100%;
-    background: linear-gradient(90deg, #A398FF 0%, #DFD5FF 49%, #FDFF8D 100%);
+    background: var(--site-bg-gradient-scroll, linear-gradient(90deg, #A398FF 0%, #DFD5FF 49%, #FDFF8D 100%));
 
   }
 }
