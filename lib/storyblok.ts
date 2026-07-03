@@ -5,10 +5,13 @@ import {
   getBackgroundGradientFromConfig,
   getHeroBlock,
   getHeroTextPair,
+  getMeteoritesFromStory,
   getScrollProgressGradientFromConfig,
   getStoryblokAssetAlt,
   getStoryblokAssetUrl,
   getStoryblokRichTextPlain,
+  mapMeteoriteBlockToMeteorite,
+  storyblokRichTextToHtml,
 } from "./storyblok-utils";
 // Static fallback so the app never breaks if the Storyblok story doesn't
 // exist yet (or the API is unreachable). This is the same data the app used
@@ -75,8 +78,11 @@ export {
   getBackgroundGradientFromConfig,
   getHeroBlock,
   getHeroTextPair,
+  getMeteoritesFromStory,
   getScrollProgressGradientFromConfig,
   getStoryblokAssetAlt,
   getStoryblokAssetUrl,
   getStoryblokRichTextPlain,
+  mapMeteoriteBlockToMeteorite,
+  storyblokRichTextToHtml,
 };

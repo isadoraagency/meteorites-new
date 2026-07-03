@@ -1,13 +1,17 @@
+import type { Meteorite } from "../types/content";
 import type {
   GradientBlock,
   HeroSectionBlock,
   HeroTextBlock,
+  MeteoriteBlock,
   SiteGlobalConfigurationsBlock,
   StoryblokAsset,
   StoryblokRichText,
+  StoryblokRichTextMark,
   StoryblokRichTextNode,
   StoryblokStory,
 } from "../types/storyblok";
+import meteoritesFallback from "../public/data/meteorites.json";
 
 export const EMPTY_GRADIENT = {
   degrees: 0,
@@ -117,4 +121,156 @@ export function getHeroBlock(
   return (
     story?.content?.body?.find((block) => block.component === "hero-section") ?? null
   );
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function applyRichTextMarks(
+  text: string,
+  marks?: StoryblokRichTextMark[]
+): string {
+  if (!marks?.length) return text;
+
+  return marks.reduce((result, mark) => {
+    switch (mark.type) {
+      case "bold":
+        return `<strong>${result}</strong>`;
+      case "italic":
+        return `<em>${result}</em>`;
+      case "underline":
+        return `<u>${result}</u>`;
+      case "strike":
+        return `<s>${result}</s>`;
+      case "code":
+        return `<code>${result}</code>`;
+      default:
+        return result;
+    }
+  }, text);
+}
+
+function renderRichTextNode(
+  node: StoryblokRichTextNode,
+  inline = false
+): string {
+  if (node.type === "text") {
+    const text = escapeHtml(node.text ?? "");
+    return applyRichTextMarks(text, node.marks);
+  }
+
+  if (node.type === "hard_break") return "<br/>";
+
+  if (node.type === "paragraph") {
+    const inner = node.content?.map((child) => renderRichTextNode(child, inline)).join("") ?? "";
+    return inline ? inner : `<p>${inner}</p>`;
+  }
+
+  if (Array.isArray(node.content)) {
+    return node.content.map((child) => renderRichTextNode(child, inline)).join("");
+  }
+
+  return "";
+}
+
+function richTextToHtml(
+  value: StoryblokRichText | StoryblokRichTextNode | string | null | undefined,
+  inline = false
+): string {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+
+  if (value.type === "doc" && Array.isArray(value.content)) {
+    if (inline) {
+      return value.content
+        .map((node) => renderRichTextNode(node, true))
+        .filter(Boolean)
+        .join("<br/>");
+    }
+    return value.content.map((node) => renderRichTextNode(node)).join("");
+  }
+
+  return renderRichTextNode(value, inline);
+}
+
+export function storyblokRichTextToHtml(
+  value?: StoryblokRichText | StoryblokRichTextNode | string | null
+): string {
+  return richTextToHtml(value);
+}
+
+export function storyblokRichTextToInlineHtml(
+  value?: StoryblokRichText | StoryblokRichTextNode | string | null
+): string {
+  return richTextToHtml(value, true);
+}
+
+export function slugifyMeteoriteTitle(title: string): string {
+  const normalized = title.trim().toLowerCase();
+  if (normalized.startsWith("the ")) {
+    return `the-${normalized.slice(4).replace(/\s+/g, "-")}`;
+  }
+  return normalized.replace(/\s+/g, "-");
+}
+
+function normalizeFoundDate(value?: string): string {
+  if (!value) return "";
+  return value.split(" ")[0] ?? value;
+}
+
+export function getMeteoriteBlocks(
+  story: StoryblokStory | null | undefined
+): MeteoriteBlock[] {
+  return (
+    story?.content?.body?.filter(
+      (block): block is MeteoriteBlock => block.component === "meteorite"
+    ) ?? []
+  );
+}
+
+export function mapMeteoriteBlockToMeteorite(block: MeteoriteBlock): Meteorite {
+  const videoFallBlock = block.videoFall?.[0];
+  const videoFallSrc = getStoryblokAssetUrl(videoFallBlock?.video);
+
+  return {
+    title: block.title?.trim() ?? "",
+    slug:
+      block.slug?.trim() ||
+      slugifyMeteoriteTitle(block.title?.trim() ?? ""),
+    about: storyblokRichTextToHtml(block.about),
+    short: storyblokRichTextToHtml(block.short),
+    old: storyblokRichTextToInlineHtml(block.old),
+    image: getStoryblokAssetUrl(block.image),
+    shadow: getStoryblokAssetUrl(block.shadow),
+    video: getStoryblokAssetUrl(block.video),
+    fallDate: block.fallDate?.trim() ?? "",
+    fallPlace: block.fallPlace?.trim() ?? "",
+    composition: (block.composition ?? [])
+      .map((item) => item.name?.trim() ?? "")
+      .filter(Boolean),
+    type: block.type?.trim() ?? "",
+    class: block.meteoriteClass?.trim() ?? "",
+    observedFall: Boolean(block.observedFall),
+    videoFall: videoFallSrc
+      ? {
+          description: videoFallBlock?.description?.trim() ?? "",
+          source: videoFallBlock?.source?.trim() ?? "",
+          src: videoFallSrc,
+        }
+      : undefined,
+    foundDate: normalizeFoundDate(block.foundDate),
+  };
+}
+
+export function getMeteoritesFromStory(
+  story: StoryblokStory | null | undefined
+): Meteorite[] {
+  const blocks = getMeteoriteBlocks(story);
+  if (!blocks.length) return meteoritesFallback as Meteorite[];
+  return blocks.map(mapMeteoriteBlockToMeteorite);
 }

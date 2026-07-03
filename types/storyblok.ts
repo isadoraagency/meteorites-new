@@ -3,10 +3,16 @@ export interface StoryblokAsset {
   alt?: string;
 }
 
+export interface StoryblokRichTextMark {
+  type?: string;
+}
+
 export interface StoryblokRichTextNode {
   type?: string;
   text?: string;
+  marks?: StoryblokRichTextMark[];
   content?: StoryblokRichTextNode[];
+  attrs?: Record<string, unknown>;
 }
 
 export interface StoryblokRichText {
@@ -50,8 +56,45 @@ export interface SiteGlobalConfigurationsBlock {
   backgroundGradient?: GradientBlock[];
 }
 
+export interface CompositionItemBlock {
+  _uid?: string;
+  component: "composition-item";
+  name?: string;
+}
+
+export interface VideoFallBlock {
+  _uid?: string;
+  component: "video-fall";
+  description?: string;
+  source?: string;
+  video?: StoryblokAsset;
+}
+
+export interface MeteoriteBlock {
+  _uid?: string;
+  component: "meteorite";
+  title?: string;
+  slug?: string;
+  about?: StoryblokRichText | string;
+  short?: StoryblokRichText | string;
+  old?: StoryblokRichText | string;
+  fallPlace?: string;
+  fallDate?: string;
+  foundDate?: string;
+  type?: string;
+  meteoriteClass?: string;
+  observedFall?: boolean;
+  image?: StoryblokAsset;
+  shadow?: StoryblokAsset;
+  video?: StoryblokAsset;
+  composition?: CompositionItemBlock[];
+  videoFall?: VideoFallBlock[];
+}
+
+export type StoryblokBodyBlock = HeroSectionBlock | MeteoriteBlock;
+
 export interface StoryblokStory {
   content?: {
-    body?: HeroSectionBlock[];
+    body?: StoryblokBodyBlock[];
   };
 }

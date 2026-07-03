@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DOMPurify from "dompurify";
+import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import { AnimatePresence, motion } from "framer-motion";
 import "./Credits.scss";
 import type { TextContent } from "../../types/content";
@@ -52,7 +52,7 @@ export default function Credits({ handleMenuItemClick, isOpen }: CreditsProps) {
                   animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
                   exit={{ opacity: 0, scale: 0 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
-                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.text) }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.text) }}
                 />
               )}
               <motion.div

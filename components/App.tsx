@@ -4,7 +4,7 @@ import Intro from "./Intro/Intro";
 import Navigation from "./Navigation/Navigation";
 
 import TimeCapsules from "./TimeCapsules/TimeCapsules";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Menu from "./Menu/Menu";
@@ -13,10 +13,10 @@ import TypeMeteorites from "./TypeMeteorites/TypeMeteorites";
 import Stardust from "./Stardust/Stardust";
 import ScrollProgress from "./ScrollProgress/ScrollProgress";
 import Footer from "./Footer/Footer";
-import type { Meteorite, MenuData } from "../types/content";
+import type { MenuData } from "../types/content";
 import type { StoryblokStory } from "../types/storyblok";
 import SiteTheme from "./SiteTheme/SiteTheme";
-import { getHeroBlock } from "../lib/storyblok-utils";
+import { getHeroBlock, getMeteoritesFromStory } from "../lib/storyblok-utils";
 import { useStoryblokState } from "@storyblok/react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -34,7 +34,7 @@ interface AppProps {
 function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) {
   const story = useStoryblokState(initialStory ?? null) as StoryblokStory | null;
   const hero = getHeroBlock(story);
-  const [items, setItems] = useState<Meteorite[]>([]);
+  const items = useMemo(() => getMeteoritesFromStory(story), [story]);
   const [navActive, setNavActive] = useState(false);
   const [activeItem, setActiveItem] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
@@ -82,14 +82,6 @@ function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) 
   const handleActiveItem = (e: number | null) => {
     setActiveItem(e);
   };
-
-  useEffect(() => {
-    fetch("/data/meteorites.json")
-      .then((response) => response.json())
-      .then((data: Meteorite[]) => {
-        setItems(data);
-      });
-  }, []);
 
   useEffect(() => {
     // Only set active item if we have items and no active item is selected yet
@@ -193,6 +185,7 @@ function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) 
       <Footer isLoaded={animationComplete} />
       {activeItem !== null && activeItem > -1 && (
         <Navigation
+          items={items}
           isLoaded={isLoaded}
           navActive={navActive}
           activeItem={activeItem}
