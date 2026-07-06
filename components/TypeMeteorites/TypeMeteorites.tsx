@@ -14,6 +14,9 @@ gsap.registerPlugin(ScrollTrigger);
 interface TypeMeteoritesProps {
   isLoaded: boolean;
   isJumping: boolean;
+  title: string;
+  description: string;
+  items: MeteoriteType[];
   className?: string;
   toggleNav?: (value: boolean) => void;
 }
@@ -21,6 +24,9 @@ interface TypeMeteoritesProps {
 export default function TypeMeteorites({
   isLoaded,
   isJumping,
+  title,
+  description,
+  items,
   className,
   toggleNav,
 }: TypeMeteoritesProps) {
@@ -35,7 +41,6 @@ export default function TypeMeteorites({
 
   const [activeStep, setActiveStep] = useState<number | null>(null);
 
-  const [data, setData] = useState<MeteoriteType[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const [R, setR] = useState(0);
 
@@ -104,12 +109,6 @@ export default function TypeMeteorites({
   };
 
   useEffect(() => {
-    fetch("/data/types.json")
-      .then((res) => res.json())
-      .then(setData);
-  }, []);
-
-  useEffect(() => {
     if (!containerRef.current) return;
 
     const update = () => {
@@ -125,7 +124,7 @@ export default function TypeMeteorites({
   }, []);
 
   useEffect(() => {
-    if (!data.length) return;
+    if (!items.length) return;
 
     const ctx = gsap.context(() => {
       const POSITIONS = [
@@ -347,7 +346,7 @@ export default function TypeMeteorites({
       });
 
       // Rest of the timeline for cycling through items...
-      data.forEach((item, step) => {
+      items.forEach((item, step) => {
         const activeIndex = (0 + step) % POSITIONS.length;
         tl.addLabel("type-3-" + step);
         tl.set(itemsTextRef.current[step], {
@@ -406,7 +405,7 @@ export default function TypeMeteorites({
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [isLoaded, data, R]);
+  }, [isLoaded, items, R]);
 
   return (
     <div id="Types">
@@ -414,20 +413,20 @@ export default function TypeMeteorites({
         <div className="meteorites-section__in">
           <div className="ia-container">
             <h2 ref={titleRef} className="meteorites-title">
-              Types of meteorites
+              {title}
             </h2>
             <div className="meteorites-desc" ref={descRef}>
-              <div className="fz-5 text-title text-center">
-                Get to know the main groups of meteorites and what they reveal about the
-                early solar system.
-              </div>
+              <div
+                className="fz-5 text-title text-center"
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
             </div>
 
             <div className="meteorites-circle" ref={containerRef}>
               <div className="meteorites-circle__line" ref={circleRef}></div>
-              {data.map((item, i) => (
+              {items.map((item, i) => (
                 <div
-                  key={item.id}
+                  key={item.uid ?? item.id}
                   ref={(el) => {
                     itemsRef.current[i] = el;
                   }}
@@ -439,9 +438,9 @@ export default function TypeMeteorites({
             </div>
 
             <div ref={centerRef} className="meteorites-center">
-              {data.map((item, i) => (
+              {items.map((item, i) => (
                 <div
-                  key={item.id}
+                  key={item.uid ?? item.id}
                   className="meteorite-item__info"
                   ref={(el) => {
                     itemsTextRef.current[i] = el;
@@ -462,9 +461,10 @@ export default function TypeMeteorites({
                     <div className="meteorite-item__text-left">
                       <div className="fz-6 meteorite-item__sub-title">{item.type}</div>
                     </div>
-                    <div className="meteorite-item__text-right text-left">
-                      <p>{item.description}</p>
-                    </div>
+                    <div
+                      className="meteorite-item__text-right text-left"
+                      dangerouslySetInnerHTML={{ __html: item.description }}
+                    />
                   </div>
                 </div>
               ))}

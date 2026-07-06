@@ -91,7 +91,27 @@ export interface MeteoriteBlock {
   videoFall?: VideoFallBlock[];
 }
 
-export type StoryblokBodyBlock = HeroSectionBlock | MeteoriteBlock;
+export interface MeteoriteTypeBlock {
+  _uid?: string;
+  component: "meteorite-type";
+  name?: string;
+  subtype?: string;
+  description?: StoryblokRichText | string;
+  image?: StoryblokAsset;
+}
+
+export interface TypeMeteoritesSectionBlock {
+  _uid?: string;
+  component: "type-meteorites-section";
+  title?: string;
+  description?: StoryblokRichText | string;
+  items?: MeteoriteTypeBlock[];
+}
+
+export type StoryblokBodyBlock =
+  | HeroSectionBlock
+  | MeteoriteBlock
+  | TypeMeteoritesSectionBlock;
 
 export interface StoryblokStory {
   content?: {

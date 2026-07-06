@@ -18,7 +18,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang="en">
-      <body>
+      <body suppressHydrationWarning>
         <StoryblokProvider
           previewAccessToken={
             isStoryblokPreview ? process.env.STORYBLOK_PREVIEW_TOKEN : undefined
