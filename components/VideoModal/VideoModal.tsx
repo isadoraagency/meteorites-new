@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import "./VideoModal.scss";
 
 interface VideoModalProps {
@@ -22,7 +22,7 @@ export default function VideoModal({
     <div>
       <AnimatePresence>
         {isVideo && (
-          <motion.div
+          <m.div
             key="meteorite-video"
             className="video-modal"
             initial={{ opacity: 0, scale: 0, borderRadius: 1000 }}
@@ -60,7 +60,7 @@ export default function VideoModal({
                 </div>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

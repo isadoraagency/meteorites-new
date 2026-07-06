@@ -8,12 +8,9 @@
 "use client";
 
 import { createRef, useEffect, useRef, useState, type RefObject } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollTrigger } from "../../lib/gsap";
 
 import "./VideoFrame.scss";
-// Register the ScrollTrigger plugin
-gsap.registerPlugin(ScrollTrigger);
 
 interface VideoFrameProps {
   videoPath?: string;

@@ -2,11 +2,9 @@
 
 import Intro from "./Intro/Intro";
 import Navigation from "./Navigation/Navigation";
-
 import TimeCapsules from "./TimeCapsules/TimeCapsules";
 import { useEffect, useMemo, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { LazyMotion, domAnimation } from "framer-motion";
 import Menu from "./Menu/Menu";
 import Cursor from "./Cursor/Cursor";
 import TypeMeteorites from "./TypeMeteorites/TypeMeteorites";
@@ -18,8 +16,6 @@ import type { StoryblokStory } from "../types/storyblok";
 import SiteTheme from "./SiteTheme/SiteTheme";
 import { getHeroBlock, getMeteoritesFromStory } from "../lib/storyblok-utils";
 import { useStoryblokState } from "@storyblok/react";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface AppProps {
   menu: MenuData;
@@ -127,7 +123,7 @@ function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) 
   }, [animationComplete]);
 
   return (
-    <>
+    <LazyMotion features={domAnimation} strict>
       <SiteTheme initialConfig={initialGlobalConfig} />
       <Cursor />
       <Menu list={menu} />
@@ -207,7 +203,7 @@ function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) 
       />
 
       {animationComplete && <ScrollProgress progress={progress} />}
-    </>
+    </LazyMotion>
   );
 }
 

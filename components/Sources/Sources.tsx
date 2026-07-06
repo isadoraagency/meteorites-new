@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Accordion from "./Accordion";
 import "./Sources.scss";
@@ -54,7 +54,7 @@ export default function Sources({ isOpen, handleMenuItemClick }: SourcesProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <m.div
           className="sources-wrap"
           initial={{ opacity: 0, scale: 0, y: "50%", borderRadius: "2000px" }}
           animate={{ opacity: 1, scale: 1, y: "0%", borderRadius: "0px" }}
@@ -64,7 +64,7 @@ export default function Sources({ isOpen, handleMenuItemClick }: SourcesProps) {
           <button className="close" aria-label="close" onClick={() => handleMenuItemClick("close")}>
             <i></i>
           </button>
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0, y: "50%" }}
             animate={{ opacity: 1, scale: 1, y: "0%" }}
             exit={{ opacity: 0, scale: 0, y: "50%" }}
@@ -72,7 +72,7 @@ export default function Sources({ isOpen, handleMenuItemClick }: SourcesProps) {
             className="ia-container"
           >
             <div className="sources-container__bgs">
-              <motion.video
+              <m.video
                 initial={{ opacity: 0, x: "-100px" }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: "-100px" }}
@@ -83,10 +83,10 @@ export default function Sources({ isOpen, handleMenuItemClick }: SourcesProps) {
                 loop
                 autoPlay
                 aria-hidden="true"
-              ></motion.video>
+              ></m.video>
             </div>
             <div className="sources-container">
-              <motion.div
+              <m.div
                 className={`sources-container__in
                 ${activeIndex || activeIndex === 0 ? "active" : ""}
                 `}
@@ -99,7 +99,7 @@ export default function Sources({ isOpen, handleMenuItemClick }: SourcesProps) {
                   Sources
                 </h2>
                 <div className="mobile-video">
-                  <motion.video
+                  <m.video
                     initial={{ opacity: 0, x: "-100px" }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: "-100px" }}
@@ -110,9 +110,9 @@ export default function Sources({ isOpen, handleMenuItemClick }: SourcesProps) {
                     loop
                     autoPlay
                     aria-hidden="true"
-                  ></motion.video>
+                  ></m.video>
                 </div>
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
@@ -131,11 +131,11 @@ export default function Sources({ isOpen, handleMenuItemClick }: SourcesProps) {
                         {item.description}
                       </Accordion>
                     ))}
-                </motion.div>
-              </motion.div>
+                </m.div>
+              </m.div>
             </div>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

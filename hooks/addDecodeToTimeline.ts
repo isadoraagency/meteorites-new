@@ -1,5 +1,4 @@
-import gsap from "gsap";
-import SplitText from "gsap/SplitText";
+import { gsap, SplitText } from "../lib/gsap";
 import type { DecodeTextOptions } from "./useDecodeText";
 
 export function addDecodeToTimeline(
