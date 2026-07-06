@@ -5,7 +5,8 @@ import "./Stardust.scss";
 import { AnimatePresence, motion } from "framer-motion";
 import { gsap, ScrollToPlugin, ScrollTrigger } from "gsap/all";
 
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { StardustCreatorContent } from "../../lib/storyblok-utils";
 
 // @splinetool/react-spline renders WebGL/canvas on import and must not run
 // during the server render pass.
@@ -17,6 +18,11 @@ gsap.registerPlugin(ScrollTrigger);
 interface StardustProps {
   isLoaded: boolean;
   onBackToIntro: () => void;
+  quote: string;
+  quoteAttribution: string;
+  creatorsIntro: string;
+  creators: StardustCreatorContent[];
+  buttonLabel: string;
   className?: string;
 }
 
@@ -24,41 +30,49 @@ interface SplineOption {
   value: number;
   label: string;
   spline: string;
-  position: string;
   tooltip: string;
 }
 
-const Stardust = ({ isLoaded, onBackToIntro }: StardustProps) => {
-  const options: SplineOption[] = [
-    {
-      value: 1,
-      label: "Ben",
-      spline: "https://prod.spline.design/qp5LEGhHQNPxy4Gq/scene.splinecode",
-      position: "Creative Director",
-      tooltip: "3D Modeling and animation with Spline",
-    },
-    {
-      value: 2,
-      label: "Cyn",
-      spline: "https://prod.spline.design/3NuFoMFXlUrDsIs6/scene.splinecode",
-      position: "Senior Designer",
-      tooltip: "Concept and Design 3D animation with Spline",
-    },
-    {
-      value: 3,
-      label: "Kostya",
-      spline: "https://prod.spline.design/k2xmx0PUFAaHAIR2/scene.splinecode",
-      position: "Web Developer",
-      tooltip: "",
-    },
-  ];
+function mapCreatorToOption(
+  creator: StardustCreatorContent,
+  index: number
+): SplineOption {
+  return {
+    value: index + 1,
+    label: creator.name,
+    spline: creator.sceneUrl,
+    tooltip: creator.tooltip,
+  };
+}
 
-  const [currentOption, setCurrentOption] = useState<SplineOption>(options[0]);
+const Stardust = ({
+  isLoaded,
+  onBackToIntro,
+  quote,
+  quoteAttribution,
+  creatorsIntro,
+  creators,
+  buttonLabel,
+}: StardustProps) => {
+  const options = useMemo(
+    () => creators.map(mapCreatorToOption),
+    [creators]
+  );
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [move, setMove] = useState(false);
   const [popupActive, setPopupActive] = useState(false);
   const sturdust = useRef<HTMLDivElement>(null);
 
   const splineRef = useRef<any>(null);
+
+  const currentOption = options[selectedIndex] ?? null;
+
+  useEffect(() => {
+    if (selectedIndex >= options.length) {
+      setSelectedIndex(0);
+    }
+  }, [options.length, selectedIndex]);
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -104,24 +118,17 @@ const Stardust = ({ isLoaded, onBackToIntro }: StardustProps) => {
   }, [isLoaded]);
 
   const onSplineLoad = (splineApp: any) => {
-    // Store the spline app reference
     splineRef.current = splineApp;
 
-    // Get current viewport dimensions
     const viewportHeight = window.innerHeight;
 
-    // Check if we can access the camera controls
     if (splineApp && splineApp.runtime && splineApp.runtime.camera) {
-      // Instead of directly setting zoom, adjust the position
-      // Increase the z position to zoom out (move camera backward)
       const camera = splineApp.runtime.camera;
 
       if (viewportHeight < 768) {
-        // Move camera back for small screens
         camera.position.z *= 1.5;
       }
     } else if (splineApp && splineApp.setZoom) {
-      // Alternative: try using setZoom method if available
       const zoomLevel = viewportHeight < 768 ? 0.5 : viewportHeight < 1024 ? 0.55 : 1;
       splineApp.setZoom(zoomLevel);
     }
@@ -182,19 +189,24 @@ const Stardust = ({ isLoaded, onBackToIntro }: StardustProps) => {
         <div className="stardust-page__wrap">
           <div className="stardust-page__text">
             <div className="ia-container">
-              <div className="text--info stardust-page__text-in">
-                <p>
-                  &ldquo;It is totally 100% true: nearly all the elements in the human body
-                  were made in a star and many have come through several supernovas.&rdquo;
-                </p>
-                <p>
-                  <strong>&ndash;Dr Ashley King, Planetary scientist </strong>
-                </p>
-              </div>
+              {(quote || quoteAttribution) && (
+                <div className="text--info stardust-page__text-in">
+                  {quote && (
+                    <div dangerouslySetInnerHTML={{ __html: quote }} />
+                  )}
+                  {quoteAttribution && (
+                    <p>
+                      <strong>{quoteAttribution}</strong>
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
           <div className="spline-canvas">
-            {currentOption && <Spline scene={currentOption.spline} onLoad={onSplineLoad} />}
+            {currentOption && (
+              <Spline scene={currentOption.spline} onLoad={onSplineLoad} />
+            )}
             <AnimatePresence>
               {currentOption && move && (
                 <motion.div
@@ -206,41 +218,51 @@ const Stardust = ({ isLoaded, onBackToIntro }: StardustProps) => {
                   exit={{ opacity: 0, x: "-100%", y: "-100%", scale: 0 }}
                 >
                   <p className="mb-0">
-                    <strong>{currentOption.label}</strong>
-                    <br />
-                    {currentOption.tooltip}
+                    {currentOption.label && <strong>{currentOption.label}</strong>}
+                    {currentOption.tooltip && (
+                      <>
+                        {currentOption.label && <br />}
+                        {currentOption.tooltip}
+                      </>
+                    )}
                   </p>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
         </div>
-        <div className="text--info stardust-page__text-in spline-nav">
-          <p>The creators behind this site are made of stardust.</p>
-          <div className="spline-tabs">
-            {options.map((item) => (
-              <button
-                className={`ia-btn ia-btn--sm ${currentOption.value === item.value ? "active" : ""}`}
-                key={`tab-${item.value}`}
-                onClick={() => setCurrentOption(item)}
-              >
-                {item.label}
-              </button>
-            ))}
+        {(creatorsIntro || options.length > 0) && (
+          <div className="text--info stardust-page__text-in spline-nav">
+            {creatorsIntro && <p>{creatorsIntro}</p>}
+            {options.length > 0 && (
+              <div className="spline-tabs">
+                {options.map((item, index) => (
+                  <button
+                    className={`ia-btn ia-btn--sm ${selectedIndex === index ? "active" : ""}`}
+                    key={item.value}
+                    onClick={() => setSelectedIndex(index)}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        )}
 
-        <button
-          className="ia-btn stardust-page__back"
-          onClick={() => {
-            onBackToIntro();
-            setPopupActive(false);
-            setMove(false);
-          }}
-          aria-label="start stardust again"
-        >
-          Become stardust again
-        </button>
+        {buttonLabel && (
+          <button
+            className="ia-btn stardust-page__back"
+            onClick={() => {
+              onBackToIntro();
+              setPopupActive(false);
+              setMove(false);
+            }}
+            aria-label={buttonLabel}
+          >
+            {buttonLabel}
+          </button>
+        )}
       </div>
     </div>
   );

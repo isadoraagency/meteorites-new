@@ -108,10 +108,29 @@ export interface TypeMeteoritesSectionBlock {
   items?: MeteoriteTypeBlock[];
 }
 
+export interface StardustCreatorBlock {
+  _uid?: string;
+  component: "stardust-creator";
+  name?: string;
+  sceneUrl?: string;
+  tooltip?: string;
+}
+
+export interface StardustSectionBlock {
+  _uid?: string;
+  component: "stardust-section";
+  quote?: StoryblokRichText | string;
+  quoteAttribution?: string;
+  creatorsIntro?: string;
+  creators?: StardustCreatorBlock[];
+  buttonLabel?: string;
+}
+
 export type StoryblokBodyBlock =
   | HeroSectionBlock
   | MeteoriteBlock
-  | TypeMeteoritesSectionBlock;
+  | TypeMeteoritesSectionBlock
+  | StardustSectionBlock;
 
 export interface StoryblokStory {
   content?: {

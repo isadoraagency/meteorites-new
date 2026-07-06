@@ -16,7 +16,7 @@ import Footer from "./Footer/Footer";
 import type { MenuData } from "../types/content";
 import type { StoryblokStory } from "../types/storyblok";
 import SiteTheme from "./SiteTheme/SiteTheme";
-import { getHeroBlock, getMeteoritesFromStory, getTypeMeteoritesSectionFromStory } from "../lib/storyblok-utils";
+import { getHeroBlock, getMeteoritesFromStory, getStardustSectionFromStory, getTypeMeteoritesSectionFromStory } from "../lib/storyblok-utils";
 import { useStoryblokState } from "@storyblok/react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -37,6 +37,10 @@ function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) 
   const items = useMemo(() => getMeteoritesFromStory(story), [story]);
   const typeMeteoritesSection = useMemo(
     () => getTypeMeteoritesSectionFromStory(story),
+    [story]
+  );
+  const stardustSection = useMemo(
+    () => getStardustSectionFromStory(story),
     [story]
   );
   const [navActive, setNavActive] = useState(false);
@@ -209,11 +213,18 @@ function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) 
         />
       )}
 
-      <Stardust
-        isLoaded={animationComplete}
-        onBackToIntro={handleBackToIntro}
-        className="stardust-section"
-      />
+      {stardustSection && (
+        <Stardust
+          isLoaded={animationComplete}
+          onBackToIntro={handleBackToIntro}
+          className="stardust-section"
+          quote={stardustSection.quote}
+          quoteAttribution={stardustSection.quoteAttribution}
+          creatorsIntro={stardustSection.creatorsIntro}
+          creators={stardustSection.creators}
+          buttonLabel={stardustSection.buttonLabel}
+        />
+      )}
 
       {animationComplete && <ScrollProgress progress={progress} />}
     </>
