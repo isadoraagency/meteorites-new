@@ -18,6 +18,14 @@ import {
 // to fetch client-side from /data/menu.json.
 import menuFallback from "../public/data/menu.json";
 
+// True everywhere except real production: Vercel preview deployments run with
+// NODE_ENV=production, so NODE_ENV alone can't tell QA previews apart —
+// VERCEL_ENV ("production" | "preview" | "development") is the reliable signal
+// there, with NODE_ENV as the fallback for local/non-Vercel environments.
+export const isPreviewEnvironment = process.env.VERCEL_ENV
+  ? process.env.VERCEL_ENV !== "production"
+  : process.env.NODE_ENV !== "production";
+
 // Initialize the Storyblok SDK once at module load. The token is read
 // server-side only (no NEXT_PUBLIC_ prefix), so it never reaches the browser.
 storyblokInit({
@@ -59,8 +67,7 @@ export async function getMenu(): Promise<MenuData> {
 export async function getStoryStoryblok(slug: string, preview = false) {
   try {
     const { data } = await getStoryblokApi().get(`cdn/stories/${slug}`, {
-      version:
-        preview || process.env.NODE_ENV !== "production" ? "draft" : "published",
+      version: preview || isPreviewEnvironment ? "draft" : "published",
       cv: preview ? Date.now() : undefined,
     });
     return data.story;

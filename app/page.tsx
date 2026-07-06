@@ -4,6 +4,7 @@ import {
   getMenu,
   getScrollProgressGradientFromConfig,
   getStoryStoryblok,
+  isPreviewEnvironment,
 } from "../lib/storyblok";
 import type { SiteGlobalConfigurationsBlock } from "../types/storyblok";
 
@@ -15,7 +16,7 @@ export default async function Home({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
 
   const isPreview =
-    process.env.NODE_ENV !== "production" ||
+    isPreviewEnvironment ||
     resolvedParams._storyblok !== undefined ||
     resolvedParams._storyblok_tk !== undefined;
 
