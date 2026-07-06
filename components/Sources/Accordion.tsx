@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import DOMPurify from "dompurify";
+import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import "./Accordion.scss";
 
 interface AccordionProps {
@@ -53,7 +53,7 @@ const Accordion = ({ title, children, activeIndex, setActiveIndex, index }: Acco
         <div
           className="accordion-inner"
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(children, {
+            __html: sanitizeHtml(children, {
               ADD_ATTR: ["target", "rel"],
             }),
           }}

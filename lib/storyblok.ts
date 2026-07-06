@@ -1,5 +1,18 @@
 import { storyblokInit, apiPlugin, getStoryblokApi } from "@storyblok/react/rsc";
 import type { MenuData, MenuLink } from "../types/content";
+import {
+  getBackgroundBlurPx,
+  getBackgroundGradientFromConfig,
+  getHeroBlock,
+  getHeroTextPair,
+  getMeteoritesFromStory,
+  getScrollProgressGradientFromConfig,
+  getStoryblokAssetAlt,
+  getStoryblokAssetUrl,
+  getStoryblokRichTextPlain,
+  mapMeteoriteBlockToMeteorite,
+  storyblokRichTextToHtml,
+} from "./storyblok-utils";
 // Static fallback so the app never breaks if the Storyblok story doesn't
 // exist yet (or the API is unreachable). This is the same data the app used
 // to fetch client-side from /data/menu.json.
@@ -39,3 +52,37 @@ export async function getMenu(): Promise<MenuData> {
     return menuFallback as MenuData;
   }
 }
+
+/**
+ * Fetches a story by slug. Uses draft in dev/preview and published in production.
+ */
+export async function getStoryStoryblok(slug: string, preview = false) {
+  try {
+    const { data } = await getStoryblokApi().get(`cdn/stories/${slug}`, {
+      version:
+        preview || process.env.NODE_ENV !== "production" ? "draft" : "published",
+      cv: preview ? Date.now() : undefined,
+    });
+    return data.story;
+  } catch (err) {
+    const status = (err as { status?: number })?.status;
+    console.warn(
+      `[storyblok] story "${slug}" fetch failed (${status ?? "error"})`
+    );
+    return null;
+  }
+}
+
+export {
+  getBackgroundBlurPx,
+  getBackgroundGradientFromConfig,
+  getHeroBlock,
+  getHeroTextPair,
+  getMeteoritesFromStory,
+  getScrollProgressGradientFromConfig,
+  getStoryblokAssetAlt,
+  getStoryblokAssetUrl,
+  getStoryblokRichTextPlain,
+  mapMeteoriteBlockToMeteorite,
+  storyblokRichTextToHtml,
+};

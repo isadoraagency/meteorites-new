@@ -5,14 +5,15 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { addDecodeToTimeline } from "../../hooks/addDecodeToTimeline";
 import { useDecodeText } from "../../hooks/useDecodeText";
+import {
+  getBackgroundBlurPx,
+  getHeroTextPair,
+  getStoryblokAssetAlt,
+  getStoryblokAssetUrl,
+} from "../../lib/storyblok-utils";
+import type { HeroSectionBlock } from "../../types/storyblok";
 import "./Intro.scss";
 gsap.registerPlugin(ScrollTrigger);
-
-// Static assets served from /public — referenced by URL, not imported
-// (Next.js, unlike Vite, doesn't resolve `import x from '/public/...'`).
-const meteorVideo = "/videos/Meteorite-Loop.mov";
-const meteorVideoW = "/videos/Meteorite-Loop.webm";
-const videoIntro = "/videos/intro-bg.mp4";
 
 interface IntroProps {
   progress: string;
@@ -22,6 +23,16 @@ interface IntroProps {
   isJumping: boolean;
   className?: string;
   toggleNav?: (value: boolean) => void;
+  hero?: HeroSectionBlock | null;
+}
+
+function renderMultilineText(text: string) {
+  return text.split("\n").map((line, i, lines) => (
+    <span key={i}>
+      {line}
+      {i < lines.length - 1 && <br />}
+    </span>
+  ));
 }
 
 export default function Intro({
@@ -32,7 +43,19 @@ export default function Intro({
   isJumping,
   className = "",
   toggleNav,
+  hero,
 }: IntroProps) {
+  const mainTitle = hero?.mainTitle?.trim() ?? "";
+  const mainSubtitle = hero?.mainSubtitle?.trim() ?? "";
+  const secondTitle = hero?.secondTitle?.trim() ?? "";
+  const secondTitleColor = hero?.secondTitleColor?.trim() ?? "";
+  const [introText2, introText3] = getHeroTextPair(hero?.texts);
+  const [introText5, introText6] = getHeroTextPair(hero?.textAfterPill);
+  const backgroundBlur = getBackgroundBlurPx(hero?.backgroundBlur);
+  const videoIntro = getStoryblokAssetUrl(hero?.video);
+  const videoIntroAlt = getStoryblokAssetAlt(hero?.video);
+  const meteorVideo = getStoryblokAssetUrl(hero?.videoAnimationSafari);
+  const meteorVideoW = getStoryblokAssetUrl(hero?.videoAnimation);
   const isSafari =
     typeof navigator !== "undefined" && /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const titleRef = useRef<HTMLDivElement>(null);
@@ -112,6 +135,7 @@ export default function Intro({
           const { isMobile } = context.conditions as Record<string, boolean>;
 
           gsap.set(introBgVideo.current, { scale: 1.3 });
+          gsap.set(introBg.current, { filter: `blur(${backgroundBlur}px)` });
           gsap.set(intro1Ref.current, { opacity: 0 });
           gsap.set(meteor.current, { scale: 0.6, top: "-100%", opacity: 0 });
 
@@ -330,7 +354,7 @@ export default function Intro({
       ctx.revert();
       mm.revert();
     };
-  }, [animationComplete]);
+  }, [animationComplete, backgroundBlur]);
 
   useEffect(() => {
     const ro = new ResizeObserver(() => {
@@ -347,19 +371,33 @@ export default function Intro({
       role="region"
       aria-label="Introduction sequence"
     >
-      <div className="intro-bg" ref={introBg} aria-hidden="true">
-        <video
-          src={videoIntro}
-          playsInline
-          muted
-          loop
-          autoPlay
-          aria-hidden="true"
-          ref={introBgVideo}
-        />
-        <div className="intro-4 text-upper text--info ">
+      <div
+        className="intro-bg"
+        ref={introBg}
+        style={{ filter: `blur(${backgroundBlur}px)` }}
+        {...(!videoIntroAlt ? { "aria-hidden": true } : {})}
+      >
+        {videoIntro ? (
+          <video
+            src={videoIntro}
+            playsInline
+            muted
+            loop
+            autoPlay
+            ref={introBgVideo}
+            {...(videoIntroAlt
+              ? { "aria-label": videoIntroAlt }
+              : { "aria-hidden": true })}
+          />
+        ) : (
+          <video ref={introBgVideo} aria-hidden />
+        )}
+        <div
+          className="intro-4 text-upper"
+          style={{ color: secondTitleColor }}
+        >
           <div className="text-title" ref={intro4Ref}>
-            Time Capsules
+            {secondTitle}
           </div>
         </div>
       </div>
@@ -373,19 +411,15 @@ export default function Intro({
         </div>
         <div className="intro-1" ref={intro1Ref}>
           <div className="lg text-title text--info text-light mb-2" ref={titleRef}>
-            WE ARE MADE <br />
-            OF STARDUST
+            {renderMultilineText(mainTitle)}
           </div>
           <p className="h6 text--info mb-0 text-light" ref={textRef}>
-            A tale of beginnings <br />
-            by Isadora Agency
+            {renderMultilineText(mainSubtitle)}
           </p>
         </div>
         <div className="intro-2" ref={intro2Ref}>
           <div className="fz-5 text-upper text--info text-title" ref={introText2Ref}>
-            ACCORDING TO Planetary scientistS and stardust expertS, nearly all the
-            elements in the human body were made in a star and many have come through
-            several supernovas.
+            {introText2}
           </div>
         </div>
         <div className="intro-3" ref={intro3Ref}>
@@ -393,25 +427,26 @@ export default function Intro({
             className="fz-5 text-upper text--info text-title mb-0"
             ref={introText3Ref}
           >
-            THEY KNOW THIS THANKS TO THE STUDY OF METEORITES.
+            {introText3}
           </div>
         </div>
         <div className="intro-5 fz-5 text-title text-upper mb-0" ref={introText5Ref}>
-          Meteorites are far older than any terrestrial rock, acting as snapshots of the
-          solar system before planets even existed.
+          {introText5}
         </div>
         <div className="intro-6 fz-5 text-title text-upper mb-0" ref={introText6Ref}>
-          So in a way they are like Time Capsules, this site is dedicated to them.
+          {introText6}
         </div>
         <div className="intro-meteor" ref={meteor}>
-          <video
-            src={isSafari ? meteorVideo : meteorVideoW}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-100 h-100"
-          />
+          {(isSafari ? meteorVideo : meteorVideoW) ? (
+            <video
+              src={isSafari ? meteorVideo : meteorVideoW}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-100 h-100"
+            />
+          ) : null}
         </div>
       </div>
     </div>

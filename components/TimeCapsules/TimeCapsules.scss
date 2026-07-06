@@ -46,6 +46,11 @@
     .p {
       display: inline-block;
       color: #B7AFFF;
+
+      p {
+        display: inline;
+        margin: 0;
+      }
     }
   }
   &-title {

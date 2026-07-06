@@ -12,7 +12,7 @@
   transition: opacity .3s, visibility  0.8s;
   &:before{
     content: '';
-    background: $vyg;
+    background: var(--site-bg-gradient, #{$vyg});
     position: absolute;
     top: 0;
     left: 0;

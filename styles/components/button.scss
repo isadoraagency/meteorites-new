@@ -15,7 +15,7 @@
   border: 2px solid transparent;
   font-family: $font-heading;
   color: #2827C2;
-  background: $vyg padding-box, conic-gradient(from var(--angle), #A398FF 43.15%, #2827C2 70.17%, #4F40FF 80.66%, #A398FF 100%) border-box;
+  background: var(--site-bg-gradient, #{$vyg}) padding-box, conic-gradient(from var(--angle), #A398FF 43.15%, #2827C2 70.17%, #4F40FF 80.66%, #A398FF 100%) border-box;
   box-sizing: border-box;
   transition: all .15s ease-in;
   animation: rotate 3s linear infinite paused;

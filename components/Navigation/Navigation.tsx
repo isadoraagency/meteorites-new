@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import "./Navigation.scss";
 import { gsap, ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import type { Meteorite } from "../../types/content";
@@ -8,6 +7,7 @@ import type { Meteorite } from "../../types/content";
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
 interface NavigationProps {
+  items: Meteorite[];
   isLoaded?: boolean;
   navActive: boolean;
   activeItem: number | null;
@@ -16,20 +16,12 @@ interface NavigationProps {
 }
 
 export default function Navigation({
+  items,
   navActive,
   activeItem,
   handleActiveItem,
   setIsJumping,
 }: NavigationProps) {
-  const [items, setItems] = useState<Meteorite[]>([]);
-  useEffect(() => {
-    fetch("/data/meteorites.json")
-      .then((response) => response.json())
-      .then((data: Meteorite[]) => {
-        setItems(data);
-      });
-  }, []);
-
   const moveToItem = (e: React.MouseEvent, el: string) => {
     e.preventDefault();
     const st = ScrollTrigger.getById("TimeCapsules" + el.replace("#", ""));

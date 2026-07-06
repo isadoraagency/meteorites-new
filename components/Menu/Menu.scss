@@ -16,7 +16,7 @@
   border-radius: 50vw;
   overflow: hidden;
   z-index: 999;
-  background: $vyg;
+  background: var(--site-bg-gradient, #{$vyg});
 
 
   &--open {
@@ -34,7 +34,7 @@
   width: 6.4rem;
   height: 6.4rem;
   border-radius: 50%;
-  background: $vyg;
+  background: var(--site-bg-gradient, #{$vyg});
   cursor: pointer;
   overflow: hidden;
   opacity: 1;

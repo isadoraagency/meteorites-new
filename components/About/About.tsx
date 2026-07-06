@@ -2,7 +2,7 @@
 
 import "./About.scss";
 import { AnimatePresence, motion } from "framer-motion";
-import DOMPurify from "dompurify";
+import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import { useEffect, useState } from "react";
 import type { TextContent } from "../../types/content";
 
@@ -52,7 +52,7 @@ export default function About({ isOpen, handleMenuItemClick }: AboutProps) {
                   exit={{ opacity: 0, scale: 0 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
                   className="content-entry "
-                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.text) }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.text) }}
                 />
               )}
               <motion.div

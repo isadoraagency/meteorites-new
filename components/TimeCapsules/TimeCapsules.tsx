@@ -1,7 +1,7 @@
 "use client";
 
 import "./TimeCapsules.scss";
-import DOMPurify from "dompurify";
+import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import { useState, useEffect, useRef } from "react";
 import { gsap, ScrollTrigger, ScrollToPlugin, MotionPathPlugin } from "gsap/all";
 import VideoModal from "../VideoModal/VideoModal";
@@ -355,12 +355,11 @@ export default function TimeCapsules({
                   </div>
                   <div>
                     <div className="p">
-                      <strong>Age:</strong>
+                      <strong>Age:</strong>&nbsp;
                     </div>
-                    &nbsp;
                     <div
                       className="p"
-                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.old) }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.old) }}
                     />
                   </div>
                 </div>
@@ -445,7 +444,7 @@ export default function TimeCapsules({
                     <div
                       className={`${isRead ? "active" : ""} time-capsules__read`}
                       ref={timeCapsulesReadMore}
-                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.about) }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.about) }}
                     />
                     <button className="time-capsules__read-more" onClick={toggleRead}>
                       Read {isRead ? "less" : "more"}
@@ -470,7 +469,7 @@ export default function TimeCapsules({
                       </div>
                     </div>
                     <div
-                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.short) }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.short) }}
                     ></div>
                   </div>
                   <div className="time-capsules__composite" ref={timeCapsulesComp}>
