@@ -14,7 +14,6 @@ interface PageProps {
 
 export default async function Home({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
-
   const isPreview =
     isPreviewEnvironment ||
     resolvedParams._storyblok !== undefined ||
