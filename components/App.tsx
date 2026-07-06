@@ -14,7 +14,7 @@ import Footer from "./Footer/Footer";
 import type { MenuData } from "../types/content";
 import type { StoryblokStory } from "../types/storyblok";
 import SiteTheme from "./SiteTheme/SiteTheme";
-import { getHeroBlock, getMeteoritesFromStory } from "../lib/storyblok-utils";
+import { getHeroBlock, getMeteoritesFromStory, getStardustSectionFromStory, getTypeMeteoritesSectionFromStory } from "../lib/storyblok-utils";
 import { useStoryblokState } from "@storyblok/react";
 
 interface AppProps {
@@ -31,6 +31,14 @@ function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) 
   const story = useStoryblokState(initialStory ?? null) as StoryblokStory | null;
   const hero = getHeroBlock(story);
   const items = useMemo(() => getMeteoritesFromStory(story), [story]);
+  const typeMeteoritesSection = useMemo(
+    () => getTypeMeteoritesSectionFromStory(story),
+    [story]
+  );
+  const stardustSection = useMemo(
+    () => getStardustSectionFromStory(story),
+    [story]
+  );
   const [navActive, setNavActive] = useState(false);
   const [activeItem, setActiveItem] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
@@ -189,18 +197,30 @@ function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) 
           setIsJumping={setIsJumping}
         />
       )}
-      <TypeMeteorites
-        isLoaded={animationComplete}
-        className="type-meteorites-section"
-        isJumping={isJumping}
-        toggleNav={toggleNav}
-      />
+      {typeMeteoritesSection && (
+        <TypeMeteorites
+          isLoaded={animationComplete}
+          className="type-meteorites-section"
+          isJumping={isJumping}
+          toggleNav={toggleNav}
+          title={typeMeteoritesSection.title}
+          description={typeMeteoritesSection.description}
+          items={typeMeteoritesSection.items}
+        />
+      )}
 
-      <Stardust
-        isLoaded={animationComplete}
-        onBackToIntro={handleBackToIntro}
-        className="stardust-section"
-      />
+      {stardustSection && (
+        <Stardust
+          isLoaded={animationComplete}
+          onBackToIntro={handleBackToIntro}
+          className="stardust-section"
+          quote={stardustSection.quote}
+          quoteAttribution={stardustSection.quoteAttribution}
+          creatorsIntro={stardustSection.creatorsIntro}
+          creators={stardustSection.creators}
+          buttonLabel={stardustSection.buttonLabel}
+        />
+      )}
 
       {animationComplete && <ScrollProgress progress={progress} />}
     </LazyMotion>

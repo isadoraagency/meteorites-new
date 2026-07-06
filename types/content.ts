@@ -27,8 +27,9 @@ export interface Meteorite {
 
 export interface MeteoriteType {
   id: number;
+  uid?: string;
   name: string;
-  description: string;
+  description: string; // HTML string
   image: string;
   type: string;
 }

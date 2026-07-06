@@ -1,17 +1,42 @@
-import type { Meteorite } from "../types/content";
+import type { Meteorite, MeteoriteType } from "../types/content";
 import type {
   GradientBlock,
   HeroSectionBlock,
   HeroTextBlock,
   MeteoriteBlock,
+  MeteoriteTypeBlock,
   SiteGlobalConfigurationsBlock,
   StoryblokAsset,
   StoryblokRichText,
   StoryblokRichTextMark,
   StoryblokRichTextNode,
+  StardustCreatorBlock,
+  StardustSectionBlock,
   StoryblokStory,
+  TypeMeteoritesSectionBlock,
 } from "../types/storyblok";
 import meteoritesFallback from "../public/data/meteorites.json";
+
+export interface TypeMeteoritesSectionContent {
+  title: string;
+  description: string;
+  items: MeteoriteType[];
+}
+
+export interface StardustCreatorContent {
+  uid?: string;
+  name: string;
+  sceneUrl: string;
+  tooltip: string;
+}
+
+export interface StardustSectionContent {
+  quote: string;
+  quoteAttribution: string;
+  creatorsIntro: string;
+  creators: StardustCreatorContent[];
+  buttonLabel: string;
+}
 
 export const EMPTY_GRADIENT = {
   degrees: 0,
@@ -273,4 +298,84 @@ export function getMeteoritesFromStory(
   const blocks = getMeteoriteBlocks(story);
   if (!blocks.length) return meteoritesFallback as Meteorite[];
   return blocks.map(mapMeteoriteBlockToMeteorite);
+}
+
+export function getTypeMeteoritesBlock(
+  story: StoryblokStory | null | undefined
+): TypeMeteoritesSectionBlock | null {
+  return (
+    story?.content?.body?.find(
+      (block): block is TypeMeteoritesSectionBlock =>
+        block.component === "type-meteorites-section"
+    ) ?? null
+  );
+}
+
+export function mapMeteoriteTypeBlockToMeteoriteType(
+  block: MeteoriteTypeBlock,
+  index: number
+): MeteoriteType {
+  return {
+    id: index + 1,
+    uid: block._uid,
+    name: block.name?.trim() ?? "",
+    type: block.subtype?.trim() ?? "",
+    description: storyblokRichTextToHtml(block.description),
+    image: getStoryblokAssetUrl(block.image),
+  };
+}
+
+export function getTypeMeteoritesSectionFromStory(
+  story: StoryblokStory | null | undefined
+): TypeMeteoritesSectionContent | null {
+  const block = getTypeMeteoritesBlock(story);
+  if (!block) return null;
+
+  return {
+    title: block.title?.trim() ?? "",
+    description: storyblokRichTextToHtml(block.description),
+    items: (block.items ?? []).map(mapMeteoriteTypeBlockToMeteoriteType),
+  };
+}
+
+export function getStardustBlock(
+  story: StoryblokStory | null | undefined
+): StardustSectionBlock | null {
+  return (
+    story?.content?.body?.find(
+      (block): block is StardustSectionBlock =>
+        block.component === "stardust-section"
+    ) ?? null
+  );
+}
+
+export function mapStardustCreatorBlockToContent(
+  block: StardustCreatorBlock
+): StardustCreatorContent | null {
+  const sceneUrl = block.sceneUrl?.trim() ?? "";
+  if (!sceneUrl) return null;
+
+  return {
+    uid: block._uid,
+    name: block.name?.trim() ?? "",
+    sceneUrl,
+    tooltip: block.tooltip?.trim() ?? "",
+  };
+}
+
+export function getStardustSectionFromStory(
+  story: StoryblokStory | null | undefined
+): StardustSectionContent | null {
+  const block = getStardustBlock(story);
+  if (!block) return null;
+
+  return {
+    quote: storyblokRichTextToHtml(block.quote),
+    quoteAttribution: block.quoteAttribution?.trim() ?? "",
+    creatorsIntro: block.creatorsIntro?.trim() ?? "",
+    creators: (block.creators ?? [])
+      .map(mapStardustCreatorBlockToContent)
+      .filter((creator): creator is StardustCreatorContent => creator !== null),
+    buttonLabel: block.buttonLabel?.trim() ?? "",
+  };
 }
