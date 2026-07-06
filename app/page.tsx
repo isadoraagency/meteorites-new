@@ -18,7 +18,6 @@ export default async function Home({ searchParams }: PageProps) {
     isPreviewEnvironment ||
     resolvedParams._storyblok !== undefined ||
     resolvedParams._storyblok_tk !== undefined;
-
   const [menu, story, globalConfigStory] = await Promise.all([
     getMenu(),
     getStoryStoryblok("home", isPreview),
