@@ -1,6 +1,5 @@
 import { useLayoutEffect, type RefObject } from "react";
-import gsap from "gsap";
-import SplitText from "gsap/SplitText";
+import { gsap, SplitText } from "../lib/gsap";
 
 export interface DecodeTextOptions {
   chars?: string;

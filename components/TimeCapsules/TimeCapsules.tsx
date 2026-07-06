@@ -3,14 +3,10 @@
 import "./TimeCapsules.scss";
 import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import { useState, useEffect, useRef } from "react";
-import { gsap, ScrollTrigger, ScrollToPlugin, MotionPathPlugin } from "gsap/all";
+import { gsap, ScrollTrigger, MotionPathPlugin } from "../../lib/gsap";
 import VideoModal from "../VideoModal/VideoModal";
 import { useDecodeText } from "../../hooks/useDecodeText";
 import type { Meteorite } from "../../types/content";
-
-gsap.registerPlugin(ScrollToPlugin);
-gsap.registerPlugin(ScrollTrigger);
-gsap.registerPlugin(MotionPathPlugin);
 
 interface TimeCapsulesProps {
   isLoaded: boolean;

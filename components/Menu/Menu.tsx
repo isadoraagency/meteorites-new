@@ -1,13 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion, useAnimation } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import "./Menu.scss";
 
-import { gsap, ScrollToPlugin, ScrollTrigger } from "gsap/all";
-
-gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
-
-import { useState, useEffect, useRef } from "react";
+import { scrollToAnchor } from "../../lib/scroll";
+import { useState, useRef } from "react";
 import Sources from "../Sources/Sources";
 import Credits from "../Credits/Credits";
 import About from "../About/About";
@@ -48,41 +45,8 @@ export default function Menu({ list }: MenuProps) {
 
   const moveToItem = (e: React.MouseEvent, el: string) => {
     e.preventDefault();
-
-    // Disable all ScrollTriggers snapping during scroll
-    const triggers = ScrollTrigger.getAll();
-    triggers.forEach((st) => {
-      if (st.vars.snap) {
-        st.disable(false);
-      }
-    });
-
-    gsap.to(window, {
-      duration: 0,
-      scrollTo: { y: el, autoKill: true },
-      ease: "power2.inOut",
-      onComplete: () => {
-        // Re-enable ScrollTriggers
-        triggers.forEach((st) => {
-          if (st.vars.snap) {
-            st.enable(false);
-          }
-        });
-        ScrollTrigger.refresh();
-      },
-    });
+    scrollToAnchor(el);
   };
-  const controls = useAnimation();
-
-  useEffect(() => {
-    const sequence = async () => {
-      await controls.start("step1");
-      await controls.start("step2");
-      await controls.start("step3");
-    };
-
-    sequence();
-  }, []);
 
   const options = {
     iterations: 8,
@@ -145,7 +109,7 @@ export default function Menu({ list }: MenuProps) {
       <AnimatePresence>
         {isOpenMenu && (
           <>
-            <motion.div
+            <m.div
               key="overlay"
               initial={{
                 width: "6.4rem",
@@ -173,8 +137,8 @@ export default function Menu({ list }: MenuProps) {
                 opacity: 0,
                 transition: { duration: 0.5 },
               }}
-            ></motion.div>
-            <motion.div
+            ></m.div>
+            <m.div
               key="menu"
               className="main-menu"
               initial={{
@@ -249,7 +213,7 @@ export default function Menu({ list }: MenuProps) {
                           </li>
                         ))}
                       </ul>
-                      <motion.div
+                      <m.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 1.9 }}
@@ -264,11 +228,11 @@ export default function Menu({ list }: MenuProps) {
                             </li>
                           ))}
                         </ul>
-                      </motion.div>
+                      </m.div>
                     </div>
                   )}
 
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 1.9 }}
@@ -279,10 +243,10 @@ export default function Menu({ list }: MenuProps) {
                     <a href="https://isadoradigitalagency.com/" target="_blank" rel="noreferrer">
                       <img src="/images/ida-logo.svg" alt="Isadora Digital Agency" />
                     </a>
-                  </motion.div>
+                  </m.div>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           </>
         )}
         <Sources key="sources-modal" isOpen={activeModal === "openSources"} handleMenuItemClick={handleMenuItemClick} />

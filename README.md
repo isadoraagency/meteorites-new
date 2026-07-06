@@ -12,6 +12,24 @@ An interactive, scroll-driven landing page about meteorites. Built with **Next.j
 - [Storyblok](https://www.storyblok.com/) — headless CMS (integration in progress)
 - Sass (SCSS) for styling
 
+## Animation guidelines
+
+Two animation libraries coexist in this project, each with a clear responsibility:
+
+| Concern | Library |
+|---|---|
+| Scroll-driven animation (pinning, scrub, snapping, parallax), timelines, text decode effects | **GSAP** |
+| React enter/exit transitions (modals, overlays, menu) via `AnimatePresence`, state-driven UI animation | **Framer Motion** |
+| Simple hovers and one-off transitions | **CSS** |
+
+Rules:
+
+- **GSAP is only imported from `lib/gsap.ts`** — never from `"gsap"`, `"gsap/all"` or plugin subpaths. That module registers every plugin exactly once and exports `gsap`, `ScrollTrigger`, `ScrollToPlugin`, `MotionPathPlugin` and `SplitText`.
+- **Framer Motion uses `LazyMotion` in strict mode** (see `components/App.tsx`). Always use the lightweight `m` component (`m.div`), never `motion.div` — strict mode throws in dev if the full component sneaks in. This keeps the Framer bundle at a fraction of its full size. Only `domAnimation` features are loaded; if you ever need drag or layout animations, switch the feature set to `domMax`.
+- **UI components don't scroll the page with raw GSAP.** To jump/scroll to a section from UI code (menu items, close buttons), use `scrollToAnchor()` from `lib/scroll.ts`, which suspends ScrollTrigger snapping during the jump. Direct `gsap.to(window, { scrollTo })` calls are reserved for scroll-orchestration components (e.g. `Navigation`).
+- A component may legitimately use both libraries **only** when it owns a scroll-driven animation *and* an enter/exit transition (e.g. `Stardust`). Mixing them for the same concern is not allowed.
+- `prefers-reduced-motion` support is pending design definitions (tracked separately): the plan is `MotionConfig reducedMotion="user"` for Framer, a `"(prefers-reduced-motion: reduce)"` condition in `gsap.matchMedia()` blocks, and disabling Lenis.
+
 ## Getting started
 
 ```bash

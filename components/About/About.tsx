@@ -1,7 +1,7 @@
 "use client";
 
 import "./About.scss";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import { useEffect, useState } from "react";
 import type { TextContent } from "../../types/content";
@@ -28,7 +28,7 @@ export default function About({ isOpen, handleMenuItemClick }: AboutProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <m.div
           className="about"
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -46,7 +46,7 @@ export default function About({ isOpen, handleMenuItemClick }: AboutProps) {
             <div className="about__in">
               <img className="mb-3" width="182" src="/images/ida-logo.svg" alt="IDA Logo" />
               {data?.text && (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
                   animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
                   exit={{ opacity: 0, scale: 0 }}
@@ -55,7 +55,7 @@ export default function About({ isOpen, handleMenuItemClick }: AboutProps) {
                   dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.text) }}
                 />
               )}
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
                 animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
                 exit={{ opacity: 0, scale: 0 }}
@@ -85,8 +85,8 @@ export default function About({ isOpen, handleMenuItemClick }: AboutProps) {
                     </linearGradient>
                   </defs>
                 </svg>
-              </motion.div>
-              <motion.div
+              </m.div>
+              <m.div
                 initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
                 animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
                 exit={{ opacity: 0, scale: 0 }}
@@ -95,10 +95,10 @@ export default function About({ isOpen, handleMenuItemClick }: AboutProps) {
                 <a href="https://isadoradigitalagency.com/" target="_blank" rel="noreferrer" className="ia-btn">
                   Let’s Talk!
                 </a>
-              </motion.div>
+              </m.div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

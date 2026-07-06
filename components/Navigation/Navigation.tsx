@@ -1,10 +1,8 @@
 "use client";
 
 import "./Navigation.scss";
-import { gsap, ScrollToPlugin, ScrollTrigger } from "gsap/all";
+import { gsap, ScrollTrigger } from "../../lib/gsap";
 import type { Meteorite } from "../../types/content";
-
-gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
 interface NavigationProps {
   items: Meteorite[];

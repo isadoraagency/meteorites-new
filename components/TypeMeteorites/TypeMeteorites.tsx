@@ -1,15 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger, ScrollToPlugin } from "gsap/all";
+import { gsap, ScrollTrigger } from "../../lib/gsap";
 
 import "./TypeMeteorites.scss";
 import { useDecodeText } from "../../hooks/useDecodeText";
 import type { MeteoriteType } from "../../types/content";
-
-gsap.registerPlugin(ScrollToPlugin);
-gsap.registerPlugin(ScrollTrigger);
 
 interface TypeMeteoritesProps {
   isLoaded: boolean;

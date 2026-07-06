@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { sanitizeHtml } from "../../lib/sanitizeHtml";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import "./Credits.scss";
 import type { TextContent } from "../../types/content";
 
@@ -29,7 +29,7 @@ export default function Credits({ handleMenuItemClick, isOpen }: CreditsProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0 }}
@@ -46,7 +46,7 @@ export default function Credits({ handleMenuItemClick, isOpen }: CreditsProps) {
           <div className="ia-container">
             <div className="credits__in">
               {data?.text && (
-                <motion.div
+                <m.div
                   className="content-entry "
                   initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
                   animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
@@ -55,7 +55,7 @@ export default function Credits({ handleMenuItemClick, isOpen }: CreditsProps) {
                   dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.text) }}
                 />
               )}
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
                 animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
                 exit={{ opacity: 0, scale: 0 }}
@@ -90,8 +90,8 @@ export default function Credits({ handleMenuItemClick, isOpen }: CreditsProps) {
                     </clipPath>
                   </defs>
                 </svg>
-              </motion.div>
-              <motion.div
+              </m.div>
+              <m.div
                 initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
                 animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
                 exit={{ opacity: 0, scale: 0 }}
@@ -101,10 +101,10 @@ export default function Credits({ handleMenuItemClick, isOpen }: CreditsProps) {
                 <a href="https://isadoradigitalagency.com/" target="_blank" rel="noreferrer">
                   <img src="/images/ida-logo.svg" alt="IDA Logo" />
                 </a>
-              </motion.div>
+              </m.div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

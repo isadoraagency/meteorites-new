@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, ScrollTrigger } from "../../lib/gsap";
 import { addDecodeToTimeline } from "../../hooks/addDecodeToTimeline";
 import { useDecodeText } from "../../hooks/useDecodeText";
 import {
@@ -13,7 +12,6 @@ import {
 } from "../../lib/storyblok-utils";
 import type { HeroSectionBlock } from "../../types/storyblok";
 import "./Intro.scss";
-gsap.registerPlugin(ScrollTrigger);
 
 interface IntroProps {
   progress: string;

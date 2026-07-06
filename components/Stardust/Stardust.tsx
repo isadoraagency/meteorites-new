@@ -2,17 +2,14 @@
 
 import dynamic from "next/dynamic";
 import "./Stardust.scss";
-import { AnimatePresence, motion } from "framer-motion";
-import { gsap, ScrollToPlugin, ScrollTrigger } from "gsap/all";
+import { AnimatePresence, m } from "framer-motion";
+import { gsap, ScrollTrigger } from "../../lib/gsap";
 
 import { useRef, useState, useEffect } from "react";
 
 // @splinetool/react-spline renders WebGL/canvas on import and must not run
 // during the server render pass.
 const Spline = dynamic(() => import("@splinetool/react-spline"), { ssr: false });
-
-gsap.registerPlugin(ScrollToPlugin);
-gsap.registerPlugin(ScrollTrigger);
 
 interface StardustProps {
   isLoaded: boolean;
@@ -137,7 +134,7 @@ const Stardust = ({ isLoaded, onBackToIntro }: StardustProps) => {
       >
         <AnimatePresence>
           {popupActive && (
-            <motion.div
+            <m.div
               className="stardust-page__popup"
               initial={{ opacity: 0, x: "50%", y: "50%", scale: 0 }}
               animate={{ opacity: 1, x: "-50%", y: "-50%", scale: 1 }}
@@ -175,7 +172,7 @@ const Stardust = ({ isLoaded, onBackToIntro }: StardustProps) => {
                 </svg>
               </p>
               <p className="mb-0 text--info">Drag to move the camera</p>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
@@ -197,7 +194,7 @@ const Stardust = ({ isLoaded, onBackToIntro }: StardustProps) => {
             {currentOption && <Spline scene={currentOption.spline} onLoad={onSplineLoad} />}
             <AnimatePresence>
               {currentOption && move && (
-                <motion.div
+                <m.div
                   key={`person-${currentOption.value}`}
                   className="spline-canvas__tooltip text--info "
                   initial={{ opacity: 0, x: "100%", y: "50%", scale: 0 }}
@@ -210,7 +207,7 @@ const Stardust = ({ isLoaded, onBackToIntro }: StardustProps) => {
                     <br />
                     {currentOption.tooltip}
                   </p>
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
           </div>
