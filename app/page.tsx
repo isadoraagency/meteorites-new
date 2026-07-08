@@ -1,7 +1,7 @@
 import App from "../components/App";
 import {
   getBackgroundGradientFromConfig,
-  getMenu,
+  getMenuContent,
   getScrollProgressGradientFromConfig,
   getStoryStoryblok,
   isPreviewEnvironment,
@@ -18,10 +18,11 @@ export default async function Home({ searchParams }: PageProps) {
     isPreviewEnvironment ||
     resolvedParams._storyblok !== undefined ||
     resolvedParams._storyblok_tk !== undefined;
-  const [menu, story, globalConfigStory] = await Promise.all([
-    getMenu(),
+  const [menuContent, story, globalConfigStory, menuStory] = await Promise.all([
+    getMenuContent(isPreview),
     getStoryStoryblok("home", isPreview),
     getStoryStoryblok("site-global-configurations", isPreview),
+    getStoryStoryblok("menu", isPreview),
   ]);
 
   const globalConfig =
@@ -37,7 +38,8 @@ export default async function Home({ searchParams }: PageProps) {
         }}
       />
       <App
-        menu={menu}
+        menuContent={menuContent}
+        initialMenuStory={menuStory}
         initialStory={story}
         initialGlobalConfig={globalConfigStory}
       />

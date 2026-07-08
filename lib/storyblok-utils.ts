@@ -1,12 +1,29 @@
-import type { Meteorite, MeteoriteType } from "../types/content";
 import type {
+  AboutContent,
+  MenuAgency,
+  MenuContent,
+  MenuData,
+  MenuLink,
+  Meteorite,
+  MeteoriteType,
+  SourceItem,
+  SourcesContent,
+} from "../types/content";
+import type {
+  AboutBlock,
   GradientBlock,
   HeroSectionBlock,
   HeroTextBlock,
+  MenuFooterBlock,
+  MenuLinkBlock,
+  MenuStoryblokContent,
   MeteoriteBlock,
   MeteoriteTypeBlock,
   SiteGlobalConfigurationsBlock,
+  SourceItemBlock,
+  SourcesBlock,
   StoryblokAsset,
+  StoryblokMultilink,
   StoryblokRichText,
   StoryblokRichTextMark,
   StoryblokRichTextNode,
@@ -156,9 +173,141 @@ function escapeHtml(text: string): string {
     .replace(/"/g, "&quot;");
 }
 
+interface RichTextRenderOptions {
+  paragraphClass?: string;
+  headingClasses?: Partial<Record<number, string>>;
+  linkClass?: string;
+  linkTarget?: string;
+  mergeLinkContinuations?: boolean;
+  mergeAfterBoldContinuations?: boolean;
+}
+
+function getParagraphTextNodes(
+  node: StoryblokRichTextNode
+): StoryblokRichTextNode[] {
+  if (node.type !== "paragraph" || !node.content?.length) return [];
+  return node.content.filter(
+    (child) => child.type === "text" && Boolean(child.text?.trim())
+  );
+}
+
+function paragraphHasMark(
+  node: StoryblokRichTextNode,
+  markType: string
+): boolean {
+  return getParagraphTextNodes(node).some((child) =>
+    child.marks?.some((mark) => mark.type === markType)
+  );
+}
+
+function isLinkOnlyParagraph(node: StoryblokRichTextNode): boolean {
+  const textNodes = getParagraphTextNodes(node);
+  return (
+    node.type === "paragraph" &&
+    textNodes.length === 1 &&
+    textNodes[0].marks?.some((mark) => mark.type === "link") === true
+  );
+}
+
+function isBoldOnlyParagraph(node: StoryblokRichTextNode): boolean {
+  const textNodes = getParagraphTextNodes(node);
+  return (
+    node.type === "paragraph" &&
+    textNodes.length > 0 &&
+    textNodes.every((child) => child.marks?.some((mark) => mark.type === "bold"))
+  );
+}
+
+function isPlainContinuationParagraph(node: StoryblokRichTextNode): boolean {
+  const textNodes = getParagraphTextNodes(node);
+  return (
+    node.type === "paragraph" &&
+    textNodes.length > 0 &&
+    !paragraphHasMark(node, "link") &&
+    !paragraphHasMark(node, "bold")
+  );
+}
+
+function shouldMergeParagraphContinuation(
+  current: StoryblokRichTextNode,
+  next: StoryblokRichTextNode,
+  options: RichTextRenderOptions
+): boolean {
+  if (current.type !== "paragraph" || next.type !== "paragraph") return false;
+
+  if (options.mergeLinkContinuations && isLinkOnlyParagraph(next)) {
+    return true;
+  }
+
+  if (
+    options.mergeAfterBoldContinuations &&
+    isPlainContinuationParagraph(next) &&
+    isBoldOnlyParagraph(current)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function mergeParagraphContinuations(
+  nodes: StoryblokRichTextNode[],
+  options: RichTextRenderOptions
+): StoryblokRichTextNode[] {
+  if (
+    !options.mergeLinkContinuations &&
+    !options.mergeAfterBoldContinuations
+  ) {
+    return nodes;
+  }
+
+  const merged: StoryblokRichTextNode[] = [];
+
+  for (let index = 0; index < nodes.length; index++) {
+    const node = nodes[index];
+
+    if (node.type !== "paragraph") {
+      merged.push(node);
+      continue;
+    }
+
+    const combined: StoryblokRichTextNode = {
+      ...node,
+      content: [...(node.content ?? [])],
+    };
+
+    while (
+      index + 1 < nodes.length &&
+      shouldMergeParagraphContinuation(combined, nodes[index + 1], options)
+    ) {
+      index++;
+      const next = nodes[index];
+      combined.content?.push({ type: "hard_break" });
+      combined.content?.push(...(next.content ?? []));
+    }
+
+    merged.push(combined);
+  }
+
+  return merged;
+}
+
+function preprocessRichTextDoc(
+  value: StoryblokRichText,
+  options: RichTextRenderOptions
+): StoryblokRichText {
+  if (!Array.isArray(value.content)) return value;
+
+  return {
+    ...value,
+    content: mergeParagraphContinuations(value.content, options),
+  };
+}
+
 function applyRichTextMarks(
   text: string,
-  marks?: StoryblokRichTextMark[]
+  marks?: StoryblokRichTextMark[],
+  options: RichTextRenderOptions = {}
 ): string {
   if (!marks?.length) return text;
 
@@ -174,6 +323,15 @@ function applyRichTextMarks(
         return `<s>${result}</s>`;
       case "code":
         return `<code>${result}</code>`;
+      case "link": {
+        const href = String(mark.attrs?.href ?? "#");
+        const target =
+          options.linkTarget ??
+          (typeof mark.attrs?.target === "string" ? mark.attrs.target : "_blank");
+        const classAttr = options.linkClass ? ` class="${options.linkClass}"` : "";
+        const rel = target === "_blank" ? ' rel="noreferrer"' : "";
+        return `<a href="${escapeHtml(href)}" target="${escapeHtml(target)}"${classAttr}${rel}>${result}</a>`;
+      }
       default:
         return result;
     }
@@ -182,22 +340,40 @@ function applyRichTextMarks(
 
 function renderRichTextNode(
   node: StoryblokRichTextNode,
-  inline = false
+  inline = false,
+  options: RichTextRenderOptions = {}
 ): string {
   if (node.type === "text") {
     const text = escapeHtml(node.text ?? "");
-    return applyRichTextMarks(text, node.marks);
+    return applyRichTextMarks(text, node.marks, options);
   }
 
   if (node.type === "hard_break") return "<br/>";
 
+  if (node.type === "heading") {
+    const level = Number(node.attrs?.level) || 3;
+    const tag = `h${level}`;
+    const className = options.headingClasses?.[level];
+    const classAttr = className ? ` class="${className}"` : "";
+    const inner =
+      node.content?.map((child) => renderRichTextNode(child, inline, options)).join("") ?? "";
+    return `<${tag}${classAttr}>${inner}</${tag}>`;
+  }
+
   if (node.type === "paragraph") {
-    const inner = node.content?.map((child) => renderRichTextNode(child, inline)).join("") ?? "";
-    return inline ? inner : `<p>${inner}</p>`;
+    const inner =
+      node.content?.map((child) => renderRichTextNode(child, inline, options)).join("") ?? "";
+    if (!inner.trim()) return "";
+    if (inline) return inner;
+    const className = options.paragraphClass;
+    const classAttr = className ? ` class="${className}"` : "";
+    return `<p${classAttr}>${inner}</p>`;
   }
 
   if (Array.isArray(node.content)) {
-    return node.content.map((child) => renderRichTextNode(child, inline)).join("");
+    return node.content
+      .map((child) => renderRichTextNode(child, inline, options))
+      .join("");
   }
 
   return "";
@@ -205,22 +381,31 @@ function renderRichTextNode(
 
 function richTextToHtml(
   value: StoryblokRichText | StoryblokRichTextNode | string | null | undefined,
-  inline = false
+  inline = false,
+  options: RichTextRenderOptions = {}
 ): string {
   if (!value) return "";
   if (typeof value === "string") return value;
 
-  if (value.type === "doc" && Array.isArray(value.content)) {
+  const normalizedValue =
+    value.type === "doc" && Array.isArray(value.content)
+      ? preprocessRichTextDoc(value, options)
+      : value;
+
+  if (normalizedValue.type === "doc" && Array.isArray(normalizedValue.content)) {
     if (inline) {
-      return value.content
-        .map((node) => renderRichTextNode(node, true))
+      return normalizedValue.content
+        .map((node) => renderRichTextNode(node, true, options))
         .filter(Boolean)
         .join("<br/>");
     }
-    return value.content.map((node) => renderRichTextNode(node)).join("");
+    return normalizedValue.content
+      .map((node) => renderRichTextNode(node, false, options))
+      .filter(Boolean)
+      .join("");
   }
 
-  return renderRichTextNode(value, inline);
+  return renderRichTextNode(normalizedValue, inline, options);
 }
 
 export function storyblokRichTextToHtml(
@@ -233,6 +418,36 @@ export function storyblokRichTextToInlineHtml(
   value?: StoryblokRichText | StoryblokRichTextNode | string | null
 ): string {
   return richTextToHtml(value, true);
+}
+
+export function storyblokRichTextToSourcesHtml(
+  value?: StoryblokRichText | StoryblokRichTextNode | string | null
+): string {
+  return richTextToHtml(value, false, {
+    headingClasses: {
+      3: "text-p p2 text-semi-bold",
+    },
+    linkClass: "ia-link",
+    linkTarget: "_blank",
+    mergeLinkContinuations: true,
+  });
+}
+
+export function storyblokRichTextToCreditsHtml(
+  value?: StoryblokRichText | StoryblokRichTextNode | string | null
+): string {
+  return richTextToHtml(value, false, {
+    paragraphClass: "fz-6",
+    mergeAfterBoldContinuations: true,
+  });
+}
+
+export function storyblokRichTextToAboutHtml(
+  value?: StoryblokRichText | StoryblokRichTextNode | string | null
+): string {
+  return richTextToHtml(value, false, {
+    paragraphClass: "h6 text-light",
+  });
 }
 
 export function slugifyMeteoriteTitle(title: string): string {
@@ -378,4 +593,151 @@ export function getStardustSectionFromStory(
       .filter((creator): creator is StardustCreatorContent => creator !== null),
     buttonLabel: block.buttonLabel?.trim() ?? "",
   };
+}
+
+const EMPTY_MENU_CONTENT: MenuContent = {
+  links: [{ large: [], small: [] }],
+  agency: {
+    footerText: "",
+    footerCreditsText: "",
+    agencyUrl: "",
+    agencyLogo: "",
+  },
+  creditsHtml: "",
+  sources: { title: "", video: "", items: [] },
+  about: { logo: "", text: "", ctaLabel: "", ctaUrl: "" },
+};
+
+function mapMenuLinks(blocks: MenuLinkBlock[] = []): MenuLink[] {
+  return blocks
+    .map((block) => ({
+      title: block.title?.trim() ?? "",
+      action: block.action?.trim() ?? "",
+    }))
+    .filter((link) => link.title && link.action);
+}
+
+export function getStoryblokLinkUrl(link?: StoryblokMultilink | null): string {
+  return link?.url?.trim() || link?.cached_url?.trim() || "";
+}
+
+function getMenuFooterFields(
+  content?: MenuStoryblokContent | null
+): MenuFooterBlock {
+  const footerGroup = content?.footer?.[0];
+  return {
+    footerText: footerGroup?.footerText ?? content?.footerText,
+    footerCreditsText:
+      footerGroup?.footerCreditsText ?? content?.footerCreditsText,
+    agencyUrl: footerGroup?.agencyUrl ?? content?.agencyUrl,
+    agencyLogo: footerGroup?.agencyLogo ?? content?.agencyLogo,
+  };
+}
+
+function mapMenuAgency(content?: MenuStoryblokContent | null): MenuAgency {
+  const footer = getMenuFooterFields(content);
+  return {
+    footerText: footer.footerText?.trim() ?? "",
+    footerCreditsText: footer.footerCreditsText?.trim() ?? "",
+    agencyUrl: getStoryblokLinkUrl(footer.agencyUrl),
+    agencyLogo: getStoryblokAssetUrl(footer.agencyLogo),
+    agencyLogoAlt: getStoryblokAssetAlt(footer.agencyLogo),
+  };
+}
+
+function mapSourceItemBlock(block: SourceItemBlock): SourceItem | null {
+  const title = block.title?.trim() ?? "";
+  const description = storyblokRichTextToSourcesHtml(block.description);
+  if (!title || !description.trim()) return null;
+  return { title, description };
+}
+
+function mapSourcesBlock(block?: SourcesBlock | null): SourcesContent {
+  return {
+    title: block?.title?.trim() ?? "",
+    video: getStoryblokAssetUrl(block?.video),
+    items: (block?.items ?? [])
+      .map(mapSourceItemBlock)
+      .filter((item): item is SourceItem => item !== null),
+  };
+}
+
+function mapAboutBlock(block?: AboutBlock | null): AboutContent {
+  return {
+    logo: getStoryblokAssetUrl(block?.logo),
+    logoAlt: getStoryblokAssetAlt(block?.logo),
+    text: storyblokRichTextToAboutHtml(block?.text),
+    ctaLabel: block?.ctaLabel?.trim() ?? "",
+    ctaUrl: getStoryblokLinkUrl(block?.ctaUrl),
+  };
+}
+
+function logMissingMenuFields(content: MenuContent): void {
+  const section = content.links[0];
+  if (!section?.large.length) {
+    console.warn("[storyblok] menu: missing or empty large links");
+  }
+  if (!section?.small.length) {
+    console.warn("[storyblok] menu: missing or empty small links");
+  }
+  if (!content.agency.footerText) {
+    console.warn("[storyblok] menu: missing footerText");
+  }
+  if (!content.agency.agencyUrl) {
+    console.warn("[storyblok] menu: missing agencyUrl");
+  }
+  if (!content.agency.agencyLogo) {
+    console.warn("[storyblok] menu: missing agencyLogo");
+  }
+  if (!content.creditsHtml.trim()) {
+    console.warn("[storyblok] menu: missing credits content");
+  }
+  if (!content.sources.title) {
+    console.warn("[storyblok] menu: missing sources title");
+  }
+  if (!content.sources.video) {
+    console.warn("[storyblok] menu: missing sources video");
+  }
+  if (!content.sources.items.length) {
+    console.warn("[storyblok] menu: missing sources items");
+  }
+  if (!content.about.text.trim()) {
+    console.warn("[storyblok] menu: missing about text");
+  }
+  if (!content.about.ctaLabel || !content.about.ctaUrl) {
+    console.warn("[storyblok] menu: missing about CTA");
+  }
+}
+
+export function getEmptyMenuContent(): MenuContent {
+  return structuredClone(EMPTY_MENU_CONTENT);
+}
+
+export function mapMenuStoryToContent(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  story?: { content?: MenuStoryblokContent } | null
+): MenuContent {
+  const content = story?.content;
+  if (!content) {
+    console.warn("[storyblok] menu: story has no content");
+    return getEmptyMenuContent();
+  }
+
+  const mapped: MenuContent = {
+    links: [
+      {
+        large: mapMenuLinks(content.large),
+        small: mapMenuLinks(content.small),
+      },
+    ],
+    agency: mapMenuAgency(content),
+    creditsHtml: content.credits
+      ? storyblokRichTextToCreditsHtml(content.credits)
+      : "",
+    sources: mapSourcesBlock(content.sources?.[0]),
+    about: mapAboutBlock(content.about?.[0]),
+  };
+
+  logMissingMenuFields(mapped);
+  return mapped;
 }

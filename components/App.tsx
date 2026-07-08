@@ -11,14 +11,16 @@ import TypeMeteorites from "./TypeMeteorites/TypeMeteorites";
 import Stardust from "./Stardust/Stardust";
 import ScrollProgress from "./ScrollProgress/ScrollProgress";
 import Footer from "./Footer/Footer";
-import type { MenuData } from "../types/content";
-import type { StoryblokStory } from "../types/storyblok";
+import type { MenuContent } from "../types/content";
+import type { StoryblokStory, MenuStoryblokContent } from "../types/storyblok";
 import SiteTheme from "./SiteTheme/SiteTheme";
-import { getHeroBlock, getMeteoritesFromStory, getStardustSectionFromStory, getTypeMeteoritesSectionFromStory } from "../lib/storyblok-utils";
+import { getHeroBlock, getMeteoritesFromStory, getStardustSectionFromStory, getTypeMeteoritesSectionFromStory, mapMenuStoryToContent } from "../lib/storyblok-utils";
 import { useStoryblokState } from "@storyblok/react";
 
 interface AppProps {
-  menu: MenuData;
+  menuContent: MenuContent;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialMenuStory?: any;
   // Full story payload from the Storyblok CDN — typed loosely until all blocks are mapped.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialStory?: any;
@@ -27,7 +29,15 @@ interface AppProps {
   onComplete?: () => void;
 }
 
-function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) {
+function App({ menuContent, initialMenuStory, initialStory, initialGlobalConfig, onComplete }: AppProps) {
+  const menuStory = useStoryblokState(initialMenuStory ?? null);
+  const resolvedMenuContent = useMemo(
+    () =>
+      menuStory
+        ? mapMenuStoryToContent(menuStory as { content?: MenuStoryblokContent })
+        : menuContent,
+    [menuContent, menuStory]
+  );
   const story = useStoryblokState(initialStory ?? null) as StoryblokStory | null;
   const hero = getHeroBlock(story);
   const items = useMemo(() => getMeteoritesFromStory(story), [story]);
@@ -134,7 +144,7 @@ function App({ menu, initialStory, initialGlobalConfig, onComplete }: AppProps) 
     <LazyMotion features={domAnimation} strict>
       <SiteTheme initialConfig={initialGlobalConfig} />
       <Cursor />
-      <Menu list={menu} />
+      <Menu menuContent={resolvedMenuContent} />
 
       <Intro
         hero={hero}

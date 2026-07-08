@@ -5,6 +5,7 @@ export interface StoryblokAsset {
 
 export interface StoryblokRichTextMark {
   type?: string;
+  attrs?: Record<string, unknown>;
 }
 
 export interface StoryblokRichTextNode {
@@ -131,6 +132,62 @@ export type StoryblokBodyBlock =
   | MeteoriteBlock
   | TypeMeteoritesSectionBlock
   | StardustSectionBlock;
+
+export interface StoryblokMultilink {
+  url?: string;
+  cached_url?: string;
+  linktype?: string;
+}
+
+export interface MenuLinkBlock {
+  _uid?: string;
+  component: "menu_link";
+  title?: string;
+  action?: string;
+}
+
+export interface SourceItemBlock {
+  _uid?: string;
+  component: "source-item";
+  title?: string;
+  description?: StoryblokRichText | string;
+}
+
+export interface SourcesBlock {
+  _uid?: string;
+  component: "sources";
+  title?: string;
+  video?: StoryblokAsset;
+  items?: SourceItemBlock[];
+}
+
+export interface AboutBlock {
+  _uid?: string;
+  component: "about";
+  logo?: StoryblokAsset;
+  text?: StoryblokRichText | string;
+  ctaLabel?: string;
+  ctaUrl?: StoryblokMultilink;
+}
+
+export interface MenuFooterBlock {
+  footerText?: string;
+  footerCreditsText?: string;
+  agencyUrl?: StoryblokMultilink;
+  agencyLogo?: StoryblokAsset;
+}
+
+export interface MenuStoryblokContent extends MenuFooterBlock {
+  _uid?: string;
+  component?: "menu";
+  large?: MenuLinkBlock[];
+  small?: MenuLinkBlock[];
+  credits?: StoryblokRichText | string;
+  sources?: SourcesBlock[];
+  about?: AboutBlock[];
+  footer?: MenuFooterBlock[];
+  footerCreditsText?: string;
+}
 
 export interface StoryblokStory {
   content?: {

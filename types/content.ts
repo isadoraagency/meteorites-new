@@ -55,3 +55,33 @@ export interface SourceItem {
   title: string;
   description: string; // HTML string
 }
+
+export interface MenuAgency {
+  footerText: string;
+  footerCreditsText: string;
+  agencyUrl: string;
+  agencyLogo: string;
+  agencyLogoAlt?: string;
+}
+
+export interface SourcesContent {
+  title: string;
+  video: string;
+  items: SourceItem[];
+}
+
+export interface AboutContent {
+  logo: string;
+  logoAlt?: string;
+  text: string;
+  ctaLabel: string;
+  ctaUrl: string;
+}
+
+export interface MenuContent {
+  links: MenuData;
+  agency: MenuAgency;
+  creditsHtml: string;
+  sources: SourcesContent;
+  about: AboutContent;
+}

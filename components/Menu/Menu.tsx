@@ -9,13 +9,15 @@ import Sources from "../Sources/Sources";
 import Credits from "../Credits/Credits";
 import About from "../About/About";
 import { useDecodeText } from "../../hooks/useDecodeText";
-import type { MenuData } from "../../types/content";
+import type { MenuContent } from "../../types/content";
 
 interface MenuProps {
-  list: MenuData | null;
+  menuContent: MenuContent;
 }
 
-export default function Menu({ list }: MenuProps) {
+export default function Menu({ menuContent }: MenuProps) {
+  const { links, agency, creditsHtml, sources, about } = menuContent;
+  const list = links;
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [isTopLinkHover, setIsTopLinkHover] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -192,46 +194,51 @@ export default function Menu({ list }: MenuProps) {
                       </linearGradient>
                     </defs>
                   </svg>
-                  {list && (
+                  {list?.[0] && (list[0].large.length > 0 || list[0].small.length > 0) && (
                     <div>
-                      <ul className={`main-menu__top ${isTopLinkHover ? "main-menu__top--hover" : ""}`}>
-                        {list[0].large.map((item, i) => (
-                          <li className="h5" key={`large-item-${i}`}>
-                            <button
-                              ref={(el) => {
-                                if (el) topItemsRef.current[i] = el;
-                              }}
-                              onClick={(e) => {
-                                setIsOpenMenu(false);
-                                moveToItem(e, "#" + item.action);
-                              }}
-                              onMouseEnter={() => setIsTopLinkHover(true)}
-                              onMouseLeave={() => setIsTopLinkHover(false)}
-                            >
-                              {item.title}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                      <m.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 1.9 }}
-                        exit={{ opacity: 0 }}
-                      >
-                        <ul className="main-menu__bottom">
-                          {list[0].small.map((item, i) => (
-                            <li className="p1 mb-0" key={`small-item-${i}`}>
-                              <button onClick={() => handleMenuItemClick(item.action)}>
+                      {list[0].large.length > 0 && (
+                        <ul className={`main-menu__top ${isTopLinkHover ? "main-menu__top--hover" : ""}`}>
+                          {list[0].large.map((item, i) => (
+                            <li className="h5" key={`large-item-${i}`}>
+                              <button
+                                ref={(el) => {
+                                  if (el) topItemsRef.current[i] = el;
+                                }}
+                                onClick={(e) => {
+                                  setIsOpenMenu(false);
+                                  moveToItem(e, "#" + item.action);
+                                }}
+                                onMouseEnter={() => setIsTopLinkHover(true)}
+                                onMouseLeave={() => setIsTopLinkHover(false)}
+                              >
                                 {item.title}
                               </button>
                             </li>
                           ))}
                         </ul>
-                      </m.div>
+                      )}
+                      {list[0].small.length > 0 && (
+                        <m.div
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 1.9 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          <ul className="main-menu__bottom">
+                            {list[0].small.map((item, i) => (
+                              <li className="p1 mb-0" key={`small-item-${i}`}>
+                                <button onClick={() => handleMenuItemClick(item.action)}>
+                                  {item.title}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </m.div>
+                      )}
                     </div>
                   )}
 
+                  {(agency.footerText || (agency.agencyLogo && agency.agencyUrl)) && (
                   <m.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -239,19 +246,42 @@ export default function Menu({ list }: MenuProps) {
                     exit={{ opacity: 0 }}
                     className="main-menu__side p1 mb-0"
                   >
-                    This site was made of stardust at{" "}
-                    <a href="https://isadoradigitalagency.com/" target="_blank" rel="noreferrer">
-                      <img src="/images/ida-logo.svg" alt="Isadora Digital Agency" />
-                    </a>
+                    {agency.footerText}
+                    {agency.footerText && agency.agencyLogo && agency.agencyUrl ? " " : null}
+                    {agency.agencyLogo && agency.agencyUrl && (
+                      <a href={agency.agencyUrl} target="_blank" rel="noreferrer">
+                        <img
+                          src={agency.agencyLogo}
+                          alt={agency.agencyLogoAlt ?? ""}
+                        />
+                      </a>
+                    )}
                   </m.div>
+                  )}
                 </div>
               </div>
             </m.div>
           </>
         )}
-        <Sources key="sources-modal" isOpen={activeModal === "openSources"} handleMenuItemClick={handleMenuItemClick} />
-        <Credits key="credits-modal" isOpen={activeModal === "openCredits"} handleMenuItemClick={handleMenuItemClick} />
-        <About key="about-modal" isOpen={activeModal === "openAbout"} handleMenuItemClick={handleMenuItemClick} />
+        <Sources
+          key="sources-modal"
+          content={sources}
+          isOpen={activeModal === "openSources"}
+          handleMenuItemClick={handleMenuItemClick}
+        />
+        <Credits
+          key="credits-modal"
+          text={creditsHtml}
+          agency={agency}
+          isOpen={activeModal === "openCredits"}
+          handleMenuItemClick={handleMenuItemClick}
+        />
+        <About
+          key="about-modal"
+          content={about}
+          isOpen={activeModal === "openAbout"}
+          handleMenuItemClick={handleMenuItemClick}
+        />
       </AnimatePresence>
     </div>
   );
