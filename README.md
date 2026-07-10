@@ -4,13 +4,81 @@ An interactive, scroll-driven landing page about meteorites. Built with **Next.j
 
 ## Tech stack
 
-- [Next.js 16](https://nextjs.org/) (App Router) + React 19 + TypeScript
-- [GSAP](https://gsap.com/) + ScrollTrigger — scroll-driven animation
-- [Framer Motion](https://motion.dev/) — UI transitions
-- [Lenis](https://lenis.darkroom.engineering/) — smooth scrolling
-- [Spline](https://spline.design/) — 3D "Stardust" scene
-- [Storyblok](https://www.storyblok.com/) — headless CMS (integration in progress)
-- Sass (SCSS) for styling
+| Layer | Technology |
+|---|---|
+| Framework | [Next.js 16](https://nextjs.org/) (App Router) + [React 19](https://react.dev/) |
+| Language | [TypeScript 6](https://www.typescriptlang.org/) |
+| Scroll animation | [GSAP 3](https://gsap.com/) + ScrollTrigger, ScrollToPlugin, MotionPathPlugin, SplitText |
+| UI transitions | [Framer Motion 12](https://motion.dev/) (`LazyMotion`, strict mode) |
+| Smooth scrolling | [Lenis](https://lenis.darkroom.engineering/) (`@studio-freight/lenis`) |
+| 3D | [Spline](https://spline.design/) (`@splinetool/react-spline`) — "Stardust" scene |
+| CMS | [Storyblok](https://www.storyblok.com/) (`@storyblok/react`, EU region) — integration in progress |
+| Styling | Sass (SCSS) |
+| Sanitization | [DOMPurify](https://github.com/cure53/DOMPurify) for CMS rich text |
+| Linting | ESLint 9 (flat config) + typescript-eslint + react-hooks |
+| Hosting | [Vercel](https://vercel.com/) |
+
+## Getting started
+
+### Prerequisites
+
+- **Node.js 20.9+** (the project is developed on Node 24) and **npm**
+- A **Storyblok preview token** for the space (ask a teammate, or find it in Storyblok under **Settings → Access Tokens**)
+
+### Step by step
+
+1. **Clone the repository and install dependencies:**
+
+   ```bash
+   git clone <repo-url>
+   cd meteorites-new
+   npm install
+   ```
+
+2. **Create a `.env.local` file** in the project root (see [Environment variables](#environment-variables)):
+
+   ```bash
+   STORYBLOK_PREVIEW_TOKEN=xxx
+   ```
+
+3. **Start the dev server:**
+
+   ```bash
+   npm run dev
+   ```
+
+   The dev server runs over **HTTPS** (`next dev --experimental-https`) — this is required for the Storyblok Visual Editor to embed the site. On first run, Next.js generates self-signed certificates into `certificates/` (gitignored) and may ask for your password to install a local certificate authority.
+
+4. **Open [https://localhost:3000](https://localhost:3000).** If the browser shows a certificate warning, accept the self-signed certificate once.
+
+Without a valid `STORYBLOK_PREVIEW_TOKEN` the app still runs, but Storyblok-driven content (currently the `menu` story) falls back to empty content with a console warning.
+
+## Environment variables
+
+Environment files (`.env*`) are gitignored. Use `.env.local` for local development.
+
+| Variable | Required | Where it's used |
+|---|---|---|
+| `STORYBLOK_PREVIEW_TOKEN` | Yes | Server-side only. Used by `lib/storyblok.ts` to fetch stories from the Storyblok CDN API, and passed to the Storyblok Bridge **only** for Visual Editor requests (detected via the `_storyblok` query param in `proxy.ts` → `x-storyblok-preview` header → `app/layout.tsx`). It never reaches regular visitors. |
+| `VERCEL_ENV` | Auto (Vercel) | Set automatically by Vercel (`production` / `preview` / `development`). Decides whether the app fetches **draft** or **published** content: production reads published, everything else reads drafts. Locally, `NODE_ENV` is the fallback signal. |
+
+> **Note:** `STORYBLOK_PUBLIC_TOKEN` and `STORYBLOK_SPACE_ID` may appear in existing `.env.local` files, but they are **not currently read by the code** — content fetching uses the preview token for both draft and published versions. They are kept for the ongoing Storyblok migration.
+
+On Vercel, set `STORYBLOK_PREVIEW_TOKEN` for all environments in **Project → Settings → Environment Variables** (or via `vercel env add`).
+
+## Scripts
+
+- `npm run dev` — start the Next.js dev server (HTTPS, self-signed certs)
+- `npm run build` — production build
+- `npm run start` — serve the production build
+- `npm run lint` — run ESLint
+
+## Deployment
+
+The project deploys to **Vercel**. Per `vercel.json`, builds only run for the `main` and `dev` branches — pushes to any other branch are ignored by Vercel.
+
+- **`main`** → production (serves **published** Storyblok content)
+- **`dev`** → preview deployment (serves **draft** Storyblok content, since `VERCEL_ENV !== "production"`)
 
 ## Animation guidelines
 
@@ -30,42 +98,16 @@ Rules:
 - A component may legitimately use both libraries **only** when it owns a scroll-driven animation *and* an enter/exit transition (e.g. `Stardust`). Mixing them for the same concern is not allowed.
 - `prefers-reduced-motion` support is pending design definitions (tracked separately): the plan is `MotionConfig reducedMotion="user"` for Framer, a `"(prefers-reduced-motion: reduce)"` condition in `gsap.matchMedia()` blocks, and disabling Lenis.
 
-## Getting started
-
-```bash
-npm install
-npm run dev
-```
-
-The dev server runs over **HTTPS** (`next dev --experimental-https`) using the local certificates in `certificates/` — this is required for the Storyblok Visual Editor. Open [https://localhost:3000](https://localhost:3000).
-
-### Environment variables
-
-Create a `.env` file in the project root:
-
-```bash
-STORYBLOK_PREVIEW_TOKEN=xxx        # server-side, draft content
-STORYBLOK_PUBLIC_TOKEN=xxx         # published content (production)
-STORYBLOK_SPACE_ID=xxx
-# Exposed to the browser so the Visual Editor bridge can initialize
-NEXT_PUBLIC_STORYBLOK_PREVIEW_TOKEN=xxx
-```
-
-## Scripts
-
-- `npm run dev` — start the Next.js dev server (HTTPS)
-- `npm run build` — production build
-- `npm run start` — serve the production build
-- `npm run lint` — run ESLint
-
 ## Content
 
 Content is being migrated from static JSON to Storyblok:
 
-- **Storyblok (EU region)** — the `menu` story is fetched server-side via `lib/storyblok.ts`, with an automatic fallback to the local JSON if the story isn't published or the API is unreachable.
+- **Storyblok (EU region)** — the `menu` story is fetched server-side via `lib/storyblok.ts`, with an automatic fallback to empty content if the story isn't published or the API is unreachable.
 - **Static JSON** — the remaining sections (`about`, `credits`, `meteorites`, `sources`, `types`) are still served from `public/data/*.json`.
 
-`lib/StoryblokProvider.tsx` initializes the Storyblok Bridge client-side so the Visual Editor can highlight blocks and push live updates.
+Draft vs. published resolution: development and Vercel preview deployments read **draft** content; only real production (`VERCEL_ENV === "production"`) reads **published** content.
+
+`lib/StoryblokProvider.tsx` initializes the Storyblok Bridge client-side so the Visual Editor can highlight blocks and push live updates. The bridge only loads inside the Visual Editor iframe (requests carrying the `_storyblok` query param) — regular visitors never download it.
 
 ## Setting up the Storyblok Visual Editor (preview)
 
@@ -96,7 +138,7 @@ You can add more than one environment (e.g. "Local" and "Staging") and switch be
 
 - **Blank preview / "refused to connect"** — the site isn't running at the configured preview URL, or the URL uses `http://` instead of `https://`. Ask a developer to start the dev server or fix the URL in **Settings → Visual Editor**.
 - **Certificate warning on localhost** — open `https://localhost:3000` directly in a browser tab first and accept the self-signed certificate, then reload the Visual Editor.
-- **Changes don't highlight/update live** — the Storyblok Bridge isn't loading. Check with a developer that `NEXT_PUBLIC_STORYBLOK_PREVIEW_TOKEN` is set in the app's `.env`.
+- **Changes don't highlight/update live** — the Storyblok Bridge isn't loading. Check with a developer that `STORYBLOK_PREVIEW_TOKEN` is set in the app's `.env.local` and that the preview URL includes the `_storyblok` query param (Storyblok adds it automatically inside the Visual Editor).
 - **Story shows old content on the site** — you saved but didn't **Publish** (or vice versa: production only shows published content).
 
 ## Project structure
@@ -105,9 +147,10 @@ You can add more than one environment (e.g. "Local" and "Staging") and switch be
 app/                # App Router entry (layout + page)
 components/         # UI sections (Intro, About, Stardust, TimeCapsules, Sources, ...)
 hooks/              # Custom hooks (text decode animation, GSAP timeline helpers)
-lib/                # Storyblok client/provider, Lenis provider
+lib/                # Storyblok client/provider, Lenis provider, GSAP setup, scroll helpers
 public/data/        # Static JSON content (being migrated to Storyblok)
 styles/             # Global SCSS (base, layout, components, utils, mixins)
 types/              # Shared content types
-certificates/       # Local HTTPS certs for the dev server
+proxy.ts            # Next.js proxy — flags Storyblok Visual Editor requests
+certificates/       # Local HTTPS certs, generated on first `npm run dev` (gitignored)
 ```
