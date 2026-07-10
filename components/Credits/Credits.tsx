@@ -1,31 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import { AnimatePresence, m } from "framer-motion";
 import "./Credits.scss";
-import type { TextContent } from "../../types/content";
+import type { MenuAgency } from "../../types/content";
 
 interface CreditsProps {
+  text: string;
+  agency: MenuAgency;
   isOpen: boolean;
   handleMenuItemClick: (action: string) => void;
 }
 
-export default function Credits({ handleMenuItemClick, isOpen }: CreditsProps) {
-  const [data, setData] = useState<TextContent | null>(null);
-
-  useEffect(() => {
-    fetch("/data/credits.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return response.json();
-      })
-      .then(setData)
-      .catch((error) => console.error("Error loading data:", error));
-  }, []);
-
+export default function Credits({ text, agency, handleMenuItemClick, isOpen }: CreditsProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -45,14 +32,14 @@ export default function Credits({ handleMenuItemClick, isOpen }: CreditsProps) {
           </div>
           <div className="ia-container">
             <div className="credits__in">
-              {data?.text && (
+              {text && (
                 <m.div
                   className="content-entry "
                   initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
                   animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
                   exit={{ opacity: 0, scale: 0 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.text) }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }}
                 />
               )}
               <m.div
@@ -91,17 +78,26 @@ export default function Credits({ handleMenuItemClick, isOpen }: CreditsProps) {
                   </defs>
                 </svg>
               </m.div>
+              {(agency.footerCreditsText || (agency.agencyLogo && agency.agencyUrl)) && (
               <m.div
                 initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
                 animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
                 exit={{ opacity: 0, scale: 0 }}
                 transition={{ duration: 0.5, delay: 0.9 }}
               >
-                <p className="fz-6 bottom-notice">This site was made of stardust by</p>
-                <a href="https://isadoradigitalagency.com/" target="_blank" rel="noreferrer">
-                  <img src="/images/ida-logo.svg" alt="IDA Logo" />
-                </a>
+                {agency.footerCreditsText && (
+                  <p className="fz-6 bottom-notice">{agency.footerCreditsText}</p>
+                )}
+                {agency.agencyLogo && agency.agencyUrl && (
+                  <a href={agency.agencyUrl} target="_blank" rel="noreferrer">
+                    <img
+                      src={agency.agencyLogo}
+                      alt={agency.agencyLogoAlt ?? ""}
+                    />
+                  </a>
+                )}
               </m.div>
+              )}
             </div>
           </div>
         </m.div>

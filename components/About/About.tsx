@@ -3,28 +3,15 @@
 import "./About.scss";
 import { AnimatePresence, m } from "framer-motion";
 import { sanitizeHtml } from "../../lib/sanitizeHtml";
-import { useEffect, useState } from "react";
-import type { TextContent } from "../../types/content";
+import type { AboutContent } from "../../types/content";
 
 interface AboutProps {
+  content: AboutContent;
   isOpen: boolean;
   handleMenuItemClick: (action: string) => void;
 }
 
-export default function About({ isOpen, handleMenuItemClick }: AboutProps) {
-  const [data, setData] = useState<TextContent | null>(null);
-
-  useEffect(() => {
-    fetch("/data/about.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return response.json();
-      })
-      .then(setData)
-      .catch((error) => console.error("Error loading data:", error));
-  }, []);
+export default function About({ content, isOpen, handleMenuItemClick }: AboutProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -44,15 +31,22 @@ export default function About({ isOpen, handleMenuItemClick }: AboutProps) {
           </div>
           <div className="ia-container">
             <div className="about__in">
-              <img className="mb-3" width="182" src="/images/ida-logo.svg" alt="IDA Logo" />
-              {data?.text && (
+              {content.logo && (
+                <img
+                  className="mb-3"
+                  width="182"
+                  src={content.logo}
+                  alt={content.logoAlt ?? ""}
+                />
+              )}
+              {content.text && (
                 <m.div
                   initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
                   animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
                   exit={{ opacity: 0, scale: 0 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
                   className="content-entry "
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.text) }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(content.text) }}
                 />
               )}
               <m.div
@@ -86,16 +80,18 @@ export default function About({ isOpen, handleMenuItemClick }: AboutProps) {
                   </defs>
                 </svg>
               </m.div>
+              {content.ctaLabel && content.ctaUrl && (
               <m.div
                 initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
                 animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
                 exit={{ opacity: 0, scale: 0 }}
                 transition={{ duration: 0.5, delay: 0.9 }}
               >
-                <a href="https://isadoradigitalagency.com/" target="_blank" rel="noreferrer" className="ia-btn">
-                  Let’s Talk!
+                <a href={content.ctaUrl} target="_blank" rel="noreferrer" className="ia-btn">
+                  {content.ctaLabel}
                 </a>
               </m.div>
+              )}
             </div>
           </div>
         </m.div>

@@ -1,22 +1,20 @@
 import { storyblokInit, apiPlugin, getStoryblokApi } from "@storyblok/react/rsc";
-import type { MenuData, MenuLink } from "../types/content";
+import type { MenuContent } from "../types/content";
 import {
   getBackgroundBlurPx,
   getBackgroundGradientFromConfig,
   getHeroBlock,
   getHeroTextPair,
   getMeteoritesFromStory,
+  getEmptyMenuContent,
   getScrollProgressGradientFromConfig,
   getStoryblokAssetAlt,
   getStoryblokAssetUrl,
   getStoryblokRichTextPlain,
   mapMeteoriteBlockToMeteorite,
+  mapMenuStoryToContent,
   storyblokRichTextToHtml,
 } from "./storyblok-utils";
-// Static fallback so the app never breaks if the Storyblok story doesn't
-// exist yet (or the API is unreachable). This is the same data the app used
-// to fetch client-side from /data/menu.json.
-import menuFallback from "../public/data/menu.json";
 
 // True everywhere except real production: Vercel preview deployments run with
 // NODE_ENV=production, so NODE_ENV alone can't tell QA previews apart —
@@ -34,30 +32,23 @@ storyblokInit({
   apiOptions: { region: "eu" }, // Space region — switch to "us" if it ever moves
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapLinks = (blocks: any[] = []): MenuLink[] =>
-  blocks.map((b) => ({ title: b.title, action: b.action }));
-
 /**
- * Fetches the "menu" story from Storyblok and maps it back into the existing
- * MenuData shape the <Menu> component already expects. Falls back to the local
- * JSON if the story isn't published yet or the request fails.
+ * Fetches the "menu" story from Storyblok and maps it into MenuContent.
+ * Returns empty content (with console warnings) if the story is missing or the request fails.
  */
-export async function getMenu(): Promise<MenuData> {
+export async function getMenuContent(preview = false): Promise<MenuContent> {
   try {
     const { data } = await getStoryblokApi().get("cdn/stories/menu", {
-      version: "draft", // use "published" in production with the public token
+      version: preview || isPreviewEnvironment ? "draft" : "published",
+      cv: preview ? Date.now() : undefined,
     });
-    const content = data.story.content;
-    return [{ large: mapLinks(content.large), small: mapLinks(content.small) }];
+    return mapMenuStoryToContent(data.story);
   } catch (err) {
-    // Concise log — the full Storyblok error object is very noisy. A 404 here
-    // just means the "menu" story hasn't been created/published yet.
     const status = (err as { status?: number })?.status;
-    console.warn(
-      `[storyblok] menu fetch failed (${status ?? "error"}), using JSON fallback`
+    console.error(
+      `[storyblok] menu fetch failed (${status ?? "error"}), returning empty menu content`
     );
-    return menuFallback as MenuData;
+    return getEmptyMenuContent();
   }
 }
 
