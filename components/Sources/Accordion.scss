@@ -60,6 +60,11 @@
       font-weight: 300;
       margin-bottom: 2rem;
       padding: 0 2.4rem;
+
+      strong,
+      b {
+        font-weight: 600;
+      }
     }
     .ia-link {
       margin-top: .8rem;
