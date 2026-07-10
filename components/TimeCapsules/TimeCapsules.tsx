@@ -52,6 +52,17 @@ export default function TimeCapsules({
   const [isRead, setIsRead] = useState(false);
   const [timeCapsulesTitleActive, setTimeCapsulesTitleActive] = useState(false);
 
+  // Latest values for GSAP callbacks without re-creating the ScrollTrigger timelines
+  const isJumpingRef = useRef(isJumping);
+  useEffect(() => {
+    isJumpingRef.current = isJumping;
+  }, [isJumping]);
+
+  const activeItemRef = useRef(activeItem);
+  useEffect(() => {
+    activeItemRef.current = activeItem;
+  }, [activeItem]);
+
   const options = {
     iterations: 8,
     speed: 0.05,
@@ -114,7 +125,7 @@ export default function TimeCapsules({
                   start: "top center",
                   end: "top top",
                   scrub: 1,
-                  snap: isJumping
+                  snap: isJumpingRef.current
                     ? undefined
                     : {
                         snapTo: "labelsDirectional",
@@ -122,7 +133,7 @@ export default function TimeCapsules({
                         ease: "power2.out",
                       },
                   onEnter: () => {
-                    if (!isJumping) {
+                    if (!isJumpingRef.current) {
                       toggleNav(true);
                     }
                   },
@@ -148,7 +159,7 @@ export default function TimeCapsules({
                   pinSpacing: false,
                   id: "TimeCapsules" + item.slug,
                   anticipatePin: 1,
-                  snap: isJumping
+                  snap: isJumpingRef.current
                     ? undefined
                     : {
                         snapTo: "labelsDirectional",
@@ -156,40 +167,40 @@ export default function TimeCapsules({
                         ease: "power2.out",
                       },
                   onEnter: () => {
-                    if (!isJumping) {
+                    if (!isJumpingRef.current) {
                       toggleNav(true);
                     }
                   },
                   onUpdate: (self) => {
-                    if (!isJumping && self.isActive) {
+                    if (!isJumpingRef.current && self.isActive) {
                       if (
                         self.direction === -1 &&
                         self.progress < 0.98 &&
-                        activeItem !== index
+                        activeItemRef.current !== index
                       ) {
                         handleActiveItem(index);
                       } else if (
                         self.direction === 1 &&
                         self.progress > 0.02 &&
-                        activeItem !== index
+                        activeItemRef.current !== index
                       ) {
                         handleActiveItem(index);
                       }
                     }
                   },
                   onEnterBack: () => {
-                    if (!isJumping) {
+                    if (!isJumpingRef.current) {
                       toggleNav(true);
                       handleActiveItem(index);
                     }
                   },
                   onLeaveBack: () => {
-                    if (!isJumping && index === 0) {
+                    if (!isJumpingRef.current && index === 0) {
                       toggleNav(false);
                     }
                   },
                   onLeave: () => {
-                    if (!isJumping && lastTimeCapsule) {
+                    if (!isJumpingRef.current && lastTimeCapsule) {
                       toggleNav(false);
                     }
                   },
@@ -209,10 +220,10 @@ export default function TimeCapsules({
                   {
                     opacity: 1,
                     onComplete: () => {
-                      if (!isJumping) setTimeCapsulesTitleActive(true);
+                      if (!isJumpingRef.current) setTimeCapsulesTitleActive(true);
                     },
                     onReverseComplete: () => {
-                      if (!isJumping) setTimeCapsulesTitleActive(true);
+                      if (!isJumpingRef.current) setTimeCapsulesTitleActive(true);
                     },
                   },
                   "<"
@@ -297,7 +308,7 @@ export default function TimeCapsules({
       ctx.revert();
       mm.revert();
     };
-  }, [isLoaded]);
+  }, [isLoaded, index, item, lastTimeCapsule, toggleNav, handleActiveItem]);
 
   function formatDate(dateString: string) {
     // Check if dateString is in the format YYYY-MM-DD

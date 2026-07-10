@@ -714,7 +714,6 @@ export function getEmptyMenuContent(): MenuContent {
 }
 
 export function mapMenuStoryToContent(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   story?: { content?: MenuStoryblokContent } | null
 ): MenuContent {
   const content = story?.content;

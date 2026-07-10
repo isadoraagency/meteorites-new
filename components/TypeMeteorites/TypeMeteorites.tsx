@@ -45,6 +45,12 @@ export default function TypeMeteorites({
   const [animateTitle, setAnimateTitle] = useState(false);
   const activeTitleRef = useRef<HTMLHeadingElement | null>(null);
 
+  // Latest value for GSAP callbacks without re-creating the ScrollTrigger timeline
+  const isJumpingRef = useRef(isJumping);
+  useEffect(() => {
+    isJumpingRef.current = isJumping;
+  }, [isJumping]);
+
   const options = {
     iterations: 4,
     speed: 0.08,
@@ -67,7 +73,7 @@ export default function TypeMeteorites({
 
   useEffect(() => {
     // First, disable animation to reset if step changes
-    setAnimateTitle(false);
+    const resetId = setTimeout(() => setAnimateTitle(false), 0);
 
     // Small delay to ensure animation flag is reset
     const timeoutId = setTimeout(() => {
@@ -81,7 +87,10 @@ export default function TypeMeteorites({
       }
     }, 10);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(resetId);
+      clearTimeout(timeoutId);
+    };
   }, [activeStep]);
 
   const handleItemActivation = (step: number) => {
@@ -202,37 +211,37 @@ export default function TypeMeteorites({
           pin: true,
           id: "type-meteorites-scroll",
           anticipatePin: 1,
-          snap: isJumping
+          snap: isJumpingRef.current
             ? undefined
             : {
-                snapTo: "labelsDirectional",
-                duration: { min: 0.3, max: 2 },
-                ease: "power2.out",
-              },
+              snapTo: "labelsDirectional",
+              duration: { min: 0.3, max: 2 },
+              ease: "power2.out",
+            },
           onEnter: () => {
-            if (isJumping) return;
+            if (isJumpingRef.current) return;
             toggleNav?.(false);
             gsap.set(titleRef.current, {
               autoAlpha: 1,
               onComplete: () => {
-                if (isJumping) return;
+                if (isJumpingRef.current) return;
                 setAnimateMainTitle(true);
                 setTimeout(() => {
-                  if (!isJumping) setAnimateMainTitle(false);
+                  if (!isJumpingRef.current) setAnimateMainTitle(false);
                 }, 2000);
               },
             });
           },
           onEnterBack: () => {
-            if (isJumping) return;
+            if (isJumpingRef.current) return;
             toggleNav?.(false);
           },
           onLeave: () => {
-            if (isJumping) return;
+            if (isJumpingRef.current) return;
             toggleNav?.(false);
           },
           onLeaveBack: () => {
-            if (isJumping) return;
+            if (isJumpingRef.current) return;
             gsap.set(titleRef.current, {
               autoAlpha: 0,
             });
@@ -313,10 +322,10 @@ export default function TypeMeteorites({
           autoAlpha: 1,
           y: 0,
           onComplete: () => {
-            if (isJumping) return;
+            if (isJumpingRef.current) return;
             setAnimateMainDesc(true);
             setTimeout(() => {
-              if (!isJumping) setAnimateMainDesc(false);
+              if (!isJumpingRef.current) setAnimateMainDesc(false);
             }, 2000);
           },
         },
@@ -401,7 +410,7 @@ export default function TypeMeteorites({
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [isLoaded, items, R]);
+  }, [isLoaded, items, R, toggleNav]);
 
   return (
     <div id="Types">

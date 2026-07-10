@@ -31,26 +31,6 @@ const VideoFrame = ({ videoPath, totalFrames = 30, framesPath = null }: VideoFra
   const [isLoading, setIsLoading] = useState(true);
   const pictureRefs = useRef<RefObject<HTMLPictureElement | null>[]>([]);
 
-  // Function to determine the correct path to frames
-  const getFramesPath = () => {
-    // If frames path is explicitly provided, use it
-    if (framesPath) return framesPath;
-
-    // If no video path is provided, use default path
-    if (!videoPath) return "/frames";
-
-    try {
-      const pathParts = videoPath.split("/");
-      const fileName = pathParts.pop() || "";
-      const fileNameWithoutExt = fileName.split(".").slice(0, -1).join(".") || "frames";
-      const framesDir = [...pathParts, fileNameWithoutExt].join("/");
-      return framesDir;
-    } catch (error) {
-      console.error("Error processing videoPath:", error);
-      return "/frames"; // Fallback path
-    }
-  };
-
   // Function to pad numbers with leading zeros
   function pad(n: number) {
     return String(n).padStart(3, "0");
@@ -58,6 +38,26 @@ const VideoFrame = ({ videoPath, totalFrames = 30, framesPath = null }: VideoFra
 
   // Load all frame images
   useEffect(() => {
+    // Determine the correct path to frames
+    const getFramesPath = () => {
+      // If frames path is explicitly provided, use it
+      if (framesPath) return framesPath;
+
+      // If no video path is provided, use default path
+      if (!videoPath) return "/frames";
+
+      try {
+        const pathParts = videoPath.split("/");
+        const fileName = pathParts.pop() || "";
+        const fileNameWithoutExt = fileName.split(".").slice(0, -1).join(".") || "frames";
+        const framesDir = [...pathParts, fileNameWithoutExt].join("/");
+        return framesDir;
+      } catch (error) {
+        console.error("Error processing videoPath:", error);
+        return "/frames"; // Fallback path
+      }
+    };
+
     const path = getFramesPath();
 
     const imagesList: FrameImage[] = [];
@@ -82,6 +82,7 @@ const VideoFrame = ({ videoPath, totalFrames = 30, framesPath = null }: VideoFra
     if (images.length === 0) return;
 
     let loadedCount = 0;
+    let cleanupCanvas: (() => void) | undefined;
     const imgElements: HTMLImageElement[] = [];
 
     // Create all image elements for preloading
@@ -92,7 +93,7 @@ const VideoFrame = ({ videoPath, totalFrames = 30, framesPath = null }: VideoFra
         setImagesLoaded(loadedCount);
         if (loadedCount === totalFrames) {
           setIsLoading(false);
-          initializeCanvas();
+          cleanupCanvas = initializeCanvas();
         }
       };
       img.onerror = (e) => {
@@ -102,12 +103,96 @@ const VideoFrame = ({ videoPath, totalFrames = 30, framesPath = null }: VideoFra
         setImagesLoaded(loadedCount);
         if (loadedCount === totalFrames) {
           setIsLoading(false);
-          initializeCanvas();
+          cleanupCanvas = initializeCanvas();
         }
       };
       img.src = image.jpg;
       imgElements.push(img);
     });
+
+    // Initialize Canvas and ScrollTrigger
+    function initializeCanvas() {
+      if (!canvasRef.current) return;
+
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      const container = containerRef.current;
+
+      if (!container || !ctx) return;
+
+      // Function to draw a frame on the canvas
+      const drawFrame = (frameIndex: number) => {
+        if (!pictureRefs.current[frameIndex]) return;
+
+        const pictureEl = pictureRefs.current[frameIndex].current;
+        if (!pictureEl) return;
+
+        const imgEl = pictureEl.querySelector("img");
+        if (!imgEl || !imgEl.complete) return;
+
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the image while maintaining aspect ratio
+        const imgRatio = imgEl.naturalWidth / imgEl.naturalHeight;
+        const canvasRatio = canvas.width / canvas.height;
+
+        let drawWidth, drawHeight, offsetX, offsetY;
+
+        if (imgRatio > canvasRatio) {
+          // Image is wider than canvas relatively
+          drawHeight = canvas.height;
+          drawWidth = drawHeight * imgRatio;
+          offsetX = (canvas.width - drawWidth) / 2;
+          offsetY = 0;
+        } else {
+          // Image is taller than canvas relatively
+          drawWidth = canvas.width;
+          drawHeight = drawWidth / imgRatio;
+          offsetX = 0;
+          offsetY = (canvas.height - drawHeight) / 2;
+        }
+
+        ctx.drawImage(imgEl, offsetX, offsetY, drawWidth, drawHeight);
+      };
+
+      // Set canvas size based on container dimensions
+      const setCanvasSize = () => {
+        const rect = container.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+
+        // Redraw current frame after resizing
+        const currentFrame = Math.floor((totalFrames - 1) / 2); // Middle frame
+        drawFrame(currentFrame);
+      };
+
+      setCanvasSize();
+      window.addEventListener("resize", setCanvasSize);
+
+      // Draw the first frame
+      drawFrame(0);
+
+      // Setup ScrollTrigger for scroll-based animation
+      const scrollTrigger = ScrollTrigger.create({
+        trigger: container,
+        start: "top top",
+        end: "+=200%",
+        pin: true,
+        pinSpacing: true,
+        scrub: 1,
+        onUpdate: (self) => {
+          const frameIndex = Math.floor(self.progress * (totalFrames - 1));
+          const boundedIndex = Math.max(0, Math.min(frameIndex, totalFrames - 1));
+          drawFrame(boundedIndex);
+        },
+      });
+
+      return () => {
+        window.removeEventListener("resize", setCanvasSize);
+        if (scrollTrigger) scrollTrigger.kill();
+      };
+    }
 
     return () => {
       // Cleanup when unmounting
@@ -115,92 +200,9 @@ const VideoFrame = ({ videoPath, totalFrames = 30, framesPath = null }: VideoFra
         img.onload = null;
         img.onerror = null;
       });
+      cleanupCanvas?.();
     };
   }, [images, totalFrames]);
-
-  // Initialize Canvas and ScrollTrigger
-  const initializeCanvas = () => {
-    if (!canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const container = containerRef.current;
-
-    if (!container || !ctx) return;
-
-    // Function to draw a frame on the canvas
-    const drawFrame = (frameIndex: number) => {
-      if (!pictureRefs.current[frameIndex]) return;
-
-      const pictureEl = pictureRefs.current[frameIndex].current;
-      if (!pictureEl) return;
-
-      const imgEl = pictureEl.querySelector("img");
-      if (!imgEl || !imgEl.complete) return;
-
-      // Clear the canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw the image while maintaining aspect ratio
-      const imgRatio = imgEl.naturalWidth / imgEl.naturalHeight;
-      const canvasRatio = canvas.width / canvas.height;
-
-      let drawWidth, drawHeight, offsetX, offsetY;
-
-      if (imgRatio > canvasRatio) {
-        // Image is wider than canvas relatively
-        drawHeight = canvas.height;
-        drawWidth = drawHeight * imgRatio;
-        offsetX = (canvas.width - drawWidth) / 2;
-        offsetY = 0;
-      } else {
-        // Image is taller than canvas relatively
-        drawWidth = canvas.width;
-        drawHeight = drawWidth / imgRatio;
-        offsetX = 0;
-        offsetY = (canvas.height - drawHeight) / 2;
-      }
-
-      ctx.drawImage(imgEl, offsetX, offsetY, drawWidth, drawHeight);
-    };
-
-    // Set canvas size based on container dimensions
-    const setCanvasSize = () => {
-      const rect = container.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-
-      // Redraw current frame after resizing
-      const currentFrame = Math.floor((totalFrames - 1) / 2); // Middle frame
-      drawFrame(currentFrame);
-    };
-
-    setCanvasSize();
-    window.addEventListener("resize", setCanvasSize);
-
-    // Draw the first frame
-    drawFrame(0);
-
-    // Setup ScrollTrigger for scroll-based animation
-    const scrollTrigger = ScrollTrigger.create({
-      trigger: container,
-      start: "top top",
-      end: "+=200%",
-      pin: true,
-      pinSpacing: true,
-      scrub: 1,
-      onUpdate: (self) => {
-        const frameIndex = Math.floor(self.progress * (totalFrames - 1));
-        const boundedIndex = Math.max(0, Math.min(frameIndex, totalFrames - 1));
-        drawFrame(boundedIndex);
-      },
-    });
-
-    return () => {
-      window.removeEventListener("resize", setCanvasSize);
-      if (scrollTrigger) scrollTrigger.kill();
-    };
-  };
 
   return (
     <div className="scroll-section" ref={containerRef}>

@@ -18,20 +18,21 @@ export function useDecodeText(
   enabled: boolean,
   options: DecodeTextOptions = {}
 ) {
+  // Destructured to primitives so inline options objects don't retrigger the effect
+  const {
+    chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789!@#$%^&*",
+    iterations = 5,
+    speed = 0.1,
+    stagger = 0.05,
+    changeDelay = 70,
+    opacity = 0,
+    blured = 0, // Starting with a visible blur value
+  } = options;
+
   useLayoutEffect(() => {
     if (!ref.current) return;
     const split = new SplitText(ref.current, { type: "words, chars" });
     if (!enabled || !ref.current) return;
-
-    const {
-      chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789!@#$%^&*",
-      iterations = 5,
-      speed = 0.1,
-      stagger = 0.05,
-      changeDelay = 70,
-      opacity = 0,
-      blured = 0, // Starting with a visible blur value
-    } = options;
 
     split.chars.forEach((char, index) => {
       // Set initial blur
@@ -67,5 +68,5 @@ export function useDecodeText(
     });
 
     return () => split.revert();
-  }, [enabled]);
+  }, [enabled, ref, chars, iterations, speed, stagger, changeDelay, opacity, blured]);
 }
