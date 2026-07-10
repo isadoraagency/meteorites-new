@@ -24,6 +24,14 @@ interface IntroProps {
   hero?: HeroSectionBlock | null;
 }
 
+const options = {
+  iterations: 4,
+  speed: 0.05,
+  stagger: 0.01,
+  blured: 5,
+  opacity: 0.9,
+};
+
 function renderMultilineText(text: string) {
   return text.split("\n").map((line, i, lines) => (
     <span key={i}>
@@ -74,13 +82,11 @@ export default function Intro({
   const [triggerIntro5, setTriggerIntro5] = useState(false);
   const [triggerIntro6, setTriggerIntro6] = useState(false);
 
-  const options = {
-    iterations: 4,
-    speed: 0.05,
-    stagger: 0.01,
-    blured: 5,
-    opacity: 0.9,
-  };
+  // Latest value for GSAP callbacks without re-creating the ScrollTrigger timeline
+  const isJumpingRef = useRef(isJumping);
+  useEffect(() => {
+    isJumpingRef.current = isJumping;
+  }, [isJumping]);
 
   useDecodeText(titleRef, isLoaded);
   useDecodeText(textRef, isLoaded);
@@ -118,7 +124,7 @@ export default function Intro({
       }
     }, introRef);
     return () => ctx2.revert();
-  }, [isLoaded]);
+  }, [isLoaded, toggleAnimationComplete]);
 
   useEffect(() => {
     const mm = gsap.matchMedia();
@@ -152,18 +158,18 @@ export default function Intro({
               invalidateOnRefresh: true,
 
               onEnter: () => {
-                if (isJumping) return;
+                if (isJumpingRef.current) return;
                 toggleNav?.(false);
               },
               onEnterBack: () => {
-                if (isJumping) return;
+                if (isJumpingRef.current) return;
                 toggleNav?.(false);
               },
               onLeave: () => {
-                if (isJumping) return;
+                if (isJumpingRef.current) return;
                 toggleNav?.(true);
               },
-              snap: isJumping
+              snap: isJumpingRef.current
                 ? undefined
                 : {
                     snapTo: "labelsDirectional",
@@ -265,7 +271,7 @@ export default function Intro({
               duration: 1.5,
               ease: "power1.inOut",
               onComplete: () => {
-                if (!isJumping) setTriggerIntro5(false);
+                if (!isJumpingRef.current) setTriggerIntro5(false);
               },
             })
             .to(
@@ -292,7 +298,7 @@ export default function Intro({
               {
                 opacity: 1,
                 onComplete: () => {
-                  if (!isJumping) setTriggerIntro5(true);
+                  if (!isJumpingRef.current) setTriggerIntro5(true);
                 },
               },
               "-=0.1"
@@ -320,7 +326,7 @@ export default function Intro({
               {
                 opacity: 1,
                 onComplete: () => {
-                  if (!isJumping) setTriggerIntro6(true);
+                  if (!isJumpingRef.current) setTriggerIntro6(true);
                 },
               },
               "-=0.1"
@@ -352,7 +358,7 @@ export default function Intro({
       ctx.revert();
       mm.revert();
     };
-  }, [animationComplete, backgroundBlur]);
+  }, [animationComplete, backgroundBlur, toggleNav]);
 
   useEffect(() => {
     const ro = new ResizeObserver(() => {

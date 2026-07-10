@@ -3,7 +3,7 @@
 import Intro from "./Intro/Intro";
 import Navigation from "./Navigation/Navigation";
 import TimeCapsules from "./TimeCapsules/TimeCapsules";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { LazyMotion, domAnimation } from "framer-motion";
 import Menu from "./Menu/Menu";
 import Cursor from "./Cursor/Cursor";
@@ -61,9 +61,9 @@ function App({ menuContent, initialMenuStory, initialStory, initialGlobalConfig,
     window.scrollTo(0, 0);
   };
 
-  const toggleAnimationComplete = () => {
-    setAnimationComplete(!animationComplete);
-  };
+  const toggleAnimationComplete = useCallback(() => {
+    setAnimationComplete((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
@@ -93,23 +93,16 @@ function App({ menuContent, initialMenuStory, initialStory, initialGlobalConfig,
     return () => clearInterval(interval);
   }, [onComplete]);
 
-  const handleActiveItem = (e: number | null) => {
+  const handleActiveItem = useCallback((e: number | null) => {
     setActiveItem(e);
-  };
+  }, []);
 
-  useEffect(() => {
-    // Only set active item if we have items and no active item is selected yet
-    if (items.length > 0 && activeItem === null) {
-      setActiveItem(0);
-    } else if (items.length === 0 && activeItem !== null) {
-      // Reset active item if items array becomes empty
-      setActiveItem(null);
-    }
-  }, [items, activeItem]);
+  // Derived: default to the first item when none is selected, none when there are no items
+  const resolvedActiveItem = items.length > 0 ? (activeItem ?? 0) : null;
 
-  const toggleNav = (e: boolean) => {
+  const toggleNav = useCallback((e: boolean) => {
     setNavActive(e);
-  };
+  }, []);
   const formatProgress = (number: number) => {
     return number.toString().padStart(3, "0");
   };
@@ -168,7 +161,7 @@ function App({ menuContent, initialMenuStory, initialStory, initialGlobalConfig,
             toggleNav={toggleNav}
             lastTimeCapsule={items[0] === items[items.length - 1]}
             handleActiveItem={handleActiveItem}
-            activeItem={activeItem}
+            activeItem={resolvedActiveItem}
             isJumping={isJumping}
           />
 
@@ -184,7 +177,7 @@ function App({ menuContent, initialMenuStory, initialStory, initialGlobalConfig,
                     index={actualIndex}
                     item={item}
                     items={items}
-                    activeItem={activeItem}
+                    activeItem={resolvedActiveItem}
                     toggleNav={toggleNav}
                     lastTimeCapsule={item === items[items.length - 1]}
                     handleActiveItem={handleActiveItem}
@@ -197,12 +190,12 @@ function App({ menuContent, initialMenuStory, initialStory, initialGlobalConfig,
         </div>
       )}
       <Footer isLoaded={animationComplete} />
-      {activeItem !== null && activeItem > -1 && (
+      {resolvedActiveItem !== null && resolvedActiveItem > -1 && (
         <Navigation
           items={items}
           isLoaded={isLoaded}
           navActive={navActive}
-          activeItem={activeItem}
+          activeItem={resolvedActiveItem}
           handleActiveItem={handleActiveItem}
           setIsJumping={setIsJumping}
         />

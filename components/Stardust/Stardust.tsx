@@ -6,6 +6,7 @@ import { AnimatePresence, m } from "framer-motion";
 import { gsap, ScrollTrigger } from "../../lib/gsap";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { Application } from "@splinetool/runtime";
 import type { StardustCreatorContent } from "../../lib/storyblok-utils";
 
 // @splinetool/react-spline renders WebGL/canvas on import and must not run
@@ -61,15 +62,11 @@ const Stardust = ({
   const [popupActive, setPopupActive] = useState(false);
   const sturdust = useRef<HTMLDivElement>(null);
 
-  const splineRef = useRef<any>(null);
+  const splineRef = useRef<Application | null>(null);
 
-  const currentOption = options[selectedIndex] ?? null;
-
-  useEffect(() => {
-    if (selectedIndex >= options.length) {
-      setSelectedIndex(0);
-    }
-  }, [options.length, selectedIndex]);
+  // Derived: fall back to the first option when the selection goes out of range
+  const safeSelectedIndex = selectedIndex < options.length ? selectedIndex : 0;
+  const currentOption = options[safeSelectedIndex] ?? null;
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -114,14 +111,17 @@ const Stardust = ({
     return () => ctxs.revert();
   }, [isLoaded]);
 
-  const onSplineLoad = (splineApp: any) => {
+  const onSplineLoad = (splineApp: Application) => {
     splineRef.current = splineApp;
 
     const viewportHeight = window.innerHeight;
 
-    if (splineApp && splineApp.runtime && splineApp.runtime.camera) {
-      const camera = splineApp.runtime.camera;
+    // `runtime` is not part of the public Application typings
+    const camera = (
+      splineApp as { runtime?: { camera?: { position: { z: number } } } }
+    ).runtime?.camera;
 
+    if (camera) {
       if (viewportHeight < 768) {
         camera.position.z *= 1.5;
       }
@@ -235,7 +235,7 @@ const Stardust = ({
               <div className="spline-tabs">
                 {options.map((item, index) => (
                   <button
-                    className={`ia-btn ia-btn--sm ${selectedIndex === index ? "active" : ""}`}
+                    className={`ia-btn ia-btn--sm ${safeSelectedIndex === index ? "active" : ""}`}
                     key={item.value}
                     onClick={() => setSelectedIndex(index)}
                   >
