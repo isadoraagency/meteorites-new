@@ -14,6 +14,23 @@ code {
 .text-light {font-weight: 300 !important;}
 .text-thin {font-weight: 100 !important;}
 
+// Re-assert richtext marks — the global reset includes `strong`/`em`/`b`/`i`
+// and parent utilities like `.text-light` can make UA `bolder` look identical.
+strong,
+b {
+  font-weight: 600;
+}
+em,
+i {
+  font-style: italic;
+}
+.text-light strong,
+.text-light b,
+.text-thin strong,
+.text-thin b {
+  font-weight: 600 !important;
+}
+
 h1,.h1,h2,.h2,h3,.h3,h4,.h4,h5,.h5,h6,.h6 {
   font-weight: 500;
   margin-bottom: 2rem;

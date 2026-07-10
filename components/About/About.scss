@@ -24,6 +24,13 @@
   .about__in {
     max-width: 720px;
     margin: 0 auto;
+
+    .content-entry {
+      strong,
+      b {
+        font-weight: 600 !important;
+      }
+    }
   }
   .close {
     position: absolute;
