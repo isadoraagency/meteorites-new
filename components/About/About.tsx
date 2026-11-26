@@ -2,8 +2,6 @@
 
 import "./About.scss";
 import { AnimatePresence, m } from "framer-motion";
-import { scrollLockScrollable } from "../../hooks/useScrollLock";
-import { fadeUp, overlayReveal } from "../../lib/motion";
 import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import type { AboutContent } from "../../types/content";
 
@@ -19,7 +17,10 @@ export default function About({ content, isOpen, handleMenuItemClick }: AboutPro
       {isOpen && (
         <m.div
           className="about"
-          {...overlayReveal}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
+          transition={{ duration: 0.5 }}
         >
           <div
             className="about__close close"
@@ -28,7 +29,7 @@ export default function About({ content, isOpen, handleMenuItemClick }: AboutPro
           >
             <i></i>
           </div>
-          <div className="ia-container" {...scrollLockScrollable}>
+          <div className="ia-container">
             <div className="about__in">
               {content.logo && (
                 <img
@@ -40,13 +41,19 @@ export default function About({ content, isOpen, handleMenuItemClick }: AboutPro
               )}
               {content.text && (
                 <m.div
-                  {...fadeUp(0.3)}
+                  initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
+                  animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
+                  exit={{ opacity: 0, scale: 0 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
                   className="content-entry "
                   dangerouslySetInnerHTML={{ __html: sanitizeHtml(content.text) }}
                 />
               )}
               <m.div
-                {...fadeUp(0.4)}
+                initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
+                animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
               >
                 <svg className="mb-2" xmlns="http://www.w3.org/2000/svg" width="56" height="76" viewBox="0 0 56 76" fill="none">
                   <path className="starPulse" d="M10.8452 35.259C23.7792 41.7409 24.3213 43.3142 17.9872 61.1063C17.9592 61.1832 18.0956 61.2391 18.1306 61.1657C26.0316 44.0134 27.5216 43.2652 41.3055 47.6599C41.3964 47.6879 41.4384 47.583 41.3544 47.5411C28.4204 41.0591 27.8783 39.4858 34.2124 21.6938C34.2404 21.6168 34.104 21.5609 34.069 21.6343C26.168 38.7866 24.678 39.5348 10.8941 35.1436C10.8032 35.1156 10.7612 35.2205 10.8452 35.2625V35.259Z" fill="url(#paint0_linear_1605_3916)"/>
@@ -75,7 +82,10 @@ export default function About({ content, isOpen, handleMenuItemClick }: AboutPro
               </m.div>
               {content.ctaLabel && content.ctaUrl && (
               <m.div
-                {...fadeUp(0.5)}
+                initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
+                animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{ duration: 0.5, delay: 0.9 }}
               >
                 <a href={content.ctaUrl} target="_blank" rel="noreferrer" className="ia-btn">
                   {content.ctaLabel}

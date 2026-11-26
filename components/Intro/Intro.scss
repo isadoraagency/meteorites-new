@@ -75,6 +75,7 @@
   top: 50%;
   transform: translateY(-50%);
   letter-spacing: 0.4rem;
+  transition: opacity .5s;
   text-shadow: 0 0 5px rgba(0,0,0,0.9);
 }
 .intro-4 {
@@ -96,6 +97,7 @@
     width: 100vw;
     left: 0;
     white-space: nowrap;
+    transition: opacity 0.5s;
   }
 }
 .intro-5,

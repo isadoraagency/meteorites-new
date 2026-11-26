@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { LABEL_SNAP } from "../../lib/scroll";
 import { gsap, ScrollTrigger } from "../../lib/gsap";
 
 import "./TypeMeteorites.scss";
@@ -212,7 +211,13 @@ export default function TypeMeteorites({
           pin: true,
           id: "type-meteorites-scroll",
           anticipatePin: 1,
-          snap: isJumpingRef.current ? undefined : LABEL_SNAP,
+          snap: isJumpingRef.current
+            ? undefined
+            : {
+              snapTo: "labelsDirectional",
+              duration: { min: 0.3, max: 2 },
+              ease: "power2.out",
+            },
           onEnter: () => {
             if (isJumpingRef.current) return;
             toggleNav?.(false);
@@ -273,9 +278,6 @@ export default function TypeMeteorites({
             scale: 0.8 + progress * 0.2,
             filter: `blur(${(1 - progress) * 5}px)`,
             duration: 0.5,
-            // Linear between points: the default ease-out made every one of
-            // the 20 segments slow down and restart, so the spiral stuttered
-            ease: "none",
           });
         }
 

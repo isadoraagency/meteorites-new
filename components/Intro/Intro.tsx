@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { LABEL_SNAP } from "../../lib/scroll";
 import { gsap, ScrollTrigger } from "../../lib/gsap";
 import { addDecodeToTimeline } from "../../hooks/addDecodeToTimeline";
 import { useDecodeText } from "../../hooks/useDecodeText";
@@ -170,7 +169,13 @@ export default function Intro({
                 if (isJumpingRef.current) return;
                 toggleNav?.(true);
               },
-              snap: isJumpingRef.current ? undefined : LABEL_SNAP,
+              snap: isJumpingRef.current
+                ? undefined
+                : {
+                    snapTo: "labelsDirectional",
+                    duration: { min: 0.3, max: 2 },
+                    ease: "power2.out",
+                  },
             },
           });
 

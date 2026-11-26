@@ -1,8 +1,4 @@
 @use "../../styles/utils/variables" as *;
-$accordion-ease: cubic-bezier(0.22, 1, 0.36, 1);
-.accordion--open .accordion-content {
-  grid-template-rows: 1fr;
-}
 .accordion {
   border-top: 1px solid #8982D9;
   &:last-child {
@@ -41,14 +37,12 @@ $accordion-ease: cubic-bezier(0.22, 1, 0.36, 1);
       }
       &:after {
         transform: rotate(-90deg);
-        transition: transform 0.4s $accordion-ease;
       }
     }
     &.open {
       i {
-        // plus morphs into minus instead of popping
         &:after {
-          transform: rotate(0deg);
+          display: none;
         }
       }
     }
@@ -57,13 +51,6 @@ $accordion-ease: cubic-bezier(0.22, 1, 0.36, 1);
     padding-bottom: 1px;
   }
   &-content {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.5s $accordion-ease;
-    &__clip {
-      min-height: 0;
-      overflow: hidden;
-    }
 
     h3 {
       margin-bottom: 2rem;

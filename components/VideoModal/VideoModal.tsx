@@ -2,8 +2,6 @@
 
 import { AnimatePresence, m } from "framer-motion";
 import "./VideoModal.scss";
-import { scrollLockScrollable, useScrollLock } from "../../hooks/useScrollLock";
-import { overlayReveal } from "../../lib/motion";
 
 interface VideoModalProps {
   video?: string;
@@ -20,8 +18,6 @@ export default function VideoModal({
   toggleVideo,
   isVideo,
 }: VideoModalProps) {
-  useScrollLock(isVideo);
-
   return (
     <div>
       <AnimatePresence>
@@ -29,9 +25,12 @@ export default function VideoModal({
           <m.div
             key="meteorite-video"
             className="video-modal"
-            {...overlayReveal}
+            initial={{ opacity: 0, scale: 0, borderRadius: 1000 }}
+            animate={{ opacity: 1, scale: 1, borderRadius: 0 }}
+            exit={{ opacity: 0, scale: 0, borderRadius: 1000 }}
+            transition={{ duration: 0.5 }}
           >
-            <div className="video-modal-in" {...scrollLockScrollable}>
+            <div className="video-modal-in">
               <div className="video-modal__close close" onClick={() => toggleVideo(false)}>
                 <i></i>
               </div>

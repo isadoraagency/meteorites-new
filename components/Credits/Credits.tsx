@@ -2,8 +2,6 @@
 
 import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import { AnimatePresence, m } from "framer-motion";
-import { scrollLockScrollable } from "../../hooks/useScrollLock";
-import { fadeUp, overlayReveal } from "../../lib/motion";
 import "./Credits.scss";
 import type { MenuAgency } from "../../types/content";
 
@@ -19,7 +17,10 @@ export default function Credits({ text, agency, handleMenuItemClick, isOpen }: C
     <AnimatePresence>
       {isOpen && (
         <m.div
-          {...overlayReveal}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
+          transition={{ duration: 0.5 }}
           className="credits"
         >
           <div
@@ -29,17 +30,23 @@ export default function Credits({ text, agency, handleMenuItemClick, isOpen }: C
           >
             <i></i>
           </div>
-          <div className="ia-container" {...scrollLockScrollable}>
+          <div className="ia-container">
             <div className="credits__in">
               {text && (
                 <m.div
                   className="content-entry "
-                  {...fadeUp(0.3)}
+                  initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
+                  animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
+                  exit={{ opacity: 0, scale: 0 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
                   dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }}
                 />
               )}
               <m.div
-                {...fadeUp(0.4)}
+                initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
+                animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
               >
                 <svg className="mb-2" xmlns="http://www.w3.org/2000/svg" width="65" height="88" viewBox="0 0 65 88" fill="none">
                   <g clipPath="url(#clip0_1598_1329)">
@@ -73,7 +80,10 @@ export default function Credits({ text, agency, handleMenuItemClick, isOpen }: C
               </m.div>
               {(agency.footerCreditsText || (agency.agencyLogo && agency.agencyUrl)) && (
               <m.div
-                {...fadeUp(0.5)}
+                initial={{ opacity: 0, filter: "blur(5px)", y: "50px" }}
+                animate={{ opacity: 1, filter: "blur(0)", y: 0 }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{ duration: 0.5, delay: 0.9 }}
               >
                 {agency.footerCreditsText && (
                   <p className="fz-6 bottom-notice">{agency.footerCreditsText}</p>

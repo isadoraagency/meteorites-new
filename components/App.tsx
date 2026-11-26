@@ -4,7 +4,7 @@ import Intro from "./Intro/Intro";
 import Navigation from "./Navigation/Navigation";
 import TimeCapsules from "./TimeCapsules/TimeCapsules";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { LazyMotion, MotionConfig, domAnimation } from "framer-motion";
+import { LazyMotion, domAnimation } from "framer-motion";
 import Menu from "./Menu/Menu";
 import Cursor from "./Cursor/Cursor";
 import TypeMeteorites from "./TypeMeteorites/TypeMeteorites";
@@ -16,8 +16,6 @@ import type { StoryblokStory, MenuStoryblokContent } from "../types/storyblok";
 import SiteTheme from "./SiteTheme/SiteTheme";
 import { getHeroBlock, getMeteoritesFromStory, getStardustSectionFromStory, getTypeMeteoritesSectionFromStory, mapMenuStoryToContent } from "../lib/storyblok-utils";
 import { useStoryblokState } from "@storyblok/react";
-import { useScrollLock } from "../hooks/useScrollLock";
-import { veilJump } from "../lib/scroll";
 
 interface AppProps {
   menuContent: MenuContent;
@@ -59,25 +57,25 @@ function App({ menuContent, initialMenuStory, initialStory, initialGlobalConfig,
   const [isJumping, setIsJumping] = useState(false);
 
   const handleBackToIntro = () => {
-    // Hide the jump behind a short fade instead of cutting straight to the top
-    veilJump(() => window.scrollTo(0, 0));
+    // Scroll to top to ensure proper positioning
+    window.scrollTo(0, 0);
   };
 
   const toggleAnimationComplete = useCallback(() => {
     setAnimationComplete((prev) => !prev);
   }, []);
 
-  // Hold the page still until the intro has finished loading. Blocking the
-  // input (wheel/touch/keys) avoids the visible scroll-then-snap-back jitter
-  // of resetting the position on every scroll event.
-  useScrollLock(!animationComplete);
-
   useEffect(() => {
-    if (animationComplete) return;
-    // Fallback for scrollbar drags, which can't be intercepted as input
-    const resetScroll = () => window.scrollTo(0, 0);
-    window.addEventListener("scroll", resetScroll);
-    return () => window.removeEventListener("scroll", resetScroll);
+    const handleScroll = (e: Event) => {
+      if (!animationComplete) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.scrollTo(0, 0);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: false });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [animationComplete]);
 
   useEffect(() => {
@@ -109,102 +107,126 @@ function App({ menuContent, initialMenuStory, initialStory, initialGlobalConfig,
     return number.toString().padStart(3, "0");
   };
 
-  return (
-    <MotionConfig reducedMotion="user">
-      <LazyMotion features={domAnimation} strict>
-        <SiteTheme initialConfig={initialGlobalConfig} />
-        <Cursor />
-        <Menu menuContent={resolvedMenuContent} />
+  useEffect(() => {
+    if (animationComplete) {
+      const handleScroll = () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight;
+        const scrollableHeight = docHeight - windowHeight;
 
-        <Intro
-          hero={hero}
-          progress={formatProgress(progress)}
+        const scrollProgress =
+          scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0;
+
+        setProgress(Math.round(scrollProgress));
+      };
+
+      handleScroll();
+
+      window.addEventListener("scroll", handleScroll);
+      window.addEventListener("resize", handleScroll);
+
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("resize", handleScroll);
+      };
+    }
+  }, [animationComplete]);
+
+  return (
+    <LazyMotion features={domAnimation} strict>
+      <SiteTheme initialConfig={initialGlobalConfig} />
+      <Cursor />
+      <Menu menuContent={resolvedMenuContent} />
+
+      <Intro
+        hero={hero}
+        progress={formatProgress(progress)}
+        isLoaded={isLoaded}
+        animationComplete={animationComplete}
+        toggleAnimationComplete={toggleAnimationComplete}
+        isJumping={isJumping}
+        toggleNav={toggleNav}
+      />
+
+      {items && items.length > 0 && (
+        <div id="time-capsules">
+          <TimeCapsules
+            className="time-capsule-0"
+            key={`capsule-${items[0].slug || 0}`}
+            isLoaded={animationComplete}
+            index={0}
+            item={items[0]}
+            items={items}
+            toggleNav={toggleNav}
+            lastTimeCapsule={items[0] === items[items.length - 1]}
+            handleActiveItem={handleActiveItem}
+            activeItem={resolvedActiveItem}
+            isJumping={isJumping}
+          />
+
+          {items.length > 1 && (
+            <div key="black-bg-container" style={{ background: "#000" }}>
+              {items.slice(1).map((item, idx) => {
+                const actualIndex = idx + 1;
+                return (
+                  <TimeCapsules
+                    className={`time-capsule-${actualIndex}`}
+                    key={`capsule-${item.slug || actualIndex}`}
+                    isLoaded={animationComplete}
+                    index={actualIndex}
+                    item={item}
+                    items={items}
+                    activeItem={resolvedActiveItem}
+                    toggleNav={toggleNav}
+                    lastTimeCapsule={item === items[items.length - 1]}
+                    handleActiveItem={handleActiveItem}
+                    isJumping={isJumping}
+                  />
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+      <Footer isLoaded={animationComplete} />
+      {resolvedActiveItem !== null && resolvedActiveItem > -1 && (
+        <Navigation
+          items={items}
           isLoaded={isLoaded}
-          animationComplete={animationComplete}
-          toggleAnimationComplete={toggleAnimationComplete}
+          navActive={navActive}
+          activeItem={resolvedActiveItem}
+          handleActiveItem={handleActiveItem}
+          setIsJumping={setIsJumping}
+        />
+      )}
+      {typeMeteoritesSection && (
+        <TypeMeteorites
+          isLoaded={animationComplete}
+          className="type-meteorites-section"
           isJumping={isJumping}
           toggleNav={toggleNav}
+          title={typeMeteoritesSection.title}
+          description={typeMeteoritesSection.description}
+          items={typeMeteoritesSection.items}
         />
+      )}
 
-        {items && items.length > 0 && (
-          <div id="time-capsules">
-            <TimeCapsules
-              className="time-capsule-0"
-              key={`capsule-${items[0].slug || 0}`}
-              isLoaded={animationComplete}
-              index={0}
-              item={items[0]}
-              items={items}
-              toggleNav={toggleNav}
-              lastTimeCapsule={items[0] === items[items.length - 1]}
-              handleActiveItem={handleActiveItem}
-              activeItem={resolvedActiveItem}
-              isJumping={isJumping}
-            />
+      {stardustSection && (
+        <Stardust
+          isLoaded={animationComplete}
+          onBackToIntro={handleBackToIntro}
+          className="stardust-section"
+          quote={stardustSection.quote}
+          quoteAttribution={stardustSection.quoteAttribution}
+          creatorsIntro={stardustSection.creatorsIntro}
+          creators={stardustSection.creators}
+          buttonLabel={stardustSection.buttonLabel}
+        />
+      )}
 
-            {items.length > 1 && (
-              <div key="black-bg-container" style={{ background: "#000" }}>
-                {items.slice(1).map((item, idx) => {
-                  const actualIndex = idx + 1;
-                  return (
-                    <TimeCapsules
-                      className={`time-capsule-${actualIndex}`}
-                      key={`capsule-${item.slug || actualIndex}`}
-                      isLoaded={animationComplete}
-                      index={actualIndex}
-                      item={item}
-                      items={items}
-                      activeItem={resolvedActiveItem}
-                      toggleNav={toggleNav}
-                      lastTimeCapsule={item === items[items.length - 1]}
-                      handleActiveItem={handleActiveItem}
-                      isJumping={isJumping}
-                    />
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-        <Footer isLoaded={animationComplete} />
-        {resolvedActiveItem !== null && resolvedActiveItem > -1 && (
-          <Navigation
-            items={items}
-            isLoaded={isLoaded}
-            navActive={navActive}
-            activeItem={resolvedActiveItem}
-            handleActiveItem={handleActiveItem}
-            setIsJumping={setIsJumping}
-          />
-        )}
-        {typeMeteoritesSection && (
-          <TypeMeteorites
-            isLoaded={animationComplete}
-            className="type-meteorites-section"
-            isJumping={isJumping}
-            toggleNav={toggleNav}
-            title={typeMeteoritesSection.title}
-            description={typeMeteoritesSection.description}
-            items={typeMeteoritesSection.items}
-          />
-        )}
-
-        {stardustSection && (
-          <Stardust
-            isLoaded={animationComplete}
-            onBackToIntro={handleBackToIntro}
-            className="stardust-section"
-            quote={stardustSection.quote}
-            quoteAttribution={stardustSection.quoteAttribution}
-            creatorsIntro={stardustSection.creatorsIntro}
-            creators={stardustSection.creators}
-            buttonLabel={stardustSection.buttonLabel}
-          />
-        )}
-
-        {animationComplete && <ScrollProgress />}
-      </LazyMotion>
-    </MotionConfig>
+      {animationComplete && <ScrollProgress progress={progress} />}
+    </LazyMotion>
   );
 }
 

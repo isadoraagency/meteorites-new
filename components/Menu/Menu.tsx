@@ -4,18 +4,12 @@ import { AnimatePresence, m } from "framer-motion";
 import "./Menu.scss";
 
 import { scrollToAnchor } from "../../lib/scroll";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Sources from "../Sources/Sources";
 import Credits from "../Credits/Credits";
 import About from "../About/About";
 import { useDecodeText } from "../../hooks/useDecodeText";
-import { useScrollLock } from "../../hooks/useScrollLock";
-import { EASE_OUT } from "../../lib/motion";
 import type { MenuContent } from "../../types/content";
-
-// Keep in sync with the openOverlay animation length in Menu.scss (1.1s):
-// content fades in during the overlay's final settle, not after it stops.
-const MENU_CONTENT_DELAY = 0.7;
 
 interface MenuProps {
   menuContent: MenuContent;
@@ -31,19 +25,6 @@ export default function Menu({ menuContent }: MenuProps) {
   const [topItemActive, setTopItemActive] = useState(false);
   const topItemsRef = useRef<HTMLButtonElement[]>([]);
 
-  // The page must not scroll underneath the menu or any of its modals
-  useScrollLock(isOpenMenu || activeModal !== "close");
-
-  // Decode the large links as the menu content lands (see MENU_CONTENT_DELAY)
-  useEffect(() => {
-    if (!isOpenMenu) return;
-    const id = setTimeout(() => setTopItemActive(true), MENU_CONTENT_DELAY * 1000);
-    return () => {
-      clearTimeout(id);
-      setTopItemActive(false);
-    };
-  }, [isOpenMenu]);
-
   const handleMenuItemClick = (action: string) => {
     if (action !== "close") {
       setActiveModal(action);
@@ -54,7 +35,14 @@ export default function Menu({ menuContent }: MenuProps) {
   const toggleMenu = () => {
     const newIsOpenMenu = !isOpenMenu;
     setIsOpenMenu(newIsOpenMenu);
-    if (!newIsOpenMenu) setIsMounted(true);
+    if (newIsOpenMenu) {
+      setTimeout(() => {
+        setTopItemActive(true);
+      }, 1000);
+    } else {
+      setIsMounted(true);
+      setTopItemActive(false);
+    }
   };
 
   const moveToItem = (e: React.MouseEvent, el: string) => {
@@ -124,11 +112,40 @@ export default function Menu({ menuContent }: MenuProps) {
         {isOpenMenu && (
           <>
             <m.div
+              key="overlay"
+              initial={{
+                width: "6.4rem",
+                height: "6.4rem",
+                borderRadius: "64rem",
+                opacity: 1,
+                left: "4rem",
+                bottom: "0%",
+                y: "-4rem",
+              }}
+              animate={{
+                y: "50%",
+                x: "-4rem",
+                left: "0",
+                width: "100%",
+                height: "100%",
+                borderRadius: "0",
+                bottom: "50%",
+                transition: {
+                  duration: 1.5,
+                  ease: "easeInOut",
+                },
+              }}
+              exit={{
+                opacity: 0,
+                transition: { duration: 0.5 },
+              }}
+            ></m.div>
+            <m.div
               key="menu"
               className="main-menu"
               initial={{
                 x: 0,
-                y: "12%",
+                y: "30%",
                 opacity: 0,
               }}
               animate={{
@@ -136,18 +153,18 @@ export default function Menu({ menuContent }: MenuProps) {
                 y: 0,
                 opacity: 1,
                 transition: {
-                  duration: 0.6,
-                  ease: EASE_OUT,
-                  delay: MENU_CONTENT_DELAY,
+                  duration: 0.5,
+                  ease: "easeOut",
+                  delay: 1.5,
                 },
               }}
               exit={{
                 x: 0,
-                y: "10%",
+                y: "50%",
                 opacity: 0,
                 transition: {
-                  duration: 0.3,
-                  ease: "easeIn",
+                  duration: 0.5,
+                  ease: "easeOut",
                 },
               }}
             >
@@ -188,9 +205,7 @@ export default function Menu({ menuContent }: MenuProps) {
                                   if (el) topItemsRef.current[i] = el;
                                 }}
                                 onClick={(e) => {
-                                  // Same path as the toggle button so the overlay plays its close animation
                                   setIsOpenMenu(false);
-                                  setIsMounted(true);
                                   moveToItem(e, "#" + item.action);
                                 }}
                                 onMouseEnter={() => setIsTopLinkHover(true)}
@@ -206,7 +221,7 @@ export default function Menu({ menuContent }: MenuProps) {
                         <m.div
                           initial={{ opacity: 0, y: 30 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.6, ease: EASE_OUT, delay: MENU_CONTENT_DELAY + 0.2 }}
+                          transition={{ duration: 0.5, delay: 1.9 }}
                           exit={{ opacity: 0 }}
                         >
                           <ul className="main-menu__bottom">
@@ -227,7 +242,7 @@ export default function Menu({ menuContent }: MenuProps) {
                   <m.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: EASE_OUT, delay: MENU_CONTENT_DELAY + 0.2 }}
+                    transition={{ duration: 0.5, delay: 1.9 }}
                     exit={{ opacity: 0 }}
                     className="main-menu__side p1 mb-0"
                   >

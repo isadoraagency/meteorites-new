@@ -1,66 +1,31 @@
 @use "../../styles/utils/variables" as *;
-
-// Fixed full-screen frame. It does not scroll itself: `.sources-scroll` does,
-// so the background video can stay put while the list scrolls over it.
 .sources-wrap {
   overflow: hidden;
   position: fixed;
   inset: 0;
   z-index: 1200;
   background: var(--site-bg-gradient, #{$vyg});
+  height: 100%;
+  padding-top: 7rem;
+  box-sizing: border-box;
+  .ia-container {
+    position: relative;
 
+  }
   .close {
     position: absolute;
     top: 2.4rem;
     right: 2.4rem;
-    z-index: 3;
+
   }
 }
-
-.sources-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  .ia-container {
-    position: relative;
-    height: 100%;
-  }
-  &__video {
-    position: absolute;
-    left: 33%;
-    top: 50%;
-    width: 70%;
-    transform: translateY(-50%);
-  }
-  video {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 99rem;
-  }
-}
-
-.sources-scroll {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  padding: 7rem 0 8rem;
-  box-sizing: border-box;
-}
-
 .sources-accordion {
   transform-origin: center top;
 }
-
-$sources-ease: cubic-bezier(0.22, 1, 0.36, 1);
-
 .sources-container {
   max-width: 652px;
   position: relative;
+  overflow-y: auto;
   &__in {
     border-radius: 4.8rem;
     border: 1px solid rgba(154, 154, 154, 0.50);
@@ -68,35 +33,51 @@ $sources-ease: cubic-bezier(0.22, 1, 0.36, 1);
     backdrop-filter: blur(15px);
     padding: 8rem 6.5rem;
     box-sizing: border-box;
-    margin-top: 8rem;
-    transition: margin-top 0.5s $sources-ease, padding 0.5s $sources-ease;
+   margin-top: 8rem;
+    transition: margin-top 0.8s ease-in-out, padding 0.8s ease-in-out;
     &.active {
       margin-top: 0;
       padding: 4.8rem 6.5rem;
     }
   }
+  &__bgs {
+    position: fixed;
+    left: 33%;
+    top: 50%;
+    width: 70%;
+    transform: translate(0, -50%);
+    video {
+      width: 100%;
+      height: auto;
+      border-radius: 99rem;
+    }
+  }
 }
-
 .mobile-video {
   display: none;
 }
-
 @media (max-width: 767px) {
+  .sources-wrap {
+    .ia-container {
+      max-height: 100%;
+      overflow-y: auto;
+    }
+  }
   .sources-container {
     max-width: 100%;
 
     &__in {
       background: none;
-      backdrop-filter: none;
       padding: 0;
       border: none;
       border-radius: 0;
-      &.active {
-        padding: 0;
-      }
+    }
+    .p2 {
+
+
     }
   }
-  .sources-bg {
+  .sources-container__bgs {
     display: none;
   }
   .mobile-video {

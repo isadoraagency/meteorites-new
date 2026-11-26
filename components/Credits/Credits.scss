@@ -12,19 +12,15 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     height: 100%;
     overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
     text-align: center;
   }
   .credits__in {
     max-width: 720px;
-    // auto margins centre vertically but, unlike justify-content, never push
-    // the top of tall content out of reach of the scroll container
-    margin: auto;
-    padding-bottom: 4rem;
+    margin: 0 auto;
 
     .content-entry {
       strong,
