@@ -1,6 +1,5 @@
 @use "../../styles/utils/variables" as *;
 .sources-wrap {
-  overflow: hidden;
   position: fixed;
   inset: 0;
   z-index: 1200;
@@ -8,9 +7,9 @@
   height: 100%;
   padding-top: 7rem;
   box-sizing: border-box;
+
   .ia-container {
     position: relative;
-
   }
   .close {
     position: absolute;
@@ -26,6 +25,7 @@
   max-width: 652px;
   position: relative;
   overflow-y: auto;
+  max-height: 80dvh;
   &__in {
     border-radius: 4.8rem;
     border: 1px solid rgba(154, 154, 154, 0.50);

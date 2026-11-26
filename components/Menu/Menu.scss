@@ -157,6 +157,8 @@
   overflow: hidden;
   transform: translate(50%, 50%);
   &__in {
+    overflow-y: auto;
+    max-height: calc(90dvh - 10rem);
     svg {
       margin-bottom: 3rem;
     }

@@ -255,48 +255,52 @@ export default function TypeMeteorites({
       // Create spiral animation
       const spiralTimeline = gsap.timeline();
 
-      // The number of rotations in the spiral
-      const rotations = 1.5;
-      // Smaller stagger delay for nearly simultaneous start
+      // Extra full turns on top of the shortest path to the final angle
+      const extraTurns = 1;
       const staggerDelay = 0.1;
+      const spiralDuration = 10;
+      const TWO_PI = Math.PI * 2;
 
       itemsRef.current.forEach((el, i) => {
-        // Create spiral animation for each item with shorter delay
-        const spiralTween = gsap.timeline({ delay: i * staggerDelay });
+        if (!el) return;
 
-        // Create spiral animation with growing radius
-        for (let step = 0; step <= 20; step++) {
-          const progress = step / 20;
-          const angle =
-            progress * rotations * Math.PI * 2 +
-            (i * (Math.PI * 2)) / itemsRef.current.length;
-          const radius = progress * R;
-
-          spiralTween.to(el, {
-            x: Math.cos(angle) * radius,
-            y: Math.sin(angle) * radius,
-            scale: 0.8 + progress * 0.2,
-            filter: `blur(${(1 - progress) * 5}px)`,
-            duration: 0.5,
-          });
-        }
-
-        // After spiral, move to final position
+        const startPos = DICE_5_POSITIONS[i];
         const finalPos = POSITIONS[i];
-        spiralTween.to(el, {
-          x: finalPos.x,
-          y: finalPos.y,
-          scale: finalPos.scale || 0.8,
-          filter: "blur(0px)",
-          duration: 0.8,
-          ease: "elastic.out(0.4, 0.7)",
-        });
 
-        // Add each animation to main timeline with a very small offset
-        // This ensures they all start nearly simultaneously
-        spiralTimeline.add(
-          spiralTween,
-          i === 0 ? 0 : "-=" + 0.95 * (staggerDelay * 5 + spiralTween.duration())
+        // Polar coords relative to the circle center
+        const r0 = Math.hypot(startPos.x, startPos.y);
+        const a0 = Math.atan2(startPos.y, startPos.x);
+        const r1 = Math.hypot(finalPos.x, finalPos.y);
+        const a1 = Math.atan2(finalPos.y, finalPos.x);
+
+        // Always rotate in one direction and land exactly on the final angle
+        const delta = (((a1 - a0) % TWO_PI) + TWO_PI) % TWO_PI;
+        const totalAngle = delta + extraTurns * TWO_PI;
+
+        const startScale = 0.8;
+        const endScale = finalPos.scale ?? 0.8;
+        const proxy = { p: 0 };
+
+        // One continuous tween: no stop-and-go between segments
+        spiralTimeline.to(
+          proxy,
+          {
+            p: 1,
+            duration: spiralDuration,
+            ease: "power2.inOut",
+            onUpdate: () => {
+              const p = proxy.p;
+              const angle = a0 + totalAngle * p;
+              const radius = r0 + (r1 - r0) * p;
+              gsap.set(el, {
+                x: Math.cos(angle) * radius,
+                y: Math.sin(angle) * radius,
+                scale: startScale + (endScale - startScale) * p,
+                filter: `blur(${(1 - p) * 5}px)`,
+              });
+            },
+          },
+          i * staggerDelay
         );
       });
 

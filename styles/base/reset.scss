@@ -230,16 +230,12 @@ iframe {
 html.overlayed {
   overflow: hidden;
   body.overlayed {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     right: 0;
     left: 0;
     overflow: hidden;
-  }
-  #wrapper {
-    overflow-y: scroll;
-    overflow-x: hidden;
   }
 }
 .alignleft {

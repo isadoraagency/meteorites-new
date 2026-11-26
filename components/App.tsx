@@ -135,97 +135,99 @@ function App({ menuContent, initialMenuStory, initialStory, initialGlobalConfig,
 
   return (
     <LazyMotion features={domAnimation} strict>
-      <SiteTheme initialConfig={initialGlobalConfig} />
-      <Cursor />
-      <Menu menuContent={resolvedMenuContent} />
+      <div id="wrapper">
+        <SiteTheme initialConfig={initialGlobalConfig} />
+        <Cursor />
+        <Menu menuContent={resolvedMenuContent} />
 
-      <Intro
-        hero={hero}
-        progress={formatProgress(progress)}
-        isLoaded={isLoaded}
-        animationComplete={animationComplete}
-        toggleAnimationComplete={toggleAnimationComplete}
-        isJumping={isJumping}
-        toggleNav={toggleNav}
-      />
-
-      {items && items.length > 0 && (
-        <div id="time-capsules">
-          <TimeCapsules
-            className="time-capsule-0"
-            key={`capsule-${items[0].slug || 0}`}
-            isLoaded={animationComplete}
-            index={0}
-            item={items[0]}
-            items={items}
-            toggleNav={toggleNav}
-            lastTimeCapsule={items[0] === items[items.length - 1]}
-            handleActiveItem={handleActiveItem}
-            activeItem={resolvedActiveItem}
-            isJumping={isJumping}
-          />
-
-          {items.length > 1 && (
-            <div key="black-bg-container" style={{ background: "#000" }}>
-              {items.slice(1).map((item, idx) => {
-                const actualIndex = idx + 1;
-                return (
-                  <TimeCapsules
-                    className={`time-capsule-${actualIndex}`}
-                    key={`capsule-${item.slug || actualIndex}`}
-                    isLoaded={animationComplete}
-                    index={actualIndex}
-                    item={item}
-                    items={items}
-                    activeItem={resolvedActiveItem}
-                    toggleNav={toggleNav}
-                    lastTimeCapsule={item === items[items.length - 1]}
-                    handleActiveItem={handleActiveItem}
-                    isJumping={isJumping}
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
-      <Footer isLoaded={animationComplete} />
-      {resolvedActiveItem !== null && resolvedActiveItem > -1 && (
-        <Navigation
-          items={items}
+        <Intro
+          hero={hero}
+          progress={formatProgress(progress)}
           isLoaded={isLoaded}
-          navActive={navActive}
-          activeItem={resolvedActiveItem}
-          handleActiveItem={handleActiveItem}
-          setIsJumping={setIsJumping}
-        />
-      )}
-      {typeMeteoritesSection && (
-        <TypeMeteorites
-          isLoaded={animationComplete}
-          className="type-meteorites-section"
+          animationComplete={animationComplete}
+          toggleAnimationComplete={toggleAnimationComplete}
           isJumping={isJumping}
           toggleNav={toggleNav}
-          title={typeMeteoritesSection.title}
-          description={typeMeteoritesSection.description}
-          items={typeMeteoritesSection.items}
         />
-      )}
 
-      {stardustSection && (
-        <Stardust
-          isLoaded={animationComplete}
-          onBackToIntro={handleBackToIntro}
-          className="stardust-section"
-          quote={stardustSection.quote}
-          quoteAttribution={stardustSection.quoteAttribution}
-          creatorsIntro={stardustSection.creatorsIntro}
-          creators={stardustSection.creators}
-          buttonLabel={stardustSection.buttonLabel}
-        />
-      )}
+        {items && items.length > 0 && (
+          <div id="time-capsules">
+            <TimeCapsules
+              className="time-capsule-0"
+              key={`capsule-${items[0].slug || 0}`}
+              isLoaded={animationComplete}
+              index={0}
+              item={items[0]}
+              items={items}
+              toggleNav={toggleNav}
+              lastTimeCapsule={items[0] === items[items.length - 1]}
+              handleActiveItem={handleActiveItem}
+              activeItem={resolvedActiveItem}
+              isJumping={isJumping}
+            />
 
-      {animationComplete && <ScrollProgress progress={progress} />}
+            {items.length > 1 && (
+              <div key="black-bg-container" style={{ background: "#000" }}>
+                {items.slice(1).map((item, idx) => {
+                  const actualIndex = idx + 1;
+                  return (
+                    <TimeCapsules
+                      className={`time-capsule-${actualIndex}`}
+                      key={`capsule-${item.slug || actualIndex}`}
+                      isLoaded={animationComplete}
+                      index={actualIndex}
+                      item={item}
+                      items={items}
+                      activeItem={resolvedActiveItem}
+                      toggleNav={toggleNav}
+                      lastTimeCapsule={item === items[items.length - 1]}
+                      handleActiveItem={handleActiveItem}
+                      isJumping={isJumping}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+        <Footer isLoaded={animationComplete} />
+        {resolvedActiveItem !== null && resolvedActiveItem > -1 && (
+          <Navigation
+            items={items}
+            isLoaded={isLoaded}
+            navActive={navActive}
+            activeItem={resolvedActiveItem}
+            handleActiveItem={handleActiveItem}
+            setIsJumping={setIsJumping}
+          />
+        )}
+        {typeMeteoritesSection && (
+          <TypeMeteorites
+            isLoaded={animationComplete}
+            className="type-meteorites-section"
+            isJumping={isJumping}
+            toggleNav={toggleNav}
+            title={typeMeteoritesSection.title}
+            description={typeMeteoritesSection.description}
+            items={typeMeteoritesSection.items}
+          />
+        )}
+
+        {stardustSection && (
+          <Stardust
+            isLoaded={animationComplete}
+            onBackToIntro={handleBackToIntro}
+            className="stardust-section"
+            quote={stardustSection.quote}
+            quoteAttribution={stardustSection.quoteAttribution}
+            creatorsIntro={stardustSection.creatorsIntro}
+            creators={stardustSection.creators}
+            buttonLabel={stardustSection.buttonLabel}
+          />
+        )}
+
+        {animationComplete && <ScrollProgress progress={progress} />}
+      </div>
     </LazyMotion>
   );
 }

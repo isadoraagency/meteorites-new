@@ -9,6 +9,7 @@ import Sources from "../Sources/Sources";
 import Credits from "../Credits/Credits";
 import About from "../About/About";
 import { useDecodeText } from "../../hooks/useDecodeText";
+import { useModalOverlay } from "../../hooks/useModalOverlay";
 import type { MenuContent } from "../../types/content";
 
 interface MenuProps {
@@ -22,8 +23,10 @@ export default function Menu({ menuContent }: MenuProps) {
   const [isTopLinkHover, setIsTopLinkHover] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [activeModal, setActiveModal] = useState("close");
-  const [topItemActive, setTopItemActive] = useState(false);
+  const topItemActive = isOpenMenu;
   const topItemsRef = useRef<HTMLButtonElement[]>([]);
+
+  useModalOverlay(isOpenMenu || activeModal !== "close");
 
   const handleMenuItemClick = (action: string) => {
     if (action !== "close") {
@@ -35,13 +38,8 @@ export default function Menu({ menuContent }: MenuProps) {
   const toggleMenu = () => {
     const newIsOpenMenu = !isOpenMenu;
     setIsOpenMenu(newIsOpenMenu);
-    if (newIsOpenMenu) {
-      setTimeout(() => {
-        setTopItemActive(true);
-      }, 1000);
-    } else {
+    if (!newIsOpenMenu) {
       setIsMounted(true);
-      setTopItemActive(false);
     }
   };
 

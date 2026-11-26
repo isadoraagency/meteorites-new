@@ -2,6 +2,7 @@
 
 import { AnimatePresence, m } from "framer-motion";
 import "./VideoModal.scss";
+import { useModalOverlay } from "../../hooks/useModalOverlay";
 
 interface VideoModalProps {
   video?: string;
@@ -18,6 +19,8 @@ export default function VideoModal({
   toggleVideo,
   isVideo,
 }: VideoModalProps) {
+  useModalOverlay(isVideo);
+
   return (
     <div>
       <AnimatePresence>
