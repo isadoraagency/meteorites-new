@@ -414,7 +414,7 @@ export default function Intro({
           {progress}%
         </div>
         <div className="intro-1" ref={intro1Ref}>
-          <div className="lg text-title text--info text-light mb-2" ref={titleRef}>
+          <div className="lg text-title text--info text-light mb-2 ia-test" ref={titleRef}>
             {renderMultilineText(mainTitle)}
           </div>
           <p className="h6 text--info mb-0 text-light" ref={textRef}>

@@ -17,8 +17,6 @@
   overflow: hidden;
   z-index: 999;
   background: var(--site-bg-gradient, #{$vyg});
-
-
   &--open {
     animation: openOverlay 2s linear forwards;
   }
