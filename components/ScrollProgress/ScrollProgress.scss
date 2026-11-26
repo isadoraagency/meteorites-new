@@ -10,9 +10,9 @@
 }
 .scroll-progress-bar {
   height: 8px;
-  transition: width 0.3s ease;
   overflow: hidden;
-  width: 0;
+  width: 100%;
+  clip-path: inset(0 100% 0 0);
   &:after {
     content: '';
     display: block;

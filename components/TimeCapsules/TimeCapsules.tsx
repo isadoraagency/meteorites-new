@@ -3,6 +3,7 @@
 import "./TimeCapsules.scss";
 import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import { useState, useEffect, useRef } from "react";
+import { LABEL_SNAP } from "../../lib/scroll";
 import { gsap, ScrollTrigger, MotionPathPlugin } from "../../lib/gsap";
 import VideoModal from "../VideoModal/VideoModal";
 import { useDecodeText } from "../../hooks/useDecodeText";
@@ -125,13 +126,7 @@ export default function TimeCapsules({
                   start: "top center",
                   end: "top top",
                   scrub: 1,
-                  snap: isJumpingRef.current
-                    ? undefined
-                    : {
-                        snapTo: "labelsDirectional",
-                        duration: { min: 0.3, max: 0.5 },
-                        ease: "power2.out",
-                      },
+                  snap: isJumpingRef.current ? undefined : LABEL_SNAP,
                   onEnter: () => {
                     if (!isJumpingRef.current) {
                       toggleNav(true);
@@ -159,13 +154,7 @@ export default function TimeCapsules({
                   pinSpacing: false,
                   id: "TimeCapsules" + item.slug,
                   anticipatePin: 1,
-                  snap: isJumpingRef.current
-                    ? undefined
-                    : {
-                        snapTo: "labelsDirectional",
-                        duration: { min: 0.3, max: 2 },
-                        ease: "power2.out",
-                      },
+                  snap: isJumpingRef.current ? undefined : LABEL_SNAP,
                   onEnter: () => {
                     if (!isJumpingRef.current) {
                       toggleNav(true);

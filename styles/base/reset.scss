@@ -397,3 +397,16 @@ svg {
     --grid-gutter-width: 40px;
   }
 }
+
+// Visitors who ask the OS for less motion get instant CSS transitions and
+// animations (framer-motion follows the same setting via <MotionConfig>).
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

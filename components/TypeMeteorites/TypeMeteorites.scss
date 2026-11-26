@@ -39,7 +39,6 @@
   text-transform: uppercase;
   z-index: 99;
   white-space: nowrap;
-  transition: all .5s;
 }
 .meteorites-desc {
   position: absolute;
@@ -136,7 +135,7 @@
     width: 48%;
     opacity: 0;
     transform: translateY(3rem);
-    transition: all .5s;
+    transition: opacity .5s ease-out, transform .5s ease-out;
   }
   &-left {
     text-align: right;
@@ -146,7 +145,7 @@
 .meteorite-item__sub-title {
   opacity: 0;
   filter: blur(3px);
-  transition: all .5s;
+  transition: opacity .5s ease-out, filter .5s ease-out;
 }
 .meteorite-item__info {
   &[style*="opacity: 1"] {

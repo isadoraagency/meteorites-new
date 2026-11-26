@@ -2,6 +2,7 @@
 
 import "./Navigation.scss";
 import { gsap, ScrollTrigger } from "../../lib/gsap";
+import { veilJump } from "../../lib/scroll";
 import type { Meteorite } from "../../types/content";
 
 interface NavigationProps {
@@ -25,45 +26,25 @@ export default function Navigation({
     const st = ScrollTrigger.getById("TimeCapsules" + el.replace("#", ""));
     const targetIndex = items.findIndex((item) => "#" + item.slug === el);
 
+    // Suppresses section callbacks (nav toggling, decode triggers) mid-jump
     setIsJumping(true);
 
-    // Short delay before setting isJumping to false
-    // This gives time for the onUpdate/onEnter callbacks to fire and be ignored if necessary
-    // or to finish their execution before isJumping becomes false
-    const onComplete = () => {
-      // Small delay for ScrollTrigger to stabilize after instant jump
-      setTimeout(() => {
-        if (targetIndex !== -1) {
-          handleActiveItem(targetIndex);
-        }
+    // The jump itself is instant (scrubbing through every pinned section in
+    // between would be chaotic), but it happens behind a short fade so it
+    // reads as a deliberate cut instead of the page glitching.
+    veilJump(
+      async () => {
+        gsap.set(window, { scrollTo: { y: st ? st.start : el } });
 
-        // Ensure all ScrollTriggers are updated to the correct state
+        // Let ScrollTrigger settle on the new position before revealing
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        if (targetIndex !== -1) handleActiveItem(targetIndex);
         ScrollTrigger.refresh();
-
-        // Sometimes one refresh is not enough after an instant jump if animations depend on it
-        requestAnimationFrame(() => {
-          ScrollTrigger.refresh();
-        });
-
-        setTimeout(() => {
-          setIsJumping(false);
-        }, 400); // Slightly longer delay to ensure everything settled
-      }, 50);
-    };
-
-    if (st) {
-      gsap.to(window, {
-        duration: 0,
-        scrollTo: { y: st.start },
-        onComplete: onComplete,
-      });
-    } else {
-      gsap.to(window, {
-        duration: 0,
-        scrollTo: { y: el },
-        onComplete: onComplete,
-      });
-    }
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        ScrollTrigger.refresh();
+      },
+      { onComplete: () => setIsJumping(false) }
+    );
   };
 
   return (

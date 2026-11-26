@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useId } from "react";
 import { sanitizeHtml } from "../../lib/sanitizeHtml";
 import "./Accordion.scss";
 
@@ -12,52 +12,38 @@ interface AccordionProps {
   index: number;
 }
 
+// Height is animated in CSS (grid-template-rows 0fr -> 1fr), so opening starts
+// on the same frame as the click — no measuring, timers or resize listeners.
 const Accordion = ({ title, children, activeIndex, setActiveIndex, index }: AccordionProps) => {
-  const [height, setHeight] = useState(0);
-  const contentRef = useRef<HTMLDivElement>(null);
   const isOpen = index === activeIndex;
-  const updateHeight = useCallback(() => {
-    if (contentRef.current) {
-      setHeight(isOpen ? contentRef.current.scrollHeight : 0);
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    document.fonts.ready.then(() => {
-      setTimeout(function () {
-        updateHeight();
-      }, 100);
-    });
-    window.addEventListener("resize", updateHeight);
-    return () => window.removeEventListener("resize", updateHeight);
-  }, [updateHeight]);
+  const panelId = useId();
 
   const toggleAccordion = () => {
     setActiveIndex(isOpen ? null : index);
   };
 
   return (
-    <div className="accordion">
+    <div className={`accordion ${isOpen ? "accordion--open" : ""}`}>
       <button
         className={`accordion-header p2 mb-0 text-semi-bold text-upper text--primary ${isOpen ? "open" : ""}`}
         onClick={toggleAccordion}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
       >
         {title}
         <i></i>
       </button>
-      <div
-        ref={contentRef}
-        className="accordion-content"
-        style={{ height: `${height}px`, overflow: "hidden", transition: "height 0.8s ease-in-out" }}
-      >
-        <div
-          className="accordion-inner"
-          dangerouslySetInnerHTML={{
-            __html: sanitizeHtml(children, {
-              ADD_ATTR: ["target", "rel"],
-            }),
-          }}
-        />
+      <div id={panelId} className="accordion-content" inert={!isOpen}>
+        <div className="accordion-content__clip">
+          <div
+            className="accordion-inner"
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHtml(children, {
+                ADD_ATTR: ["target", "rel"],
+              }),
+            }}
+          />
+        </div>
       </div>
     </div>
   );
